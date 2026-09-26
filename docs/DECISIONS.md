@@ -29,7 +29,7 @@
 | 022 | **Real-time days** with pause and speed. Untimed prep and night phases. Interactions pause the clock | 🟡 | Q6, Q13 |
 | 023 | **Three difficulty modes** (Cozy, Standard, Tycoon). Bankruptcy only in Tycoon | 🟡 | Q7 |
 | 024 | **One flagship TCG** (Glimmerkin) at launch. Multi-brand architecture from day one | 🟡 | Q8 |
-| 025 | **Free grid Build Mode** with path validation | 🟡 | Q10 |
+| 025 | **Free grid Build Mode** with path validation | 🟡 | Q9 |
 | 026 | **Card stacks vs instances** model for scale (bulk aggregated, notable cards individual, lazy sub-scores) | ✅ | `06 §5.5` |
 | 027 | **Set Forge** procedural sets after the curated ones. Generated definitions are stored in the save | ✅ | `03 §5` |
 | 028 | The TCG is **not playable** (no battles). Card stats are flavor, and tournaments are simulated | 🟡 | Q11 |

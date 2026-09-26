@@ -44,7 +44,7 @@ SHOP (layer 0, 3D) + HUD (layer 1)
 ### 3.1 Desktop (16:9)
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
-│ [🏪 Foil & Fortune  Lv 7 ◔] [☀ Tue · Spring 12 · 14:35 ⏸ ▶ ▶▶ ▶▶▶ [OPEN]] [$2,431.50] [★★½] [🔔3]│
+│ [🏪 Foil & Fortune  Lv 15 ◔] [☀ Thu · Summer 4 · 14:35 ⏸ ▶ ▶▶ ▶▶▶ [OPEN]] [$12,431.50] [★★★] [🔔3]│
 │                                                                                       │
 │                                                                    ┌──────────────┐   │
 │                   ( 3D shop diorama: customers, shelves,            │ Activity     │   │
@@ -61,7 +61,7 @@ SHOP (layer 0, 3D) + HUD (layer 1)
 - **Top-left:** shop name, level badge with an XP ring (click for level rewards).
 - **Top-center:** weather/season icon, weekday, date, clock, speed controls, and the **OPEN/CLOSED door sign** (big, flippable).
 - **Top-right:** **cash counter** (rolling digits, pulses on change), **reputation stars** (click for sub-scores and reviews), notification bell.
-- **Bottom dock:** chunky key buttons with **badges** (e.g., Orders ②, Grading ✓), unlocked progressively. Keys 1–9 are shortcuts.
+- **Bottom dock:** chunky key buttons with **badges** (e.g., Orders ②, Grading ✓), unlocked progressively. Each has a **letter-key** shortcut (§9). Number keys are reserved for game speed.
 - **Right:** collapsible activity feed. **Left:** Goals chip (daily objectives progress).
 
 ### 3.2 Phone and tablet landscape
@@ -79,7 +79,7 @@ The top bar compresses to icons plus key numbers, and the dock becomes an icon r
 | Move items (product to slot, card to grading tray or binder, furniture) | Drag & drop | Long-press, then drag |
 | Details | Hover tooltip (300 ms) | Tap-and-hold |
 | Camera | Wheel zoom, drag pan, Q/E rotate | Pinch, two-finger pan, buttons |
-| Time | Space pause · 1/2/3 speed | Buttons |
+| Time | Space pause · 1 = 1×, 2 = 2×, 3 = 4× | Buttons |
 
 **Safety:** confirmation for high-value irreversible actions (opening sealed product worth > $200, cracking a slab, selling an item worth > $500 below 80% of market, firing staff). **Undo** for price edits and build placements (Ctrl+Z / ↶ button).
 
@@ -104,7 +104,7 @@ The table uses a clipboard skin: product · your price · market · your avg cos
 
 ### 5.6 Crate: supplier app (tablet)
 ```
-┌────────── 🚚 Crate · Harbor Hobby Distribution ─────────── Cart (3) $412.50 ┐
+┌────────── 🚚 Crate · Harbor Hobby Distribution ─────────── Cart (3) $314.20 ┐
 │ [Budget Box][Harbor Hobby▼][Starforge 🔒Lv10][Kaze Manga][FoilMarket]       │
 │ Filters: [Glimmerkin ▾] [Emberdawn ▾] [Sealed ▾]        Delivery: 2 days 🚚 │
 │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                        │
@@ -115,7 +115,7 @@ The table uses a clipboard skin: product · your price · market · your avg cos
 │ │Stock 12  │ │Stock 4 🔥│ │Stock 30  │ │Stock ∞   │                        │
 │ │[−] 2 [+] │ │[−] 0 [+] │ │[−] 0 [+] │ │[−] 1 [+] │                        │
 │ └──────────┘ └──────────┘ └──────────┘ └──────────┘                        │
-│ Volume discount: $412 → reach $500 for −3%  ▰▰▰▰▰▰▰▱▱                        │
+│ Volume discount: $314 → reach $500 for −3%  ▰▰▰▰▰▱▱▱▱                        │
 │                                            [ Place order · arrives Thu ▶ ] │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -168,7 +168,7 @@ Real page-turn animation (CSS 3D) with a paper sound. Pockets have a subtle slee
 The face reacts live as you adjust the ask (before you commit). The patience pips crack when spent. A deal ends with a **"DEAL!"** stamp and coin burst. A walk-away plays a door-slam puff. The **streak counter** is shown when active.
 
 ### 5.11 Buy Offer / Appraisal (modal)
-The seller's items are laid out on the counter mat. Lots show a **sample** plus a "+ 243 more cards" box. The **estimated value range bar** narrows as you appraise (Appraise button: costs game time, or instant with the TCG Expert). Offer via slider with fairness zones colored along it (lowball, fair, generous) and a mood face. The **Sorting minigame** follows for purchased lots (optional, or instant with an upgrade).
+The seller's items are laid out on the counter mat. Lots show a **sample** plus a "+ 243 more cards" box. The **estimated value range bar** narrows as you appraise (Appraise button: costs game time, or instant with the TCG Expert). Offer via slider with the five fairness zones from `02 §6.3` colored along it (Lowball · Low · Fair · Generous · Overpay) and a mood face. The **Sorting minigame** follows for purchased lots (optional, or instant with an upgrade).
 
 ### 5.12 Grading Lab (desk)
 A submission tray (drag cards in), **company cards** (logo, price, turnaround, prestige stars, max value), a service-tier toggle, fee total, and a **predicted grade distribution** mini-chart when tools or staff allow. A "Shipments" tab shows parcel trackers with progress along a route line. **Reveal ceremony** plays at the night phase.
@@ -189,7 +189,7 @@ Daily objectives as sticky notes (with a reroll), Theo's Lessons as index cards,
 ```
         ╔══════════════════════════╗
         ║     FOIL & FORTUNE       ║
-        ║  Tue · Spring 12 · Y1    ║
+        ║  Thu · Summer 4 · Y1     ║
         ║--------------------------║
         ║ Customers served     27  ║
         ║ Revenue         $684.20  ║
@@ -203,8 +203,9 @@ Daily objectives as sticky notes (with a reroll), Theo's Lessons as index cards,
         ║ ⭐ Best pull: Solaryx IR   ║
         ║ 🤝 Best deal: +$41 (Dex)  ║
         ║--------------------------║
-        ║ TOMORROW: 2 boxes arrive ║
-        ║ · League Night (Fri)     ║
+        ║ TOMORROW (Fri):          ║
+        ║ · 2 boxes arrive         ║
+        ║ · League Night 🏆         ║
         ╚══════════════════════════╝
                [ Next Day ▶ ]
 ```
@@ -265,7 +266,7 @@ An illustrated card (the same frame language as TCG cards), a title, 2–3 sente
 
 Mouse and keyboard, and touch, are first-class. Gamepad support is post-1.0.
 
-**Keyboard shortcuts:** Space pause · 1/2/3 speed · B build · I inventory · P prices · O orders · M market · C collection · G grading · Q/E rotate · Esc back · Ctrl+Z undo (build and prices).
+**Keyboard shortcuts:** Space pause · 1 = 1×, 2 = 2×, 3 = 4× speed · B build · I inventory · P prices · O orders · M market · C collection (binder) · G grading · S staff · U upgrades · J goals · Q/E rotate · Esc back · Ctrl+Z undo (build and prices).
 
 ---
 

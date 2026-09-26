@@ -83,7 +83,7 @@ Real shops sell Pokémon, Magic, Yu-Gi-Oh!, One Piece… Our fictional equivalen
 
 **Your answer:**
 
-### Q10 · Shop layout freedom (`docs/01 §7.5`)
+### Q9 · Shop layout freedom (`docs/01 §7.5`)
 - [ ] **A. ⭐ Free grid placement:** place, rotate and move shelves and decor anywhere (customers path around them)
 - [ ] B. Fixed slots: choose what goes into predefined spots (simpler, less creative)
 
@@ -93,7 +93,7 @@ Real shops sell Pokémon, Magic, Yu-Gi-Oh!, One Piece… Our fictional equivalen
 
 ## 🟡 Important (a default works)
 
-### Q9 · How much story?
+### Q10 · How much story?
 - [ ] **A. ⭐ Light story:** mentor Theo, 8 quirky regular customers with small storylines, rival shops, and Theo's mysterious vault as the long-term goal
 - [ ] B. Pure sandbox, no story
 - [ ] C. Heavier narrative with chapters
@@ -220,7 +220,7 @@ Which games should I study, and what exactly do you love about them (e.g., "the 
 
 ### Q30 · Free asset downloads (`docs/08 §2`)
 My cloud workspace currently **cannot reach** the big free asset sites (Kenney, Quaternius, Poly Haven, itch.io, OpenGameArt, FreePD…). Only npm and GitHub work.
-- [ ] **A. ⭐ Procedural-first** (I generate everything in code), **and** you allow these domains in the environment's network settings so I *can* add hand-picked CC0 extras (e.g., sound effects, music): `kenney.nl`, `quaternius.com`, `polyhaven.com`, `dl.polyhaven.org`, `ambientcg.com`, `opengameart.org`, `itch.io`, `freepd.com`, `freemusicarchive.org`
+- [ ] **A. ⭐ Procedural-first** (I generate everything in code), **and** you allow these domains in the environment's network settings (cloud environment menu in the session's title bar → Edit → Network access) so I *can* add hand-picked CC0 extras (e.g., sound effects, music): `kenney.nl`, `quaternius.com`, `poly.pizza`, `polyhaven.com`, `dl.polyhaven.org`, `ambientcg.com`, `opengameart.org`, `itch.io`, `*.itch.zone`, `freepd.com`, `freemusicarchive.org`, `freesound.org`
 - [ ] B. Procedural only (no downloads needed at all)
 - [ ] C. You'll download packs yourself and upload them to the repo
 

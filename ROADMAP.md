@@ -8,23 +8,24 @@
 |-------|------|---------|----------|--------|
 | 0 | Planning | 0.0.1 | Full design, tech and content plan | ✅ Done |
 | 1 | Foundation & Art Spike | 0.1.0 | Project skeleton, core engine, **visual prototypes to choose the art direction** | ⏳ Next |
-| 2 | Vertical Slice: "One Day at the Nook" | 0.2.0 | The core loop in miniature: stock, sell, rip packs | |
-| 3 | The Merchant | 0.3.0 | Suppliers, haggling, buying from customers, reputation, market v1, tutorial | |
+| 2 | Vertical Slice: "One Day at the Nook" | 0.2.0 | The core loop in miniature: stock, sell, rip packs, reorder | |
+| 3 | The Merchant | 0.3.0 | Suppliers, haggling, buying from customers, reputation, market v1, Build Mode v1, tutorial | |
 | 4 | Collector & Grader | 0.4.0 | Card conditions, grading, binder, fakes, achievements | |
-| 5 | Living Market & Events | 0.5.0 | Full market sim, release calendar, 1st Editions, events, tournaments, FoilMarket | |
-| 6 | Build, Grow & First Staff | 0.6.0 | Build mode, expansions, upgrades, Cashier and Stocker → **MVP / Early Access** | |
-| 7 | Manga & Accessories | 0.7.0 | Manga category, accessories, mystery box builder | |
+| 5 | Living Market & Events | 0.5.0 | Full market sim, release calendar, 1st Editions, events, tournaments, FoilMarket, Set Forge v1 | |
+| 6 | Build, Grow & First Staff | 0.6.0 | Build Mode v2, expansions, upgrades, Cashier and Stocker → **MVP / Early Access** | |
+| 7 | Manga & Accessories | 0.7.0 | Manga category, accessories, Mystery Box Builder | |
 | 8 | Experts & Automation | 0.8.0 | Expert staff, policies, premium grading, imports | |
 | 9 | Empire | 0.9.0 | Tiers 4–5, auctions, card shows, streaming, branches, rivals, **Theo's Vault** | |
-| 10 | Content, Polish & Release | **1.0.0** | Set Forge, localization, audio, accessibility, balance → **Launch** 🚀 | |
+| 10 | Content, Polish & Release | **1.0.0** | Set Forge v2, localization, audio, accessibility, balance → **Launch** 🚀 | |
 
-> Features unlock in-game by level (`docs/02 §9`). Until a feature is implemented, its unlock entry is gated behind a feature flag, so every build stays coherent.
+> **Unlocks vs. phases:** features unlock in-game by level (`docs/02 §9`). Until a feature is built, its unlock is hidden behind a feature flag and its level grants a placeholder perk, so every build stays coherent and no level is empty.
+> **Content per phase** (full table in `docs/03 §4`): P2 *Emberdawn* subset · P3 *Emberdawn*, *Origins*, *Moonlit Masquerade* · P5 *Tidebreak*, *Sparkit & Friends*, *Sunken Kingdom* + Set Forge v1 fallback · P7 *Harvest of Spirits*, *Wildwood* · P8 *O25*, *Frostbound Kingdom*, *Ancient Amber* · P9 *Shadow Syndicate*, *Crystal Skies*, *Echoes of Legend* · P10 *Neon Circuit*, *Starfall Odyssey* + Set Forge v2.
 
 ---
 
 ## Phase 0 · Planning ✅
 - [x] Game Design Document (`docs/01_GAME_DESIGN.md`)
-- [x] Economy, balancing and progression (`docs/02_ECONOMY_BALANCING.md`)
+- [x] Economy, balancing and progression (`docs/02_ECONOMY_BALANCING.md`), with grading and reputation calibrated by simulation
 - [x] Content bible: TCG, sets, creatures, manga, characters, events (`docs/03_CONTENT_BIBLE.md`)
 - [x] Art direction and audio (`docs/04_ART_DIRECTION.md`)
 - [x] UI/UX design with wireframes (`docs/05_UI_UX.md`)
@@ -36,11 +37,11 @@
 ## Phase 1 · Foundation & Art Spike (v0.1.0)
 **Goal:** a solid, tested skeleton deployed on Vercel, plus visual prototypes so you can **see and choose** the art direction before we build on it.
 - [ ] Scaffold: Vite 8, React 19, TypeScript 7, Tailwind 4, Biome, Vitest, Playwright, path aliases, npm scripts, `vercel.json`, CI workflow
-- [ ] `core/`: seeded RNG streams, money (cents) and formatting, calendar/time utilities, IDs, event bus
+- [ ] `core/`: seeded RNG streams, money (cents) and formatting, calendar utilities (Day 1 = Spring 8 = Monday), IDs, event bus
 - [ ] `content/`: Zod schemas (brand, species, set, card, pack, product), registry, `content:validate`, balance config skeleton
 - [ ] `sim/`: GameState v1, `createNewGame`, `dispatch`, `tick`, phase transitions, first commands, with unit tests
 - [ ] `state/`: Zustand bridge, GameLoop, presentation bus
-- [ ] `save/`: IndexedDB slots, autosave ring, export/import, migration framework with a fixture test
+- [ ] `save/`: IndexedDB slots, autosave ring and weekly autosave, export/import, migration framework with a fixture test
 - [ ] `i18n/` setup (English) · fonts · UI tokens · first UI kit components · `/debug/ui` gallery · debug panel
 - [ ] **Art Spike A:** 3D diorama corner (shell, shelf, counter, day/evening lighting, one walking Peg-folk with expressions)
 - [ ] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art`
@@ -49,12 +50,14 @@
 - **Done when:** `npm run check` is green, the preview URL works on desktop and phone, and the art direction is chosen.
 
 ## Phase 2 · Vertical Slice: "One Day at the Nook" (v0.2.0)
-**Goal:** 15 minutes of genuine fun: stock the shelf, serve kids, rip packs, watch money grow.
+**Goal:** 15 minutes of genuine fun: stock the shelf, serve kids, rip packs, reorder, watch money grow.
 - [ ] Content: *Emberdawn* subset (~40 cards, genomes, rendered art), Booster Pack, 3-Pack Blister, Starter Deck, Booster Box
+- [ ] Starting inventory per `docs/02 §2`, including Theo's Booster Box (the first "open or sell?" choice)
 - [ ] Tier-1 shop scene (fixed starter layout): wall shelves, display case, register, door and bell
 - [ ] Day cycle: prep → open → night · clock · pause and speed · **Day Summary receipt**
 - [ ] Customers: Kid and Casual archetypes. Arrive, browse, pick (shelves visibly empty), queue, **manual checkout**, bubbles and reactions, satisfaction
 - [ ] Stocking via Fixture Popover, Restock All, Closet storage · per-SKU pricing with market reference and price reaction bubbles
+- [ ] **Basic ordering:** a simple Crate app with Budget Box Co. only (next-morning delivery), so stock never runs dry
 - [ ] **Pack Opening** with full juice (tear, reveal, rarity hints, summary) and **Quick Rip** for boxes
 - [ ] Inventory sheet (sealed, singles) · basic Binder
 - [ ] Cash, XP, levels 1–5 · toasts · level-up celebration
@@ -64,68 +67,71 @@
 
 ## Phase 3 · The Merchant (v0.3.0)
 **Goal:** the complete core loop, Buy → Stock/Open → Sell → Profit → Upgrade, for the first ~2 hours.
-- [ ] **Crate app:** Budget Box Co. and Harbor Hobby. Orders, delivery, minimums, volume discounts, limited stock, insurance, damaged shipments
-- [ ] Display-case singles, "ask to see", **Negotiation** (haggling) with tells and streaks
-- [ ] **Buy offers:** customers selling singles, binders and lots. Appraisal, offer slider, fairness and hidden reputation effects, **Sorting minigame**
-- [ ] Archetypes: Competitive Player, Card Hunter (simple requests), Attic Finder (Grandma Rosa intro)
-- [ ] **Reputation** with sub-scores and a **ShopStars** review feed
+- [ ] **Crate app, full version:** Budget Box Co. and Harbor Hobby. Orders, delivery, minimums, volume discounts, limited stock, insurance, damaged shipments · **third-party mystery boxes**
+- [ ] **Build Mode v1:** buy fixtures from a catalog, place, move and rotate them on the grid, with validity and path checks
+- [ ] **Upgrades board v1:** Card Reader Terminal, POS System (pricing rules)
+- [ ] Display-case singles, "ask to see", **Negotiation** (haggling) with tells and the Happy Deal streak
+- [ ] **Buy offers:** customers selling singles, binders and lots. Appraisal, offer slider with fairness zones, hidden reputation effects, **Sorting minigame**
+- [ ] Archetypes: Competitive Player, Card Hunter (buys if you have the card), Attic Finder (Grandma Rosa intro)
+- [ ] **Reputation v2** with sub-scores and a **ShopStars** review feed
 - [ ] **Market v1:** daily card and sealed prices, **FoilTrack** app (watchlist, detail, sparkline)
-- [ ] Content: full *Emberdawn* (130) and *Origins* (72, vintage) with art
+- [ ] Content: full *Emberdawn* (130), *Origins* (72, vintage) and *Moonlit Masquerade* (125) with art
 - [ ] **Theo's Lessons** tutorial (Days 1–7) · Daily Objectives
 - [ ] Rent, bank loans, difficulty modes (Cozy, Standard, Tycoon)
-- **Done when:** the balance sim meets the Day 1–14 KPIs (`docs/02 §18`) and the first two hours feel rewarding.
+- **Done when:** the balance sim meets the Day 1–14 KPIs that apply at this phase (`docs/02 §18`: revenue, cash, margins, Harbor day, Tier-2 affordability), and the first two hours feel rewarding.
 
 ## Phase 4 · Collector & Grader (v0.4.0)
-- [ ] Hidden sub-scores and 5 conditions from all sources · **Card Inspect** with Card Lab tools (loupe, light box, centering)
-- [ ] **Grading:** Grading Desk, Cardboard Certs and Summit, service tiers, shipment tracker, **reveal ceremony**, slabs, pop reports, crack and resubmit
+- [ ] Hidden sub-scores and 5 conditions from all sources · **Card Inspect** with Card Lab tools (Loupe, Light Box, Centering Tool, bought on the Upgrades board)
+- [ ] **Grading:** Grading Desk (placed via Build Mode), Cardboard Certs and Summit, service tiers, shipment tracker, **reveal ceremony**, slabs, pop reports, crack and resubmit
 - [ ] Graded sales · Investor and Hardcore Collector archetypes
 - [ ] Fakes and detection · Shady Dealer (Mr. Grimsby)
 - [ ] Binder complete (set and master set, silhouettes, covers) · Dex · Trophy Room
 - [ ] Achievements framework and the first 30 achievements
-- **Done when:** grading statistical tests pass, and grading feels like a skill because tools improve predictions.
+- **Done when:** the grading statistical tests (`docs/02 §8`) pass, the "first grading submission ≈ day 10" KPI holds, and grading feels like a skill because tools improve predictions.
 
 ## Phase 5 · Living Market & Events (v0.5.0)
 - [ ] Full market model (species, set and meta factors, shocks, indices, *Glimmer Gazette* news) · sealed appreciation · print lifecycle (announce → pre-order → release → last call → OOP) · **1st Edition waves**
-- [ ] Seasons and release calendar · **Sparkit & Friends** special set · release-day rush · prerelease weekends
-- [ ] **Starforge Official Distribution:** pre-orders and allocations
-- [ ] Random **event cards** system with the first ~25 events
+- [ ] Seasons and release calendar · release-day rush · prerelease weekends · **Set Forge v1** as the fallback for any unauthored release
+- [ ] Content: *Tidebreak* (goes OOP on Day 8), **Sparkit & Friends** (Day 8) and *Sunken Kingdom* (Day 22, the first pre-order release)
+- [ ] **Starforge Official Distribution:** pre-orders, allocations, prerelease kits, League Promo Kits
+- [ ] Random **event cards** system with the first ~25 events · Liquidator and Estate Sale events
+- [ ] Influencer archetype (SashaRips) and hype events
 - [ ] Play tables · **League Night** and tournaments (simulated brackets that shift the meta)
-- [ ] **FoilMarket** (buy and sell online) · **Special Orders**
-- **Done when:** speculation works (buying sealed and holding through OOP can pay off), and 30 in-game days feel varied.
+- [ ] **Website** upgrade → **FoilMarket** (buy and sell online) · **Special Orders**
+- **Done when:** speculation works (buying *Tidebreak* sealed and holding through OOP can pay off), a *Sunken Kingdom* pre-order works end to end, and 30 in-game days feel varied.
 
 ## Phase 6 · Build, Grow & First Staff (v0.6.0) → 🎉 MVP / Early Access
-- [ ] **Build Mode:** grid placement, rotate, move, sell, path validation, appeal meter, undo
-- [ ] Full launch fixture catalog · decor catalogs I and II
-- [ ] **Shop Tiers 2–3** with the expansion celebration · storage upgrades
-- [ ] **Upgrades board:** POS, Card Reader, Loyalty Cards, marketing
+- [ ] **Build Mode v2:** sell, undo/redo, multi-select, appeal meter polish, full launch fixture catalog, decor catalogs I and II
+- [ ] **Shop Tiers 2–3** with the expansion celebration · storage upgrades (Back Room, Stockroom)
+- [ ] **Upgrades board v2:** Loyalty Cards, marketing (flyers, social ads) · Security Tags and shoplifting (Tycoon only)
 - [ ] **Staff v1:** hiring, **Cashier** and **Stocker**, salaries, morale, schedules
-- [ ] Customer pathfinding on custom layouts
+- [ ] Tourist archetype (Tier 2+) · customer pathfinding on custom layouts
 - [ ] Settings complete (graphics presets, audio, accessibility v1)
 - **Done when:** there are 5–8 hours of engaging play, performance budgets are met, and all implemented screens have Early-Access polish.
 
 ## Phase 7 · Manga & Accessories (v0.7.0)
 - [ ] **Manga:** 8 series, volumes and generated covers, Kaze Manga Direct, New Manga Day, complete runs, out-of-print volumes, anime events, Manga Fans, **Manga Library**
 - [ ] **Accessories** category and pegboard
-- [ ] **Mystery Box Builder**
-- [ ] Content: *Tidebreak* and *Moonlit Masquerade*
+- [ ] **Mystery Box Builder** (player-made boxes)
+- [ ] Content: *Harvest of Spirits* and *Wildwood*
 
 ## Phase 8 · Experts & Automation (v0.8.0)
 - [ ] Staff: **TCG Expert**, **Event Host**, **Grading Specialist**. Traits, training, **policies** (auto-buy, auto-haggle, restock rules)
 - [ ] POS Pro (reorder points, auto-order, forecasts) · Self-Checkout Kiosk
 - [ ] **Apex Grading** · **Sakura Imports** (JP-style sets)
-- [ ] Content: *Sunken Kingdom* and *Harvest of Spirits*
+- [ ] Content: *Origins 25th Anniversary*, *Frostbound Kingdom* and *Ancient Amber*
 
 ## Phase 9 · Empire (v0.9.0)
-- [ ] **Shop Tiers 4–5** (mezzanine and upper floor) · Warehouse and Climate Vault
+- [ ] **Shop Tiers 4–5** (mezzanine and upper floor) · Warehouse Unit and Climate Vault
 - [ ] **Blackline Grading** (Black Label)
 - [ ] **Collectors Con** card shows · **Gavel & Glimmer Auctions** · **Streaming Studio** and Streamer
 - [ ] **Rivals and Town Rankings** · **Branch stores**, City Map, Store Manager
 - [ ] **Theo's Vault** legacy goals and finale · Hall of Fame · Grail List
 - [ ] 2nd TCG brand: **Arcane Dominion** (Q8)
-- [ ] Content: *Origins 25th Anniversary* and *Frostbound Kingdom*
+- [ ] Content: *Shadow Syndicate*, *Crystal Skies* and *Echoes of Legend* (the remaining vintage and classic grails)
 
 ## Phase 10 · Content, Polish & Release (v1.0.0) 🚀
-- [ ] **Set Forge** (procedural future sets) · remaining curated sets on schedule
+- [ ] **Set Forge v2** (polished procedural future sets) · content: *Neon Circuit* and *Starfall Odyssey* (all 16 curated sets complete)
 - [ ] ~100 achievements · ~40 events · all regular storylines
 - [ ] German localization (Q4)
 - [ ] Audio complete (music set, ~60 SFX, adaptive layers)

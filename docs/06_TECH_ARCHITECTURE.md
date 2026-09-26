@@ -29,6 +29,7 @@
 | Styling | **Tailwind CSS** + CSS custom properties (design tokens) + dedicated effect CSS | 4.3 | Fast iteration and consistent tokens. Foil effects live in hand-written CSS layers |
 | UI animation | **Motion** (`motion/react`) | 13.x | Springs, layout animations, gestures, exit animations |
 | Audio | **Howler.js** (music, sampled SFX) + Web Audio (ZzFX SFX, blip voices) | 2.2 · ZzFX 1.3 | Robust cross-browser audio with tiny generated SFX |
+| Procedural music *(optional)* | **Tone.js** | 15.x | Fallback generative lo-fi if CC0 tracks aren't available (Q15, Q30) |
 | Validation | **Zod** | 4.x | Content schemas, save validation, settings |
 | Persistence | **idb-keyval** + **fflate** | 6.x · 0.8 | Tiny IndexedDB wrapper plus compression for export files |
 | i18n | **i18next** + **react-i18next** | 26.x · 17.x | Standard and typed, with plurals and interpolation |
@@ -95,7 +96,7 @@
 ├─ CLAUDE.md · README.md · ROADMAP.md · CHANGELOG.md · USER_QUESTIONS.md · CREDITS.md
 ├─ docs/                        # design and technical docs (this folder)
 ├─ public/                      # static files served as-is
-│  ├─ art/<set>/                # pre-rendered card art (WebP), versioned folders
+│  ├─ art/v<N>/<set>/           # pre-rendered card art (WebP), versioned folders
 │  ├─ audio/                    # music (ogg/m4a) and sampled SFX sprites
 │  └─ icons/ · manifest assets
 ├─ scripts/                     # Node/tsx tools (never shipped)
@@ -161,12 +162,12 @@ advancePhase(draft: GameState, ctx: SimContext): void                     // pre
 // ctx = { content: ContentRegistry, balance: BalanceConfig, emit(e: DomainEvent): void }
 ```
 - **Commands** are serializable discriminated unions (`{ type: 'pricing/setPrice', productId, cents }`). Handlers **validate first** and return typed errors (`{ ok: false, code: 'NOT_ENOUGH_CASH' }`) that the UI turns into friendly messages. Bots in the balance sim and tests dispatch the **same** commands the UI does.
-- **Domain events** (`sale/completed`, `pack/opened`, `card/pulled`, `customer/left`, `level/up`, `grading/returned`…) are emitted during dispatch and tick, then delivered to presentation (sounds, VFX, toasts) and to in-sim listeners (achievements, goals, stats).
+- **Domain events** (`sale/completed`, `product/opened`, `card/pulled`, `customer/left`, `level/up`, `grading/returned`…; full list in `07 §5`) are emitted during dispatch and tick, then delivered to presentation (sounds, VFX, toasts) and to in-sim listeners (achievements, goals, stats).
 
 ### 5.3 Tick order (each game-minute while OPEN)
 `clock → scheduledEvents → customerSpawn → customerAgents (browse/decide/queue) → staffAutomation → checkout → vending → reputationSignals`
 **Night pipeline (on close):** ledger close · wages · grading progress · rent (Sunday) · review resolution · morale · objectives reset · autosave point.
-**Dawn pipeline (prep start):** market daily update · world calendar (releases, print status, manga releases) · supplier restock · deliveries · event roll · newspaper · candidate refresh (Mondays) · autosave.
+**Dawn pipeline (prep start):** market daily update · world calendar (releases, print status, manga releases) · supplier restock · deliveries · event roll · newspaper · candidate refresh (Mondays) · autosave (ring) · weekly autosave (Mondays).
 
 ### 5.4 Determinism
 - **RNG:** a small seeded PRNG (sfc32) with **independent streams** per domain (`customers`, `market`, `packs`, `grading`, `events`, `staff`, `misc`), stored in state. Opening a pack never shifts tomorrow's market.
@@ -219,7 +220,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 ## 8. Cards & 2D (`src/cards`)
 - **CardView** is layered DOM: `frame (SVG) → art (<img>/<canvas>) → text (HTML) → foil layers (CSS) → stamps and overlays`. Props: `cardId`, `print` (finish, stamps, misprint), `condition?`, `slab?`, `size`, `interactive`.
 - **Foil engine:** CSS custom properties (`--mx`, `--my`, `--angle`, `--foil-intensity`) are set from pointer or tilt on a single rAF-throttled handler. Each foil type is a CSS class stacking gradients, masks and blend modes (`foil.css`). **Our own implementation** (see the GPL note in `CLAUDE.md`).
-- **Art resolution:** `useCardArt(cardId, variant)` resolves in order: **user override** (`/art/overrides/…`) → **pre-rendered** (`/art/<set>/<nnn>.webp`) → **runtime render** (art engine, cached) → element-tinted **placeholder**. Suspense-friendly, with a shimmer placeholder while loading.
+- **Art resolution:** `useCardArt(cardId, variant)` resolves in order: **user override** (`/art/overrides/…`) → **pre-rendered** (`/art/v<N>/<set>/<nnn>.webp`) → **runtime render** (art engine, cached) → element-tinted **placeholder**. Suspense-friendly, with a shimmer placeholder while loading.
 - **Performance:** binder pages render 9 cards with foil on hover only. Inventory uses `CardThumb` (no foil, small art). A full CardView is used only for focused cards.
 
 ---
@@ -228,7 +229,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 - **Genome:** a data description of a species (body plan, parts, palette, patterns, features, expression set). Evolutions reference a parent genome plus "growth" modifiers.
 - **Style A, SDF renderer:** WebGL2 full-screen shader. The genome compiles to a uniform buffer and part list (smooth-union SDF primitives). Soft shadows, AO, rim light and glossy eyes. Backgrounds are procedural biomes. It renders into an offscreen canvas and returns an `ImageBitmap` or `Blob`.
 - **Style B, SVG composer:** part library plus palette mapping, producing an optimized SVG string.
-- **Build-time render:** `npm run art:render -- --set emberdawn` drives the renderer in headless Chromium (Playwright), encodes WebP with `sharp`, and writes `public/art/<set>/`. Output is committed with a manifest (`genomeVersion`, seed, hash) so builds stay fast and reproducible.
+- **Build-time render:** `npm run art:render -- --set emberdawn` drives the renderer in headless Chromium (Playwright), encodes WebP with `sharp`, and writes `public/art/v<N>/<set>/`. Output is committed with a manifest (`genomeVersion`, seed, hash) so builds stay fast and reproducible.
 - **Runtime render** (Set Forge sets): the same code runs in the browser and caches results in IndexedDB (`art-cache` store, key = hash of genome version + card + variant).
 
 ---
@@ -243,7 +244,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 
 ## 11. Persistence (`src/save`)
 - **SaveFile:** `{ format: 'ff-save', saveVersion, gameVersion, savedAt, slot, summary: { shopName, day, level, cashCents }, state: GameState }`.
-- **Storage:** IndexedDB (`idb-keyval` custom store `foil-and-fortune/saves`). Slots: 3 manual plus a ring of 3 **autosaves**. The app calls `navigator.storage.persist()` to reduce eviction.
+- **Storage:** IndexedDB (`idb-keyval` custom store `foil-and-fortune/saves`). Slots: 3 manual, a ring of 3 **autosaves** (every prep start), and 1 **weekly autosave** (`auto-weekly`, every Monday prep, which Tycoon bankruptcy reloads). The app calls `navigator.storage.persist()` to reduce eviction.
 - **Migrations:** `save/migrations/NNN-description.ts`, applied sequentially from the file's `saveVersion` to the current one. **Every** schema change bumps `saveVersion` and ships a migration plus a fixture test (`tests/fixtures/saves/`).
 - **Export/Import:** JSON → deflate (`fflate`) → base64 in a `.ffsave` text file with a header line. Import runs size limits, Zod validation, migrations and then load. There's an in-game weekly reminder to export a backup, since browser storage can be cleared.
 - **Settings** live in `localStorage` (`ff.settings`), validated with defaults and separate from saves.
@@ -332,7 +333,7 @@ A **dev panel** (leva): time warp (jump to hour or day), add cash, XP or reputat
 | **A TCG set** | 1) `content/tcg/gk/sets/<slug>.ts` with `defineSet({ id, code, name, releaseDay, era, packConfig, roster/cards, products })` · 2) species genomes if new (`content/tcg/gk/species/`) · 3) `npm run art:render -- --set <slug>` · 4) i18n names if localized · 5) `npm run content:validate` (EV, IDs) · 6) add to `03 §4` timeline and the CHANGELOG |
 | **A product type** | Add the kind to `content/schema/product.ts`, define the SKU in `products.ts` with contents and SU, add opening behavior in `sim/generators/packOpening.ts` if new, then add art or 3D prop mapping |
 | **A customer archetype** | `content/customers/archetypes.ts` entry (budget, knowledge, preferences, haggle mix, rep gate), dialogue lines in `content/customers/dialogue/<id>.ts`, visual cues in `scene/agents/looks.ts`, then balance weights in `balance/customers.ts` |
-| **An event** | `content/events/<id>.ts` with `defineEvent({ id, weight, conditions, cooldown, choices: [{ label, effects }] })`. Effects use the shared **effect DSL** (`addCash`, `modifyTraffic`, `marketShock`, `spawnCustomer`, `grantItem`…). Add i18n strings and a test for its effects |
+| **An event** | `content/events/<id>.ts` with `defineEvent({ id, category, weight, conditions, cooldownDays, urgent, choices: [{ labelKey, effects }] })`. Effects use the shared **effect DSL** from `07 §2.4` (`cash`, `traffic`, `marketShock`, `reputation`, `spawnCustomer`, `grantProduct`, `supplierPrice`, `closeEarly`, `flag`). Add i18n strings and a test for its effects |
 | **A fixture or decor** | `content/shop/fixtures.ts` (footprint, capacity, categories, appeal, cost, unlock) plus a procedural model component in `scene/fixtures/` (or a CC0 model mapping) |
 | **An upgrade** | `content/shop/upgrades.ts` plus the effect hook in the relevant system (checked via `hasUpgrade(state, id)`) |
 | **An achievement** | `content/achievements/*.ts` with `defineAchievement({ id, category, condition: { stat, gte } \| custom, reward })`. Prefer stat-based conditions (auto-tracked) |

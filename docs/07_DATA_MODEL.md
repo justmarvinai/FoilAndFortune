@@ -2,7 +2,7 @@
 
 > TypeScript **shapes** for content definitions and the save-able `GameState`. This is a spec: the implementation lives in `src/content/schema/*` (Zod schemas, with types inferred from them) and `src/sim/state/*`. Names here are canonical. If the code diverges, update this doc in the same commit.
 
-**Conventions:** money is `Cents` (integer). Days are absolute `Day` numbers (Day 1 = Spring 8, Year 1; negative days are before the game starts). All state is plain JSON-compatible: no `Map`, `Set`, `Date`, classes or `undefined`-dependent semantics. `Record` keys are string IDs.
+**Conventions:** money is `Cents` (integer). Days are absolute `Day` numbers: Day 1 = Spring 8, Year 1, a **Monday**. Days ≤ 0 are before the game starts, and `weekday = (day − 1) mod 7` (0 = Monday). All state is plain JSON-compatible: no `Map`, `Set`, `Date`, classes or `undefined`-dependent semantics. `Record` keys are string IDs.
 
 ---
 
@@ -116,8 +116,10 @@ interface PackConfigDef {
 }
 
 type ProductKind = 'booster' | 'blister' | 'bundle' | 'box' | 'eliteBox' | 'collection' | 'tin'
-  | 'starterDeck' | 'prereleaseKit' | 'posterCollection' | 'mysteryBox' | 'accessory'
+  | 'starterDeck' | 'prereleaseKit' | 'posterCollection' | 'promoKit' | 'mysteryBox' | 'accessory'
   | 'mangaVolume' | 'mangaDeluxe' | 'mangaBoxSet' | 'importBooster' | 'importBox';
+// promoKit = event supply (League Promo Kit): consumed by hosted events, never sold to customers.
+// mysteryBox = third-party boxes (recipe-based contents) and player-built boxes (explicit contents).
 
 interface ProductDef {
   id: ProductId; kind: ProductKind; name: string;
@@ -209,7 +211,9 @@ interface QuestDef { id: QuestId; giver: NpcId | 'theo'; steps: QuestStep[]; rew
 ```ts
 interface MangaSeriesDef { id: SeriesId; title: string; publisher: string; genre: string;
   status: 'ongoing' | 'completed'; volumesAtStart: number; cadenceDays?: number;
-  popularity: { base: number; profile: 'megaHit' | 'rising' | 'cultClassic' | 'evergreen' | 'fading' | 'seasonal' };
+  popularity: { base: number;
+    profile: 'megaHit' | 'popular' | 'rising' | 'cultClassic' | 'evergreen' | 'seasonal' | 'fading' };
+  // cadenceDays must be a multiple of 7 (28, 42, 49 or 56) so releases stay on Tuesdays
   oopEarlyVolumes?: number[]; cover: CoverTemplate }
 ```
 
@@ -243,7 +247,8 @@ interface GameState {
   progression: { level: number; xp: number; unlocked: Record<UnlockId, Day>;
                  flags: Record<string, boolean | number>; tutorial: TutorialState };
   reputation: { sub: Record<RepSub, number>; history: number[]; reviews: Review[]; risks: ReviewRisk[] };
-  shop: { tier: 1|2|3|4|5; layout: LayoutState; storageTier: string;
+  shop: { tier: 1|2|3|4|5; layout: LayoutState;
+          storage: { onsite: 'closet' | 'backRoom' | 'stockroom'; warehouse: boolean; climateVault: boolean };
           upgrades: Record<UpgradeId, Day>; appealCache: number };
   inventory: InventoryState;
   pricing: { prices: Record<ProductId, Cents>; rules: PricingRule[] };
@@ -318,7 +323,10 @@ interface PlacedFixture { uid: string; fixtureId: FixtureId; x: number; z: numbe
 
 interface CustomerAgent { uid: number; archetypeId: ArchetypeId; npcId?: NpcId; name: string;
   looks: AvatarSpec; voice: VoiceProfile;
-  budgetCents: Cents; knowledge: number; patience: number; mood: -2 | -1 | 0 | 1 | 2;
+  budgetCents: Cents; knowledge: number;
+  patienceMinutes: number;          // remaining waiting tolerance (queue, unanswered bubbles)
+  hagglePatience: number;           // remaining counter rounds (1–5, by haggle style)
+  mood: -2 | -1 | 0 | 1 | 2;
   haggleStyle: 'pushover' | 'fair' | 'tough' | 'chaotic';
   intent: 'buy' | 'sell' | 'request' | 'event';
   plan: PlanStep[]; step: number; stepEndsAt: GameMinute;
@@ -397,7 +405,7 @@ interface SaveFile {
   saveVersion: number;              // bump on ANY GameState shape change (+ migration)
   gameVersion: string;              // package.json version
   savedAt: string;                  // ISO
-  slot: 'slot-1' | 'slot-2' | 'slot-3' | 'auto-1' | 'auto-2' | 'auto-3';
+  slot: 'slot-1' | 'slot-2' | 'slot-3' | 'auto-1' | 'auto-2' | 'auto-3' | 'auto-weekly';
   summary: { shopName: string; day: Day; level: number; cashCents: Cents; playTimeMs: number };
   state: GameState;
 }

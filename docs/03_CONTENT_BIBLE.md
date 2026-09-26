@@ -52,10 +52,11 @@ A sunny coastal city with an old harbor, a university, and a hobby scene that ha
 > *"Find your spark."* Glimmerkin is Brightbay's (and the world's) most beloved creature-collecting trading card game, published by **Starforge Games**. It's in its **26th year** when the game begins.
 
 ### 3.1 Brand history
-- **Year 1 (the Vintage era):** *Origins* launches with 33 creatures and becomes a phenomenon. The first four sets had **1st Edition** and **Unlimited** print runs.
-- **Years 5–20 (Classic era):** Crystal types, legendary "Gold Star" cards, and the first secret rares. 1st Edition printing is discontinued.
-- **Years 21–25 (Modern era):** full-art and Illustration Rares, **Nova** cards, and quarterly releases.
-- **Year 26 (game start):** Starforge **revives 1st Edition** for its anniversary year, starting with *Emberdawn*. Every new set now has a limited 1st Edition wave, which feeds the speculation game.
+Brand years are written **"GK Year n"** to keep them apart from the game calendar. **GK Year 26 = game Year 1.** The game calendar also has a Year 0 (the year before the game starts), so GK Year 1 = game Year −24.
+- **GK Years 1–4 (Vintage era):** *Origins* launches with 33 creatures and becomes a phenomenon. The first four sets had **1st Edition** and **Unlimited** print runs.
+- **GK Years 5–20 (Classic era):** Crystal types, legendary "Gold Star" cards, and the first secret rares. 1st Edition printing is discontinued.
+- **GK Years 21–25 (Modern era):** full-art and Illustration Rares, **Nova** cards, and quarterly releases.
+- **GK Year 26 (game Year 1):** Starforge **revives 1st Edition** for its anniversary year, starting with *Emberdawn*. Every new set now has a limited 1st Edition wave, which feeds the speculation game.
 
 ### 3.2 Elements (9)
 
@@ -94,7 +95,7 @@ A sunny coastal city with an old harbor, a university, and a hobby scene that ha
 | **Mythic Rare** | ♛ crown | Gold crown frame, "cosmos" foil, unique animation | Rare slot (≈ 0.3%) |
 | Promo | ★ PROMO | Black-star promo frame, sometimes stamped | Products and events |
 
-**Finishes:** Normal · Reverse Holo (foil everywhere *except* the art; C/U/R only) · Holo (art window) · Full-Art Textured · Gold · Rainbow · Cosmos (promos and Mythics) · Etched.
+**Finishes:** Normal · Reverse Holo (foil everywhere *except* the art; C/U/R only) · Holo (art window) · Full-Art Textured · Gold · Rainbow · Cosmos (promos and Mythics) · Etched · Crystal (*Crystal Skies* only).
 **Stamps:** 1st Edition · Prerelease · League · Staff · Anniversary.
 **Misprints:** Miscut · Ink Error · Missing Foil · Crimped · Wrong Back (see `02 §11`).
 
@@ -106,29 +107,30 @@ Booster Pack · 3-Pack Blister (+promo) · Booster Bundle (6) · **Booster Box /
 
 ## 4. Set Timeline
 
-Game time **Day 1 = Spring 8, Year 1** (Glimmerkin's 26th year). *Emberdawn* released one week earlier (Spring 1). The calendar rule is **main sets on day 1 of each season** and **special sets on day 15 of selected seasons**.
+Game time **Day 1 = Spring 8, Year 1** (a Monday; GK Year 26). *Emberdawn* released one week earlier (Spring 1 = Day −6). The calendar rule is **main sets on day 1 of each season** and **special sets on day 15 of selected seasons**. Every set enters **last call at 56 days** and goes **out of print at 70 days** after release (`02 §1`).
 
-| # | Set | Code | Era | Release | Theme | Chase / signature | Cards | Status at start |
-|---|-----|------|-----|---------|-------|-------------------|-------|-----------------|
-| 1 | **Origins** | ORG | Vintage | Year −25 | The original 33 creatures | **Infernox** Holo (1st Ed.) | 72 | Vintage (second-hand only) |
-| 2 | Wildwood | WLD | Vintage | Year −25 | Deep forests, Neutral critters | Mossquatch Holo | 64 | Vintage |
-| 3 | Ancient Amber | AMB | Vintage | Year −24 | Fossils revived from amber | Rexolith Holo | 62 | Vintage |
-| 4 | Shadow Syndicate | SHS | Vintage | Year −24 | Villain team *Umbra Syndicate* and dark variants | Syndicate's Infernox Holo | 82 | Vintage |
-| 5 | Crystal Skies | CRS | Classic | Year −18 | Crystal-type variants | Crystalynx (Crystal) | 150 | Vintage |
-| 6 | Echoes of Legend | EOL | Classic | Year −15 | Legendary trio debut, "Gold Star" legends | Aurorael Gold Star | 110 | Vintage |
-| 7 | Tidebreak | TDB | Modern | Autumn 1, Y0 | Oceans and storms | Maelstryx Mythic | 120 | **Last call** (goes OOP early game) |
-| 8 | Moonlit Masquerade | MNM | Modern | Winter 1, Y0 | A masked ball of Shade and Mystic creatures | Phantomane Nova (IR) | 125 | In print |
-| 9 | **Emberdawn** | EMD | Modern | Spring 1, Y1 | Volcanic island at sunrise | **Solaryx** Mythic | 130 | **Current set** (1st Ed. sold out) |
-| S1 | **Sparkit & Friends** | SPF | Special | Spring 15, Y1 (**Day 8**) | Mascot celebration, slice-of-life art | Sparkit Nova Crown | 90 | First release you experience |
-| 10 | Sunken Kingdom | SNK | Future | Summer 1, Y1 (Day 22) | Underwater ruins, *Relic* items | Maelstryx Nova | ~130 | Future |
-| 11 | Harvest of Spirits | HOS | Future | Autumn 1, Y1 (Day 50) | Lantern festival spirits | Phantomane Legend art | ~130 | Future |
-| S2 | Origins 25th Anniversary | O25 | Special | Autumn 15, Y1 (Day 64) | Reprints of Origins classics with new frames (**vintage reprint shock**) | Anniversary Infernox | 60 | Future |
-| 12 | Frostbound Kingdom | FBK | Future | Winter 1, Y1 (Day 78) | Ice castle, crowned creatures | Glacierra Mythic | ~130 | Future |
-| 13 | Neon Circuit | NEC | Future | Spring 1, Y2 (Day 106) | Cyber city, Volt and Mystic | Thundervixen Nova | ~130 | Future |
-| 14 | Starfall Odyssey | SFO | Future | Summer 1, Y2 (Day 134) | Space voyage | Aurorael Mythic | ~130 | Future |
-| ∞ | **Set Forge** (procedural) | auto | Future | Autumn 1, Y2 onward | Generated (§5) | Generated | 100–140 | — |
+| # | Set | Code | Era | Release | Theme | Chase / signature | Cards | Status at Day 1 | Authored in |
+|---|-----|------|-----|---------|-------|-------------------|-------|-----------------|-------------|
+| 1 | **Origins** | ORG | Vintage | GK Year 1 | The original 33 creatures | **Infernox** Holo (1st Ed.) | 72 | Vintage (second-hand only) | Phase 3 |
+| 2 | Wildwood | WLD | Vintage | GK Year 1 | Deep forests, Neutral critters | Mossquatch Holo | 64 | Vintage | Phase 7 |
+| 3 | Ancient Amber | AMB | Vintage | GK Year 2 | Fossils revived from amber | Rexolith Holo | 62 | Vintage | Phase 8 |
+| 4 | Shadow Syndicate | SHS | Vintage | GK Year 2 | Villain team *Umbra Syndicate* and dark variants | Syndicate's Infernox Holo | 82 | Vintage | Phase 9 |
+| 5 | Crystal Skies | CRS | Classic | GK Year 7 | Crystal-type variants | Crystalynx (Crystal) | 150 | Vintage | Phase 9 |
+| 6 | Echoes of Legend | EOL | Classic | GK Year 10 | Legendary trio debut, "Gold Star" legends | Aurorael Gold Star | 110 | Vintage | Phase 9 |
+| 7 | Tidebreak | TDB | Modern | Autumn 1, Y0 (Day −62) | Oceans and storms | Maelstryx Mythic | 120 | **Last call**, out of print on Day 8 | Phase 5 |
+| 8 | Moonlit Masquerade | MNM | Modern | Winter 1, Y0 (Day −34) | A masked ball of Shade and Mystic creatures | Phantomane Nova (IR) | 125 | In print (last call Day 22, OOP Day 36) | Phase 3 |
+| 9 | **Emberdawn** | EMD | Modern | Spring 1, Y1 (Day −6) | Volcanic island at sunrise | **Solaryx** Mythic | 130 | **Current set**, 1st Ed. sold out (last call Day 50, OOP Day 64) | Phase 2 (subset) · 3 (full) |
+| S1 | **Sparkit & Friends** | SPF | Special | Spring 15, Y1 (**Day 8**) | Mascot celebration, slice-of-life art | Sparkit Nova Crown | 90 | First release you experience | Phase 5 |
+| 10 | Sunken Kingdom | SNK | Future | Summer 1, Y1 (Day 22) | Underwater ruins, *Relic* items | Maelstryx Nova | ~130 | First release with Starforge pre-orders | Phase 5 |
+| 11 | Harvest of Spirits | HOS | Future | Autumn 1, Y1 (Day 50) | Lantern festival spirits | Phantomane Legend art | ~130 | Future | Phase 7 |
+| S2 | Origins 25th Anniversary | O25 | Special | Autumn 15, Y1 (Day 64) | Reprints of Origins classics with new frames (**vintage reprint shock**) | Anniversary Infernox | 60 | Future | Phase 8 |
+| 12 | Frostbound Kingdom | FBK | Future | Winter 1, Y1 (Day 78) | Ice castle, crowned creatures | Glacierra Mythic | ~130 | Future | Phase 8 |
+| 13 | Neon Circuit | NEC | Future | Spring 1, Y2 (Day 106) | Cyber city, Volt and Mystic | Thundervixen Nova | ~130 | Future | Phase 10 |
+| 14 | Starfall Odyssey | SFO | Future | Summer 1, Y2 (Day 134) | Space voyage | Aurorael Mythic | ~130 | Future | Phase 10 |
+| ∞ | **Set Forge** (procedural) | auto | Future | Autumn 1, Y2 (Day 162) onward | Generated (§5) | Generated | 100–140 | — | v1 Phase 5 · v2 Phase 10 |
 
-**Content needed per roadmap phase:** Vertical Slice uses an *Emberdawn* subset (~40 cards). MVP adds full *Emberdawn*, *Origins* and *Sparkit & Friends*. v1.0 adds *Tidebreak*, *Moonlit Masquerade*, *Sunken Kingdom*, *Harvest of Spirits*, *O25* and *Frostbound Kingdom*, plus Set Forge. Other vintage and classic sets appear as they are authored. Until then, lots draw from available sets only.
+**v1.0 ships all 16 curated sets above.** The MVP (end of Phase 6) has *Origins*, *Moonlit Masquerade*, *Emberdawn*, *Tidebreak*, *Sparkit & Friends* and *Sunken Kingdom*.
+**Calendar fallback:** from Phase 5 on, any scheduled release whose content isn't authored yet in the build is **generated by Set Forge** using that slot's name, code and theme, so the calendar never stalls. Before Phase 5 (development builds), unauthored releases are skipped with a debug warning. Lots, auctions and customer collections only draw from sets present in the build.
 
 ### 4.1 Launch set details
 
@@ -155,7 +157,7 @@ Game time **Day 1 = Spring 8, Year 1** (Glimmerkin's 26th year). *Emberdawn* rel
 
 ## 5. Set Forge: procedural future sets
 
-After the curated sets, new releases are generated deterministically from the save seed and the set index. The **full generated definition is stored in the save**, so generator changes never break old saves.
+After the curated sets, new releases are generated deterministically from the save seed and the set index. The **full generated definition is stored in the save**, so generator changes never break old saves. **Set Forge v1** (Phase 5) is the calendar fallback for unauthored slots (§4). **Set Forge v2** (Phase 10) adds polished themes, names and IR story sequences for endless play.
 1. **Theme** from a pool (biome × culture × mechanic, e.g., "Desert Carnival", "Sky Railway", "Haunted Library"), with 2–3 focus elements.
 2. **Roster:** 1–3 **new species** (procedural creature genome plus a syllable-based name that passes the blocklist and similarity checks) + popular reprints (weighted by species popularity) + 1 legendary headliner.
 3. **Composition** from a template (e.g., 100 main + 20–40 secret) with Tactic names from templates ("<Adjective> <Object>").
@@ -235,16 +237,18 @@ Popularity (`pop`, 0.5–3.0) drives prices and demand. **Bold** marks fan favor
 
 Publishers: **Kaze Comics** · **Moonpetal Press** · **Iron Lotus**. The distributor is **Kaze Manga Direct**.
 
-| Series | Genre | Status | Vols at start | Popularity profile | Cover motif |
-|--------|-------|--------|---------------|--------------------|-------------|
-| **Blade of the Crimson Moon** | Shōnen battle | Ongoing (new vol / 28 days) | 27 | **Mega-hit** (P 2.6) | Crimson moon, bold brush title |
-| **Ramen Samurai** | Cooking battle comedy | Ongoing | 14 | Popular (1.6) | Steam, noodles, katana chopsticks |
-| **Starlight Idol Academy** | Idol / school | Ongoing | 8 | Rising (1.2, trending up) | Pastel stars, stage lights |
-| **Iron Tide 2099** | Mecha sci-fi | Completed | 18 | Cult classic (1.1). Vols 1–3 out of print | Chrome, blueprints |
-| **The Hollow Lantern** | Horror mystery | Completed | 11 | Steady (0.9). Spikes every Autumn | Dark ink, lantern glow |
-| **Spike Kings** | Volleyball sports | Ongoing | 16 | Popular (1.5) | Dynamic action, halftone |
-| **Reincarnated as a Holo Rare** | Isekai comedy | Ongoing | 3 | New and rising (0.8). Anime-announcement candidate | A salaryman trapped in a trading card |
-| **The Tea Witch of Willowmere** | Cozy fantasy slice of life | Ongoing | 6 | Evergreen (1.0) | Watercolor, teapots, cats |
+Popularity profiles (`02 §15`): Mega-hit · Popular · Rising · Cult Classic · Evergreen · Seasonal · Fading. New volumes always release on a Tuesday.
+
+| Series | Genre | Status (cadence) | Vols at start | Popularity profile (base P) | Cover motif |
+|--------|-------|------------------|---------------|-----------------------------|-------------|
+| **Blade of the Crimson Moon** | Shōnen battle | Ongoing (every 4 weeks) | 27 | **Mega-hit** (2.6) | Crimson moon, bold brush title |
+| **Ramen Samurai** | Cooking battle comedy | Ongoing (every 6 weeks) | 14 | Popular (1.6) | Steam, noodles, katana chopsticks |
+| **Starlight Idol Academy** | Idol / school | Ongoing (every 7 weeks) | 8 | Rising (1.2, trending up) | Pastel stars, stage lights |
+| **Iron Tide 2099** | Mecha sci-fi | Completed | 18 | Cult Classic (1.1). Vols 1–3 out of print | Chrome, blueprints |
+| **The Hollow Lantern** | Horror mystery | Completed | 11 | Seasonal (0.9). Spikes every Autumn | Dark ink, lantern glow |
+| **Spike Kings** | Volleyball sports | Ongoing (every 6 weeks) | 16 | Popular (1.5) | Dynamic action, halftone |
+| **Reincarnated as a Holo Rare** | Isekai comedy | Ongoing (every 8 weeks) | 3 | Rising (0.8). Anime-announcement candidate | A salaryman trapped in a trading card |
+| **The Tea Witch of Willowmere** | Cozy fantasy slice of life | Ongoing (every 8 weeks) | 6 | Evergreen (1.0) | Watercolor, teapots, cats |
 
 **Later series:** *Ghost Detective Kuro* · *Dragon Courier* · *Pixel Heart* · *Neon Ronin* · *Kaiju Kindergarten*.
 **Tie-in:** *Blade of the Crimson Moon* gets its own TCG (**Crimson Moon Card Game**) late in the game, which links the manga and TCG markets.
@@ -387,7 +391,7 @@ Publishers: **Kaze Comics** · **Moonpetal Press** · **Iron Lotus**. The distri
 2. *Origins* **Prototype Infernox** (1 of 1, in Theo's Vault)
 3. *Origins* **"Blue Spark" Sparkit** (1st print error) in any 9+
 4. *Crystal Skies* **Crystalynx** (Crystal) in a BLG Black Label
-5. *Echoes of Legend* **Aurorael Gold Star** 1st Edition
+5. *Echoes of Legend* **Aurorael Gold Star** in AGC 10
 6. *Emberdawn* **Solaryx** Mythic *Gold Crown* in a Black Label
 7. Any **Wrong Back** misprint
 8. *SPF* **Staff-stamped Prerelease Sparkit**

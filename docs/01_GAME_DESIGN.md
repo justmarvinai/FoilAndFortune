@@ -71,9 +71,9 @@ Buy ──► Stock / Grade / Open ──► Sell ──► Profit ──► Upg
 
 - **Clock:** Business hours are 09:00–19:00. Default pace: 1 in-game minute = 0.6 s real time at 1×, so one open day ≈ 6 minutes. Speeds: ⏸ Pause, 1×, 2×, 4×. The clock runs **only** while the shop is open. Prep and night phases are untimed **(Q6)**.
 - **Interactions pause time.** Opening a negotiation, dialogue or event card pauses the clock by default. This is a setting. You never lose a sale because you were reading.
-- **Week:** Monday–Sunday. Traffic rises on weekends. Friday evening is **League Night** (once play tables are unlocked). Tuesday is **New Manga Day**. Rent is due Sunday night.
+- **Week:** Monday–Sunday. **Day 1 is a Monday**, and since a season is exactly 4 weeks, every season starts on a Monday. Traffic rises on weekends. Friday evening is **League Night** (once play tables are unlocked). Tuesday is **New Manga Day**. Rent is due Sunday night.
 - **Seasons and years:** 4 seasons × 28 days = a 112-day year, Stardew style. Seasons change the view out the window, decorations, customer mix (summer: kids on holiday, winter: gift shoppers) and events.
-- **Release calendar:** A new **main set releases on day 1 of every season**. **Special sets** release on day 15 of some seasons. Prerelease events run on the weekend before a release. A set goes **out of print** about two seasons after release. See §17.4.
+- **Release calendar:** A new **main set releases on day 1 of every season**. **Special sets** release on day 15 of some seasons. Prerelease events run on the weekend before a main-set release. A set enters **"last call"** about 56 days after release and goes **out of print** at about 70 days (two and a half seasons). See §17.4.
 - **Game start:** Day 1 = Spring 8, Year 1. The current set, *Emberdawn*, released one week earlier and sells well. At the end of the tutorial week, the hyped special set *Sparkit & Friends* arrives on Spring 15 (Day 8), which is the first big "release day" moment. The full timeline is in `03 §4`.
 
 ---
@@ -88,7 +88,7 @@ You grow through **5 tiers**. Each tier enlarges the buildable floor, raises the
 
 1. **The Nook**: a cramped corner shop (start)
 2. **Hobby Shop**: you knock through into the neighbor's space
-3. **Collector's Corner**: adds a backroom and service areas
+3. **Collector's Corner**: adds a service wing for stations
 4. **Card Emporium**: adds a mezzanine level (manga and events)
 5. **Flagship Megastore**: two full floors and a street-front showcase window
 
@@ -105,30 +105,31 @@ Placed on a tile grid in **Build Mode** (§7.5). Each fixture has a footprint, c
 - **Pack vending machine:** sells packs on its own, with no checkout needed.
 - **Register counter:** checkout lane(s). A second lane cuts queues.
 - **Play tables:** enable League Nights and tournaments (§22.3).
-- **Service stations:** Grading Desk, Card Lab tools, Sorting Station, Streaming Studio. These unlock features.
+- **Service stations:** Grading Desk, Sorting Station, Self-Checkout Kiosk, Streaming Studio. These unlock features.
 - **Decor:** plants, posters, rugs, neon signs, a mascot statue, arcade cabinet, lighting. Decor only raises Appeal and personality.
 
+**Rule:** anything that takes floor or wall space is a **fixture** (bought and placed in Build Mode). Everything else is an **upgrade** (§7.6) or **storage** (§7.4).
+
 ### 7.4 Storage (the brief's "More Storage Room")
-The backroom holds stock that isn't on display, measured in **storage units (SU)**. Upgrades run Closet → Back Room → Stockroom → Warehouse Unit. A separate **Climate Vault** protects high-value graded and vintage items and adds prestige. If storage is full, deliveries can't be received. They wait at the depot and incur a small fee, so you need to manage it.
+The backroom holds stock that isn't on display, measured in **storage units (SU)**. On-site storage is upgraded Closet → Back Room → Stockroom (each replaces the last). An off-site **Warehouse Unit** adds capacity with one day of retrieval time. A separate **Climate Vault** protects high-value graded and vintage items and adds prestige. If storage is full, deliveries can't be received. They wait at the depot and incur a small fee, so you need to manage it.
 
 ### 7.5 Build Mode
 - The view switches to a blueprint look: a grid overlay, a catalogue drawer, and ghost placement (green = valid, red = blocked). Keys: R rotates, drag moves, sell refunds 50%.
 - **Path validation:** the door → counter path and every fixture's access tile must stay reachable. This uses the same A* grid customers use.
 - **Appeal** (the sum of fixtures, decor and cleanliness) is shown live. Appeal raises traffic and customer patience.
-- Layout choices matter: popular products near the entrance sell faster, and display cases near the counter cut "ask to see" walking time. **(Q10:** free grid placement is recommended over fixed slots.)
+- Layout choices matter: popular products near the entrance sell faster, and display cases near the counter cut "ask to see" walking time. **(Q9:** free grid placement is recommended over fixed slots.)
 
 ### 7.6 Shop services & upgrades (non-furniture)
 Bought from the **Upgrades** board. Each is a one-time purchase that unlocks or improves a capability:
 - **POS System** (auto-pricing rules, sales analytics) → **POS Pro** (reorder points, demand forecast)
-- **Card Reader Terminal** (faster checkout) → **Self-Checkout Kiosk**
-- **Grading Desk** (enables grading submissions)
-- **Card Lab:** Loupe → Light Box → Centering Tool. Each reveals more precise condition information (§15).
-- **Sorting Station** (faster collection sorting)
+- **Card Reader Terminal** (faster checkout)
+- **Card Lab tools:** Loupe → Light Box → Centering Tool, kept at the Grading Desk. Each reveals more precise condition information (§15).
 - **Security Tags** (Tycoon mode only; see Q14)
 - **Website** → **FoilMarket seller account** (online marketplace)
 - **Loyalty Cards** (regulars return more often)
-- **Streaming Studio** (pack-break streams)
-- **Marketing:** flyers, social ads and radio spots are consumables that boost traffic, with optional targeting of customer types.
+- **Marketing:** flyers, social ads, radio spots and billboards are consumables that boost traffic, with optional targeting of customer types.
+
+Prices and unlock levels are in `02 §4.5`.
 
 ---
 
@@ -188,7 +189,7 @@ Each archetype has a budget range, product preferences, **knowledge** (how well 
 | **Investor** 📈 | Sealed boxes (especially 1st Edition and out-of-print), high-grade slabs | Big budget, expert knowledge, tough haggler | Also *sells* sealed product to you when they take profits. Needs 2.5★ |
 | **Manga Fan** 📚 | Manga volumes, box sets, complete runs, tie-in TCG product | Loyal to favorite series, asks for specific volumes | Needs the Manga category |
 | **Hardcore Collector** 💎 | Vintage, 1st Edition, gem-mint slabs, set completion, misprints | Huge budget, very picky about condition, pays premiums | Brings "want lists". Needs 3★ |
-| **Card Hunter** 🔎 | One specific card (shown in a speech bubble) | Pays a premium if you have it | If you don't, you can accept a **Special Order** (§11.4) |
+| **Card Hunter** 🔎 | One specific card (shown in a speech bubble) | Pays a premium if you have it | If you don't, from Lv 8 you can accept a **Special Order** (§11.4) |
 | **Attic Finder** 📦 | Wants to *sell* an old collection | Low knowledge, sometimes sentimental | Source of hidden vintage gems (§12.3) |
 | **Shady Dealer** 🕶️ | Wants to *sell* suspicious cards | Too-good-to-be-true deals | Fakes or trimmed cards (§12.4). More common at low reputation |
 | **Influencer** 🎥 | Rare pulls, cool shop moments | Rare visits. Films in your shop | A good experience creates **Hype** (a big temporary traffic boost). Needs 4★ |
@@ -222,7 +223,7 @@ A customer asks to see a card in a case, walks to it and inspects it. At or unde
 - Customers can buy **individual packs or entire displays**, as the brief asks. Investors and competitive players sometimes buy whole booster boxes or multiple ECBs.
 - The bargain bin sells bulk commons automatically ("3 for $1").
 
-### 11.4 Special orders (quest-like contracts)
+### 11.4 Special orders (quest-like contracts, Lv 8)
 A Card Hunter asks for a card you don't have. You can **accept a special order** and agree a price (they offer market +10–30%) and a deadline (3–7 days). A 20% deposit is paid up front. You then source the card from FoilMarket, a supplier, a collection or your own pulls. Deliver in time for full payment, XP and reputation. Miss the deadline and you refund the deposit and take a reputation hit.
 
 ### 11.5 Online & auctions (mid/late game)
@@ -240,8 +241,11 @@ A customer with a 📦 bubble approaches the counter with **cards, a binder, a s
 3. **Offer:** an offer slider plus quick buttons (40% / 60% / 75% / 90% of estimate). The customer accepts, counters or walks. Patience pips and their mood face react in real time.
 
 ### 12.2 Buy cheap, fair, or overpay (from the brief)
-- **Cheap (lowball):** knowledgeable customers get insulted and leave (reputation −). Uninformed ones may accept, with a hidden **"word gets around"** chance of a bad review later.
-- **Fair (about 60–85% of true value, the realistic buylist range):** a steady reputation gain and a "Fair Deal" streak bonus.
+The offer slider shows five fairness zones (exact values in `02 §6.3`):
+- **Lowball (< 40% of true value):** knowledgeable customers get insulted and leave (reputation −). Uninformed ones may accept, with a hidden **"word gets around"** chance of a bad review later.
+- **Low (40–55%):** usually accepted by desperate or uninformed sellers, with a small hidden review risk.
+- **Fair (55–90%, the realistic buylist range):** a steady reputation gain, and it counts toward the Happy Deal streak.
+- **Generous (90–100%):** a bigger trust gain.
 - **Overpay (> 100%):** a customer-love reputation boost. It's usually a loss, but sometimes it's worth it to win a regular's friendship or to grab a lot you *suspect* hides something.
 
 ### 12.3 Large collections & hidden gems
@@ -270,14 +274,14 @@ Lowballing and overpricing leave "memories" on regulars and a hidden town-wide *
 
 Haggling appears when customers **buy** high-value items and when they **sell** to you. The design goal is short, readable and skill-based, never tedious.
 
-**Customer hidden values:** a *reservation price* (the most they'll pay, or the least they'll accept), an *opening offer*, **patience** (2–5 counter rounds), **mood**, and a **haggle style** (Pushover · Fair · Tough · Chaotic).
+**Customer hidden values:** a *reservation price* (the most they'll pay, or the least they'll accept), an *opening offer*, **haggle patience** (1–5 counter rounds, by style), **mood**, and a **haggle style** (Pushover · Fair · Tough · Chaotic).
 
 **Mechanics:**
 - **UI:** a haggle table showing the item, your ask, their offer, a mood meter (face with 5 expressions), patience pips and quick buttons (±5%, ±10%, "meet in the middle", "final offer").
 - Every counter spends patience. **Insulting asks** (far beyond their reservation) spend extra patience and sour their mood.
 - **Tells:** depending on archetype and your *Read People* perk, you get hints like "They glance at the price twice…" (near their limit), "They're clutching their wallet" (budget-limited), or "Collector's gleam in their eyes" (high desire).
-- **"Final offer"** is a bluff. If your ask is within their reservation, they accept. Otherwise there's a chance they walk.
-- **Deal streak:** consecutive deals closed in the "fair zone" build a small, visible **Streak** multiplier on reputation and XP (inspired by Recettear's combo system).
+- **"Final offer"** ends the haggle. If your ask is within their reservation, they accept. Slightly above it, some accept and the rest walk. Far above it, most walk, and a few make one last counter to take or leave (`02 §6.1`).
+- **Happy Deal streak:** consecutive deals that leave the customer happy (sales at ≤ 110% of market, buys in the Fair zone or better) build a small, visible **Streak** multiplier on reputation and XP (inspired by Recettear's combo system).
 - **Auto-haggle:** later, a TCG Expert or a player-set policy handles routine haggles ("accept anything ≥ 92% of my price").
 
 ---
@@ -313,7 +317,7 @@ A strategic decision the game makes legible. **Expected Value (EV)** per pack is
 - **Hidden sub-scores** (1–10 in 0.5 steps): **Centering, Corners, Edges, Surface**. The visible condition is derived from them. Grading outcomes depend on them.
 - **Where condition comes from:** fresh pulls are mostly Mint or Near Mint with occasional factory defects (off-center, print lines). Customer lots vary widely. Vintage cards skew toward Good or Played.
 - **Inspection (the Card Lab):** zoom into a card with a **loupe** to spot whitening, dings and scratches. The **Light Box** reveals surface scratches and fakes. The **Centering Tool** measures borders exactly. Better tools and better staff give narrower **grade estimates** ("likely 8–9" becomes "72% chance of a 9"). This turns grading into a knowledge skill, not pure luck.
-- **Protection:** sleeves and toploaders are supplies. High-value cards left unprotected in open cases slowly risk *surface* wear (a very small chance, cozy-tuned). Protected cards don't. **(Q14** checks whether you want even this light risk.)
+- **Protection (Tycoon mode only, Q14):** sleeves and toploaders are supplies. In Tycoon mode, high-value cards left unprotected in open cases slowly risk *surface* wear (a very small chance). Protected cards don't. Cozy and Standard have no card wear.
 
 ---
 
@@ -337,7 +341,7 @@ Each company offers service tiers (Economy / Standard / Express: cost versus tur
 4. **Graded card.** The slab shows company, grade, card name and a cert number. Sell it in a case, consign it at auction, keep it in the Trophy Room, or **crack it** to resubmit (you lose the slab fee, gamble for a higher grade, and risk damage).
 
 ### 16.3 Randomness with logic
-The final grade comes from the hidden sub-scores plus company-specific **noise** (budget = high variance) and **strictness** (premium = harsher). Value multipliers depend on company prestige × grade × card desirability × **population scarcity** (fewer 10s in the world means a higher premium). The world has a simulated **Population Report** per card and company, which your own submissions add to. Formulas are in `02 §8`.
+The final grade comes from the hidden sub-scores (**the weakest attribute dominates**) plus company-specific **noise** (budget = high variance) and **strictness** (premium = harsher, with a strict rule for 10s). Value multipliers depend on company prestige × grade × card desirability × **population scarcity** (fewer 10s in the world means a higher premium). The world has a simulated **Population Report** per card and company, which your own submissions add to. Formulas are in `02 §8`.
 
 ### 16.4 Graded cards sell individually (from the brief)
 Slabs are individual inventory items with their own price tags. Investors and collectors hunt them, and high grades on vintage cards are the game's most valuable items.
@@ -361,7 +365,7 @@ Every morning at 06:00 the market ticks. Each card and sealed product gets a new
 Set indices ("Emberdawn Index", "GK Vintage Index") work like stock tickers. *The Glimmer Gazette* headlines explain big moves, which teaches players cause and effect.
 
 ### 17.4 Set lifecycle
-`Announce (≈10 days before) → Pre-orders (Official Distributor) → Prerelease weekend → Release day (1st Edition wave, ~7 days) → In print (Unlimited) → "Last call" (supplier stock dwindles) → Out of print → Vintage (years later)`
+`Announce (≈10 days before) → Pre-orders (Official Distributor) → Prerelease weekend → Release day (1st Edition wave, ~7 days) → In print (Unlimited) → "Last call" from ~day 56 (supplier stock dwindles) → Out of print at ~day 70 → Vintage (years later)`
 - **1st Edition wave:** limited quantities of 1st Edition product, mostly through pre-order allocations. Holding 1st Edition sealed product is a long-term investment.
 - **Out-of-print:** suppliers stop restocking. Remaining sealed product gets scarce and appreciates, with volatility and reprint risk.
 - **Vintage:** sets from the TCG's history before the game begins. You obtain them only from customers, lots, auctions, card shows and FoilMarket.
@@ -374,11 +378,11 @@ Better suppliers unlock with level and reputation (from the brief: "Unlock bette
 
 | Supplier | Unlock | Specialty | Delivery |
 |----------|--------|-----------|----------|
-| **Budget Box Co.** (cash & carry) | Start | Packs, blisters, starter decks, tins. Small minimums, higher prices | Next morning |
+| **Budget Box Co.** (cash & carry) | Start | Packs, blisters, starter decks, tins, collection boxes, third-party mystery boxes. Small minimums, higher prices | Next morning |
 | **Harbor Hobby Distribution** (regional) | Lv 4, 2★ | Booster boxes, ECBs, bundles, collections, bulk discounts. Accessories from Lv 9 | 2 days |
 | **Kaze Manga Direct** | Lv 5 | Manga volumes, deluxe editions, box sets | 3 days |
 | **FoilMarket** (online) | Lv 8 | Buy singles, slabs and sealed at market + shipping. Also where you sell online | 2 days |
-| **Starforge Official Distribution** | Lv 10, 3★ | Pre-orders, **1st Edition allocations**, prerelease kits, event promo kits, best prices | On release day |
+| **Starforge Official Distribution** | Lv 10, 3★ | Pre-orders, **1st Edition allocations**, prerelease kits, League Promo Kits (event supply), best prices | On release day |
 | **Liquidators & Estate Sales** | Events, Lv 8+ | Random lots, vintage sealed, damaged stock. High risk, high reward | Varies |
 | **Sakura Imports** | Lv 18 | JP-style Glimmerkin sets | 5 days + customs |
 | **Other brand distributors** | Lv 22 / Lv 32 | *Arcane Dominion*, *Crimson Moon CG* | 2 days |
@@ -402,9 +406,9 @@ Better suppliers unlock with level and reputation (from the brief: "Unlock bette
 
 From the brief: buy wholesale, sell individually, popular series sell fast, older volumes get harder to source, and complete collections can be bought and sold.
 
-- **Series:** each has volumes 1…N, a genre, a status (ongoing or completed), a **popularity curve** (Mega-hit, Rising, Cult Classic, Evergreen, Fading) and a release cadence. There are 8 series at launch (`03 §7`).
+- **Series:** each has volumes 1…N, a genre, a status (ongoing or completed), a **popularity profile** (Mega-hit, Popular, Rising, Cult Classic, Evergreen, Seasonal, Fading) and a release cadence (every 4, 6, 7 or 8 weeks). There are 8 series at launch (`03 §7`).
 - **Wholesale:** Kaze Manga Direct sells volumes in bundles of 5+. **Older volumes** of popular series have limited supplier stock and can go out of print for a while, so they carry a second-hand premium.
-- **New Volume Day (Tuesdays):** fans come in for new volumes. Stock up in advance.
+- **New Manga Day (Tuesdays):** fans come in for new volumes. Stock up in advance.
 - **Complete collections:** box sets and "complete runs" (vol 1–N) sell at a premium to Manga Fans. Buy them from customers (who often want to offload a whole run), or assemble your own from single volumes to sell as a set.
 - **Events:** an anime announcement spikes a series. "Final volume" hype. A manga-to-TCG tie-in brand (*Crimson Moon Card Game*) links the two markets.
 - **Personal Manga Library** (from the brief's "Build a huge manga collection"): a cozy shelf in your back office that tracks completed series with achievements.
@@ -425,7 +429,7 @@ From the brief: hire employees later. Roles include cashier, stocker, TCG expert
 | **Streamer** | Lv 25 | Pack-break streams in the Streaming Studio | Charisma, Hype |
 | **Store Manager** | Lv 35 | Runs branch stores, auto-ordering | Management |
 
-- **Candidates** refresh weekly. Each has **skills** (1–5 ★), **traits** (e.g., *Speedy*, *Chatty* (+sales, −speed), *Eagle Eye* (+fake detection), *Kid Whisperer*, *Night Owl*, *Clumsy* (tiny damage risk)), a **salary ask**, and a personality blurb.
+- **Candidates** refresh weekly. Each has **skills** (1–5 ★), **traits** (e.g., *Speedy*, *Chatty* (+sales, −speed), *Eagle Eye* (+fake detection), *Kid Whisperer*, *Night Owl*, *Clumsy* (a tiny damage risk in Tycoon, slower restocking otherwise)), a **salary ask**, and a personality blurb.
 - **Growth:** employees gain XP and level up. Training courses cost money.
 - **Morale:** affected by pay versus market wage, workload, days off and bonuses. Low morale lowers performance, and very low morale leads to quitting (with warnings).
 - **Policies:** you set rules instead of micromanaging, for example "Buy lots only if estimated profit ≥ 25%", "Restock packs when below 50%", or "Accept haggles within 5%".
@@ -461,10 +465,10 @@ In the Streaming Studio you sell "spots" in a box break. Viewers watch you open 
 ## 23. Progression
 
 - **Shop Level 1–50.** XP comes from sales, deals, openings, pulls, grading, special orders, events, achievements and story. Each level unlocks something (products, suppliers, fixtures, services, staff roles, events). The full table is in `02 §9`.
-- **Shop Rank titles** mark milestones: *Corner Stall → Hobby Shop → Local Favorite → Collector's Haven → Regional Legend → Collectibles Empire*.
+- **Shop Rank titles** mark milestones: *Corner Stall (Lv 1) → Hobby Shop (Lv 7) → Local Favorite (Lv 15) → Collector's Haven (Lv 25) → Collectibles Empire (Lv 35) → Collectibles Legend (Lv 50)*.
 - **Unlock pacing:** there is a steady drip of new toys. No level is "empty".
 - **Gated by more than level:** some unlocks also require reputation (for example Official Distributor needs 3★), a shop tier, or a story beat.
-- **Pacing targets** (1× speed, average play): Lv 5 ≈ 30 min · Lv 10 ≈ 1.5 h · Lv 20 ≈ 5 h · Lv 30 ≈ 11 h · Lv 50 ≈ 35 h+ (tuned via headless balance simulation; see `06 §9`).
+- **Pacing targets** (1× speed, average play): Lv 5 ≈ 30 min · Lv 10 ≈ 1.5 h · Lv 20 ≈ 5 h · Lv 30 ≈ 11 h · Lv 50 ≈ 35 h+ (tuned via the headless balance simulator; see `02 §18`).
 
 ---
 
@@ -521,13 +525,15 @@ Progressive disclosure: the HUD dock starts with 3 buttons and gains more as sys
 | 1 | Stock the shelf with packs, set a price, open the shop, serve a kid, ring up the checkout, **rip your first pack**, read the day summary |
 | 2 | Order from Budget Box Co. and a customer offers you a binder: your first buy offer and haggle |
 | 3 | Put singles in the display case, haggle a sale, and meet the FoilTrack market app |
-| 4 | Level-up rewards, buy your first upgrade (a bigger shelf) and enter Build Mode |
-| 5–7 | Rent day explained, special orders, reputation panel, Daily Objectives unlocked, a teaser for grading ("Theo knows a guy at Cardboard Certs…") |
+| 4 | Level-up rewards, then enter Build Mode and place your first new fixture (a Gondola Shelf) |
+| 5–7 | Reputation panel and reviews, Daily Objectives unlocked, rent day explained (Day 7 is the first Sunday), a teaser for grading ("Theo knows a guy at Cardboard Certs…") and for Release Day on Day 8 |
+
+Later systems (grading, special orders, staff, and so on) get a short Theo tip or first-time spotlight when they unlock.
 
 "I know what I'm doing" skips the tutorial but keeps the unlock pacing.
 
 ### 27.3 Story beats (light)
-Delivered through Theo's visits, regulars, rival encounters and the vault. They are short, funny, optional to read, and never block play **(Q9)**.
+Delivered through Theo's visits, regulars, rival encounters and the vault. They are short, funny, optional to read, and never block play **(Q10)**.
 
 ---
 
@@ -547,7 +553,7 @@ Delivered through Theo's visits, regulars, rival encounters and the vault. They 
 - **Variable rewards** come *only* from in-game systems: pack pulls, lot sorting, grading reveals.
 - **Collection loops:** silhouettes in binders and the Grail List.
 - **Visible growth:** the shop changes physically.
-- **Short feedback cycles** and juicy UI (see `05_UI_UX.md` §9).
+- **Short feedback cycles** and juicy UI (see `05_UI_UX.md` §6).
 - **No dark patterns:** no energy timers, no real money, no guilt-trip notifications, and no penalties for time away (no offline progress by default; **Q28**).
 
 ---
@@ -559,8 +565,8 @@ Mapped to `ROADMAP.md` phases:
 | Tier | Contents |
 |------|----------|
 | **Vertical Slice** (Phase 2) | Tier-1 shop, one current set (subset), packs and boxes, kids and casual customers, stocking, pricing, checkout, pack opening, basic binder, day cycle, save/load |
-| **MVP / Early Access** (Phases 3–6) | Full core loop, 3 sets (*Origins* vintage, *Emberdawn* current, *Sparkit & Friends* special), suppliers incl. Starforge, negotiation, buy offers, lots and sorting, reputation, full market sim with release calendar and 1st Editions, FoilMarket, special orders, conditions and grading (2 companies), fakes, events, League Night, build mode, tiers 1–3, first staff (Cashier, Stocker), achievements (first 30) |
-| **v1.0** (Phases 7–10) | Manga, accessories, mystery boxes, expert staff and automation, tiers 4–5, all 4 graders, imports, auctions, card shows, streaming, branches, rivals, Theo's Vault ending, second TCG brand, ~8 curated sets plus Set Forge, ~100 achievements, localization **(Q4)** |
+| **MVP / Early Access** (Phases 3–6) | Full core loop, 6 curated sets (*Origins*, *Tidebreak*, *Moonlit Masquerade*, *Emberdawn*, *Sparkit & Friends*, *Sunken Kingdom*) plus Set Forge v1 as a calendar fallback, suppliers incl. Starforge, third-party mystery boxes, negotiation, buy offers, lots and sorting, reputation, full market sim with release calendar and 1st Editions, FoilMarket, special orders, conditions and grading (2 companies), fakes, events, League Night, build mode, tiers 1–3, first staff (Cashier, Stocker), achievements (first 30) |
+| **v1.0** (Phases 7–10) | Manga, accessories, Mystery Box Builder, expert staff and automation, tiers 4–5, all 4 graders, imports, auctions, card shows, streaming, branches, rivals, Theo's Vault ending, second TCG brand, **all 16 curated sets** (`03 §4`) plus Set Forge v2, ~100 achievements, localization **(Q4)** |
 | **Post-1.0** | Third brand, New Game+/Legacy, seeded daily challenges, mod/content packs, seasonal live events (offline, data-driven), optional card-battle mini-game **(Q11)** |
 
 ---

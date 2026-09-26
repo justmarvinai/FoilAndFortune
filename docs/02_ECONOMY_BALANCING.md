@@ -16,9 +16,11 @@
 | Speeds | 0 (pause), 1×, 2×, 4× | |
 | Sim tick | 1 game-minute | Fixed step. The view interpolates between ticks |
 | Week / Season / Year | 7 / 28 / 112 days | Mon–Sun · Spring, Summer, Autumn, Winter |
+| Calendar anchor | **Day 1 = Spring 8, Year 1 = a Monday** | Days ≤ 0 are before the game starts. A season is exactly 4 weeks, so every season starts on a Monday. `weekday = (day − 1) mod 7` (0 = Mon) |
 | Market update | Daily, before prep | |
 | Rent due | Sunday night | Weekly: 7 × daily rent |
-| Autosave | Start of every prep phase + manual | |
+| Autosave | Start of every prep phase (ring of 3) + a weekly slot every Monday + manual | |
+| Set lifecycle | Announce 10 days before release · 1st Edition wave 7 days · **last call from day 56** · **out of print at day 70** after release | Per-set overrides allowed |
 
 ## 2. Starting State per Difficulty (`balance/difficulty.ts`)
 
@@ -30,9 +32,10 @@
 | Customer knowledge modifier | −0.10 | **0** | +0.15 |
 | Fake frequency | ×0.25 | **×1** | ×1.5 |
 | Damaged-shipment chance / order | 1.5% | **3%** | 5% |
+| Card wear (unprotected singles) and shoplifting | — | **—** | yes (Q14) |
 | Bankruptcy | never | **never** (debt limits instead) | yes |
 
-**Starting inventory (all modes):** 24 × *Emberdawn* Booster Pack, 4 × *Emberdawn* 3-Pack Blister, 2 × *Emberdawn* Starter Deck, **Theo's Binder** (30 mixed singles including 2 Holo Rares and 1 vintage *Origins* uncommon as story bait), and a **Bulk Shoebox** (200 commons and uncommons).
+**Starting inventory (all modes):** 24 × *Emberdawn* Booster Pack, 4 × *Emberdawn* 3-Pack Blister, 2 × *Emberdawn* Starter Deck, **1 × *Emberdawn* Booster Box** (Theo's last display, for the first "open or sell?" decision), **Theo's Binder** (30 mixed singles including 2 Holo Rares and 1 vintage *Origins* uncommon as story bait), and a **Bulk Shoebox** (200 commons and uncommons).
 **Starting fixtures:** 2 × Small Wall Shelf, 1 × Small Display Case, 1 × Register Counter (1 lane), Closet storage (200 SU), 1 plant, 1 "Origins" poster.
 **Starting reputation:** 20 (1★). **Level** 1.
 
@@ -42,7 +45,7 @@
 
 - **Expenses:** rent (weekly), salaries (daily, paid at close), supplier orders (paid when ordered), grading fees (paid at submission), marketing, fixtures and upgrades (paid on purchase), depot fees, loan interest.
 - **Bank loan** (Brightbay Credit Union): available any time up to `max($1,000, 3 × avg weekly revenue over the last 4 weeks)`. Interest is charged weekly. In Standard, if rent can't be paid, an automatic loan is offered with a warning. Above 80% of the loan limit, **supplier credit freezes** (no new orders except Budget Box Co.) until debt drops.
-- **Tycoon bankruptcy:** rent unpaid while the loan is maxed → bankruptcy screen → reload the last weekly save or restart.
+- **Tycoon bankruptcy:** rent unpaid while the loan is maxed → bankruptcy screen → reload the weekly autosave (`auto-weekly`, taken every Monday) or restart.
 - **HUD formatting:** `$1,234.56` in detailed views. Abbreviate large values in the HUD (`$12.4k`, `$1.2M`).
 
 ---
@@ -55,7 +58,7 @@
 |------|------|----------------|--------|-------------|----------------|------------------------------|-----------|
 | 1 | The Nook | 6 × 5 | start | — | $35 | 2.5 | 1 |
 | 2 | Hobby Shop | 9 × 7 | Lv 7 | $6,000 | $70 | 4.0 | 3 |
-| 3 | Collector's Corner | 12 × 9 + backroom | Lv 15 | $25,000 | $140 | 6.0 | 5 |
+| 3 | Collector's Corner | 12 × 9 + service wing 4 × 4 | Lv 15 | $25,000 | $140 | 6.0 | 5 |
 | 4 | Card Emporium | 16 × 11 + mezzanine 8 × 6 | Lv 25 | $90,000 | $280 | 9.0 | 8 |
 | 5 | Flagship Megastore | 20 × 14 + upper floor 20 × 10 | Lv 35 | $300,000 | $550 | 13.0 | 12 |
 
@@ -78,12 +81,14 @@ Branch stores (Lv 35 / 40 / 45): $150,000 / $250,000 / $400,000 purchase, with $
 | Pack Vending Machine | 1×1 | 60 packs (auto-sell) | $2,500 | Lv 12 | +3 |
 | Register Counter (extra lane) | 2×1 | 1 lane | $800 | Lv 7 | +1 |
 | Play Table (4 seats) | 2×2 | 4 players | $400 | Lv 10 | +2 |
-| Grading Desk (service) | 2×1 | — | $1,200 | Lv 6 | +1 |
-| Sorting Station (service) | 2×1 | — | $900 | Lv 8 | 0 |
-| Streaming Studio (service) | 3×3 | — | $12,000 | Lv 25 | +6 |
+| Grading Desk (service station) | 2×1 | — | $1,200 | Lv 6 | +1 |
+| Sorting Station (service station) | 2×1 | — | $900 | Lv 8 | 0 |
+| Self-Checkout Kiosk (service station) | 1×1 | 1 automatic lane (slower than a good cashier) | $3,500 | Lv 18 | +1 |
+| Streaming Studio (service station) | 3×3 | — | $12,000 | Lv 25 | +6 |
 | Decor (plants, posters, rugs, lights, neon, statue, arcade…) | 1×1–2×2 | — | $25–$2,000 | Lv 1+ | +0.5…+8 |
 
 **Slot capacities:** 1 shelf slot = 12 packs, **or** 4 blisters/tins/starter decks, **or** 2 bundles/collections/ECBs, **or** 6 accessories, **or** 10 manga volumes (face-out: 3). 1 box-rack slot = 1 booster box.
+**Classification rule:** anything that occupies floor or wall tiles is a **fixture** (bought and placed in Build Mode). Everything else is an **upgrade** (Upgrades board, §4.5) or **storage** (§4.3).
 
 ### 4.3 Storage
 
@@ -95,7 +100,9 @@ Branch stores (Lv 35 / 40 / 45): $150,000 / $250,000 / $400,000 purchase, with $
 | Warehouse Unit (off-site; +1 day retrieval) | 10,000 SU | $50,000 | Lv 28 |
 | Climate Vault (graded/vintage; +prestige) | 500 slabs + 50 sealed | $80,000 | Lv 30 |
 
-**Product sizes (SU):** pack 1 · blister 2 · tin 3 · starter deck 2 · bundle 3 · collection box 5 · ECB 6 · booster box 18 · manga volume 1 · accessory 1 · 100 bulk cards 1 · slab 0.2. Raw singles live in card boxes and binders, with no SU cap except 20,000 singles per Card Storage tier.
+Closet → Back Room → Stockroom **replace** each other (on-site capacity). The Warehouse Unit **adds** off-site capacity. The Climate Vault is a **separate** store for slabs and sealed product.
+
+**Product sizes (SU):** pack 1 · blister 2 · tin 3 · starter deck 2 · bundle 3 · collection box 5 · ECB 6 · booster box 18 · manga volume 1 · accessory 1 · 100 bulk cards 1 · slab 0.2. **Raw singles** live in card boxes and binders and don't use SU. Their own cap depends on the on-site tier: Closet 5,000 · Back Room 20,000 · Stockroom 60,000 · Warehouse +200,000.
 **Depot fee** when storage is full: $5/day per waiting order.
 
 ### 4.4 Appeal
@@ -110,12 +117,11 @@ Normalized appeal `a = 1 − e^(−appeal / scale_tier)`, where `scale_tier` = 1
 | Card Reader Terminal | $400 | Lv 7 | Checkout 30% faster (manual and cashier) |
 | POS System | $750 | Lv 9 | Pricing rules, sales analytics, EV display |
 | Website | $500 | Lv 8 | Enables the FoilMarket seller account |
-| Card Lab: Loupe | $100 | Lv 6 | Inspect corners and edges, grade estimate ±1.5 |
+| Card Lab: Loupe | $100 | Lv 6 | Inspect corners and edges, grade estimate ±1.5 (all Card Lab tools require the Grading Desk) |
 | Card Lab: Light Box | $600 | Lv 12 | Reveals surface and fakes, estimate ±1.0 |
 | Card Lab: Centering Tool | $1,500 | Lv 17 | Exact centering, estimate ±0.5 |
 | Loyalty Cards | $800 | Lv 12 | Regulars and satisfied customers return 25% more often |
 | POS Pro | $3,000 | Lv 16 | Reorder points, auto-order, demand forecast |
-| Self-Checkout Kiosk | $3,500 | Lv 18 | 1 automatic lane (slower than a good cashier) |
 | Security Tags *(Tycoon only)* | $1,000 | Lv 10 | Prevents shoplifting events |
 | Marketing: Flyers | $50 | Lv 11 | +10% traffic for 3 days |
 | Marketing: Social Ads | $200 | Lv 11 | +20% traffic for 7 days, targetable at one archetype |
@@ -193,27 +199,27 @@ P(buy | p)        = 0.95                              if p ≤ p_max
 | Tough | 0.65–0.80 | 2–4 | 0.20 |
 | Chaotic | 0.50–0.95 | 1–5 | U(0, 0.6) |
 
-- `R = p_max` from §5.3.
+- `R = p_max` from §5.3. **Haggle patience** (rounds) is separate from the customer's waiting patience (minutes).
 - Your ask `a ≤ R` → accept. Tough customers test you once with a midpoint counter 50% of the time. If you hold, they accept.
 - `a > R` → counter `c_t = min(R, c_{t−1} + (a − c_{t−1}) × concession)`, patience −1. Asks above `1.3R` cost **−2 patience and −1 mood** ("insulted").
-- **Final offer:** accept if `a ≤ R`. If `R < a ≤ 1.05R`, 40% accept. Otherwise 70% walk.
-- **Fair Deal Streak:** a deal closed at `0.9–1.1 × V` gives streak +1. Each streak level gives +1% XP and reputation from deals (cap +10%). A deal outside the band breaks the streak.
+- **Final offer** (always ends the haggle): `a ≤ R` → accept · `R < a ≤ 1.05R` → 40% accept, 60% walk · `a > 1.05R` → 30% they make one last counter at `R` (take it or lose them), 70% walk.
+- **Happy Deal Streak:** a deal counts if the customer ends it happy, meaning **sales at ≤ 1.10 × market** or **buys at ≥ 0.55 × true value** (§6.3). Each streak level gives +1% XP and reputation from deals (cap +10%). A pricey or rip-off sale, or a low or lowball buy, breaks the streak.
 
 ### 6.2 Customer sells to you
 - Their minimum `S = V̂_c × accept`, where `V̂_c` is their *perceived* lot value (knowledge-weighted, ignoring hidden cards they don't know about). `accept`: Pushover 0.35–0.55 · Fair 0.55–0.70 · Tough 0.70–0.85 · Chaotic 0.30–0.90. The "needs cash" event modifier is −0.15.
 - Opening ask `A₀ = V̂_c × U(0.9, 1.2)`. They concede toward `S` using the same concession table.
 - Offers below `0.5 S` are an "insult" (−2 patience, −1 mood).
 
-### 6.3 Fairness & reputation effects (per completed buy)
-Fairness `f = offer / V_true` (true value includes hidden cards the seller *did* know about; gems they didn't know about are excluded).
+### 6.3 Fairness zones & reputation effects (per completed buy)
+Fairness `f = offer / V_true` (true value includes hidden cards the seller *did* know about; gems they didn't know about are excluded). These **zones are canonical**. The GDD, UI offer slider (`05 §5.11`) and streak rule all use them.
 
-| `f` | Immediate | Hidden consequence |
-|-----|-----------|--------------------|
-| < 0.35 | Trust −2 if seller `k ≥ 0.5` | Otherwise a bad-review risk within 14 days: `0.15 + 0.5 × (0.35 − f)/0.35` |
-| 0.35–0.55 | — | Small review risk (5%) |
-| 0.55–0.90 | Trust +0.2, streak +1 | — |
-| 0.90–1.00 | Trust +0.4, streak +1 | — |
-| > 1.00 | Reputation +0.5, friendship +1 (regulars) | — |
+| `f` | Zone | Immediate (Trust sub-score points) | Hidden consequence |
+|-----|------|------------------------------------|--------------------|
+| < 0.40 | **Lowball** | −2 if seller `k ≥ 0.5` | Otherwise a bad-review risk within 14 days: `0.15 + 0.5 × (0.40 − f)/0.40` |
+| 0.40–0.55 | **Low** | — | Small review risk (5%) |
+| 0.55–0.90 | **Fair** (realistic buylist) | +0.2, streak +1 | — |
+| 0.90–1.00 | **Generous** | +0.4, streak +1 | — |
+| > 1.00 | **Overpay** | +0.5, friendship +1 (regulars), streak +1 | — |
 
 ---
 
@@ -226,14 +232,15 @@ Fairness `f = offer / V_true` (true value includes hidden cards the seller *did*
 | Common | $0.05 | $0.10 | $0.25 |
 | Uncommon | $0.10 | $0.20 | $0.50 |
 | Rare | $0.30 | $0.60 | $1.50 |
-| Holo Rare | $1.00 | $2.50 | $6.00 |
-| Ultra Rare | $4 | $9 | $25 |
-| Illustration Rare | $8 | $15 | $60 |
-| Secret Rare | $20 | $40 | $120 |
-| Mythic Rare | $150 | $220 | $600 |
+| Holo Rare | $1.00 | $2.20 | $6.00 |
+| Ultra Rare | $4 | $8 | $25 |
+| Illustration Rare | $8 | $14 | $60 |
+| Secret Rare | $20 | $36 | $120 |
+| Mythic Rare | $150 | $200 | $600 |
 | Promo | $1 | $4 | $40 |
 
-Each card's `baseValue` = typical × **species popularity** (0.5–3.0) × **playability bump** (competitive staples +0–150% at Rare and above) × **art appeal** (0.8–1.5, IR/SR/MR only). The value is clamped to the band. The content generator computes it and stores it in the card definition, so it can be hand-edited.
+Each card's `baseValue` = typical × **relative popularity** × **playability bump** (competitive staples +0–150% at Rare and above) × **art appeal** (0.8–1.5, IR/SR/MR only). The value is clamped to the band.
+**Relative popularity** = species popularity ÷ the mean popularity of all species in *that set* (clamped 0.4–2.5). It averages 1.0 within every set, so fan favorites are pricier without inflating the set's pack EV (§11.3). The content generator computes `baseValue` and stores it in the card definition, so it can be hand-edited.
 
 ### 7.2 Multipliers
 | Factor | Multipliers |
@@ -251,31 +258,41 @@ Each card's `baseValue` = typical × **species popularity** (0.5–3.0) × **pla
 
 ### 8.1 Hidden sub-scores (Centering, Corners, Edges, Surface; 1–10 in 0.5 steps)
 
+**Notation:** `round½(x) = floor(2x + 0.5) / 2` (nearest half, ties up). `Gamma(k, θ)` uses **shape k and scale θ** (mean kθ). Every sub-score is clamped to 1–10 after rounding.
+
 | Source | Centering | Corners / Edges / Surface | Extras |
 |--------|-----------|---------------------------|--------|
-| Fresh modern pull | `round½(N(9.0, 0.7))`, clamp 5–10 | `round½(10 − Gamma(1.2, 0.45))`, clamp 6–10 | 5% factory defect: one sub −U(1.5, 3.5) |
-| JP-style import pull | `N(9.3, 0.5)` | Gamma(1.1, 0.35) | 2% defect |
-| Customer modern binder | `N(8.6, 0.9)` | Gamma(1.6, 0.7) | 15% "played" event −U(1, 3) |
-| Vintage lot | `N(7.2, 1.3)` | `N(7.0, 1.4)` each, correlated ρ = 0.5 | recipe modifiers (e.g., "well-kept binder" +1) |
-| Kid's shoebox | `N(8.0, 1.0)` | `N(6.0, 1.5)` | — |
+| Fresh modern pull | `round½(N(9.0, 0.7))` | `round½(10 − Gamma(1.0, 0.45))` each | 5% factory defect: one random sub −U(1.5, 3.5), re-rounded |
+| JP-style import pull | `round½(N(9.3, 0.5))` | `round½(10 − Gamma(1.0, 0.35))` | 2% defect |
+| Customer modern binder | `round½(N(8.6, 0.9))` | `round½(10 − Gamma(1.6, 0.7))` | 15% "played" event −U(1, 3) |
+| Vintage lot | `round½(N(7.2, 1.3))` | `round½(N(7.0, 1.4))` each, correlated ρ = 0.5 | recipe modifiers (e.g., "well-kept binder" +1) |
+| Kid's shoebox | `round½(N(8.0, 1.0))` | `round½(N(6.0, 1.5))` | — |
 
 **Visible condition from the lowest sub-score:** ≥ 9.5 Mint · ≥ 8.0 Near Mint · ≥ 6.0 Good · ≥ 3.5 Played · else Damaged.
-**Target distribution for fresh modern pulls** (asserted by a statistical unit test): Mint 15–20% · NM 65–75% · Good 8–14% · Played ≤ 2%.
+**Fresh modern pulls** (verified with a 200,000-card Monte Carlo): Mint 18.2% · NM 72.3% · Good 9.1% · Played 0.4%. **Unit-test bands:** Mint 15–21% · NM 67–77% · Good 7–12% · Played ≤ 2%.
 
 ### 8.2 True grade
-`G_true = min( average(4 subs), lowestSub + 1.0 )`
+`G_true = 0.8 × lowestSub + 0.2 × average(4 subs)`. **The weakest attribute dominates**, and strong other attributes lift it a little. This is easy to explain to players ("find the weakest spot") and makes the Card Lab tools matter.
 
 ### 8.3 Company grading
-`g = G_true + bias + N(0, σ)`, then the company's rounding and rules apply.
+`g = G_true + bias + N(0, σ)`. **Integer scales** round half up: `grade = clamp(floor(g + 0.5), 1, 10)`. If the 10-rule fails, the grade is capped at 9. **Half-step scale (BLG):** `round½(g)`.
 
 | Company | Bias | σ | Scale | Rules for a 10 |
 |---------|------|---|-------|----------------|
-| Cardboard Certs (CC) | +0.25 | 0.70 | integers | none |
-| Summit Grading Authority (SGA) | 0.00 | 0.45 | integers | all subs ≥ 9 |
-| Apex Grading Co. (AGC) | −0.20 | 0.30 | integers | centering ≥ 9.5 and all other subs ≥ 9.5 |
-| Blackline Grading (BLG) | −0.25 | 0.25 | half-steps + 4 printed sub-grades (each `sub + N(0, 0.3) − 0.2`) | "Pristine 10": overall 10 with all printed subs ≥ 9.5 · **Black Label**: all four printed subs = 10 |
+| Cardboard Certs (CC) | 0.00 | 0.80 | integers | none (lenient rules, very noisy) |
+| Summit Grading Authority (SGA) | 0.00 | 0.45 | integers | all subs ≥ 9.0 |
+| Apex Grading Co. (AGC) | −0.15 | 0.35 | integers | all four subs ≥ 9.5 |
+| Blackline Grading (BLG) | −0.10 | 0.30 | half-steps + 4 printed sub-grades, each `round½(sub + N(0, 0.2) − 0.1)` | Overall 10 requires all printed subs ≥ 9.5 ("Pristine 10"), otherwise capped at 9.5 · **Black Label**: Pristine with all four printed subs = 10 |
 
-**Target outcomes for a fresh NM/Mint modern pull** (unit-tested): AGC 10 ≈ 10–14%, 9 ≈ 40–50%, 8 ≈ 25–35% · CC 10 ≈ 20–30% · BLG Pristine ≈ 2–4%, Black Label ≈ 0.2–0.5%.
+**Outcomes for fresh NM/Mint modern pulls** (verified with a 200,000-card Monte Carlo; unit-test bands in brackets):
+| Company | 10 | 9.5 | 9 | 8.5 | 8 | ≤ 7.5 |
+|---------|----|-----|---|-----|---|-------|
+| AGC | **8.2%** [6–10] | — | 60.4% [55–65] | — | 30.5% [25–35] | 0.8% |
+| SGA | **18.0%** [15–21] | — | 57.0% | — | 24.0% | 1.0% |
+| CC | **27.0%** [24–30] | — | 41.3% | — | 25.9% | 5.9% |
+| BLG | **2.6%** incl. Black Label **0.30%** [any 10: 2–4 · BL: 0.2–0.5] | 20.2% [15–25] | 33.4% | 29.4% | 12.8% | 1.7% |
+
+*Reading it:* a Mint card that passes the Centering Tool check has a real shot at an AGC 10. Near-Mint cards cap at 9. Budget CC hands out many 10s, but they're worth less (§8.5).
 
 ### 8.4 Fees, turnaround & limits
 | Company | Economy | Standard | Express | Max declared value (E / S / X) | Bulk discount |
@@ -301,11 +318,11 @@ Plus $12 insured shipping per submission. **Collectors Con walk-through:** same-
 | 6 | 0.60 | 0.70 | 0.80 | 0.75 |
 | ≤ 5 | 0.45 | 0.50 | 0.60 | 0.55 |
 
-- **Desirability `D`** = clamp(1 + 0.5 × (popularity − 1), 0.8, 2.0). For grades ≥ 9 on vintage cards, add ×(1 + 0.25 × min(ageYears, 20)/10), up to ×1.5.
+- **Desirability `D`** = clamp(1 + 0.5 × (species popularity − 1), 0.8, 2.0), using the species' **absolute** popularity. For grades ≥ 9 on vintage cards, multiply by the **vintage bonus** `(1 + 0.25 × min(ageYears, 20)/10)` **after** clamping. That bonus is up to ×1.5, so `D` can reach 3.0.
 - **Population scarcity `P`:** grade 10: `1 + 0.6 × e^(−pop10/20)` · grade 9: `1 + 0.2 × e^(−pop9/50)` · else 1.
 - **Population report:** initialized per card and company from print run × grading rate × grade distribution (log-normal noise), then grows about 0.1%/day plus your submissions.
 
-*Worked examples:* Modern Holo Rare ($3) in AGC 10 ≈ $17: **not worth** a $30–65 fee. Modern Mythic ($220) in AGC 10 ≈ $2,000: **worth it**. 1st Edition *Origins* Infernox Holo ($1,800 raw) in AGC 10 ≈ $35–40k: **grail**.
+*Worked examples:* Modern Holo Rare ($3) in AGC 10 ≈ $17: **not worth** a $30–65 fee. Modern Mythic Solaryx ($200, popularity 2.6) in AGC 10 ≈ 200 × 4.5 × 1.8 × 1.5 ≈ $2,400: **worth it**. 1st Edition *Origins* Infernox Holo ($1,800 raw, popularity 3.0, 25 years old, pop10 ≈ 5) in AGC 10 ≈ 1,800 × 4.5 × 3.0 × 1.47 ≈ $36k: **grail**.
 
 ### 8.6 Crack & resubmit
 The slab fee is lost. There is a 3% chance (Standard) of surface −0.5 while cracking. The hidden sub-scores are unchanged, so you're betting on company noise.
@@ -335,9 +352,11 @@ The slab fee is lost. There is a 3% chance (Standard) of surface −0.5 while cr
 
 | L | 1 | 2 | 3 | 5 | 7 | 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 49 |
 |---|---|---|---|---|---|----|----|----|----|----|----|----|----|----|
-| XP → L+1 | 80 | 234 | 439 | 970 | 1,632 | 2,838 | 5,319 | 8,312 | 11,745 | 15,582 | 19,784 | 24,344 | 29,216 | 33,344 |
+| XP → L+1 | 80 | 234 | 439 | 969 | 1,633 | 2,839 | 5,321 | 8,312 | 11,746 | 15,582 | 19,788 | 24,338 | 29,213 | 33,334 |
 
-Cumulative to reach Lv 10 ≈ 9.7k XP.
+Cumulative to reach Lv 10 = 9,747 XP.
+
+**Rank titles:** Corner Stall (Lv 1) → Hobby Shop (Lv 7) → Local Favorite (Lv 15) → Collector's Haven (Lv 25) → Collectibles Empire (Lv 35) → **Collectibles Legend** (Lv 50).
 
 **Pacing targets** (1×, "balanced" bot, Standard): Lv 2 on day 1 · Lv 5 by day 4 · Lv 10 by day 12 · Lv 15 by day 25 · Lv 20 by day 40 · Lv 30 by day 90 · Lv 40 by day 170 · Lv 50 by day 300.
 
@@ -345,7 +364,7 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 
 | Lv | Unlocks |
 |----|---------|
-| 1 | Budget Box Co. (packs, blisters, starter decks, tins, collection boxes) · Small Wall Shelf · pricing · checkout · pack opening · basic Binder |
+| 1 | Budget Box Co. (packs, blisters, starter decks, tins, collection boxes, third-party mystery boxes) · Small Wall Shelf · pricing · checkout · pack opening · basic Binder |
 | 2 | Singles in the display case · Small Display Case (buy more) · customer buy offers (tutorial) |
 | 3 | Gondola Shelf · Decor catalog I · FoilTrack market app |
 | 4 | **Harbor Hobby Distribution** (needs 2★): booster boxes, ECBs, bundles · Box Wall Rack · Bargain Bin |
@@ -354,7 +373,7 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 | 7 | **Hiring: Cashier** · extra Register lane · **Shop Tier 2** · Card Reader Terminal |
 | 8 | **FoilMarket** · Special Orders · Liquidator & Estate Sale events · Sorting Station · Tall Wall Shelf |
 | 9 | **Accessories** · Accessory Pegboard · POS System (pricing rules) |
-| 10 | **Starforge Official Distribution** (needs 3★): pre-orders, 1st Edition allocations · Play Tables · League Night · Large Lit Display Case |
+| 10 | **Starforge Official Distribution** (needs 3★): pre-orders, 1st Edition allocations, League Promo Kits · Play Tables · League Night · Large Lit Display Case |
 | 11 | Marketing (flyers, social ads) · Decor catalog II |
 | 12 | Summit Grading · **Hiring: Stocker** · Pack Vending Machine · Card Lab: Light Box · Loyalty Cards |
 | 13 | Tournaments · host Prerelease Events |
@@ -375,6 +394,8 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 | 50 | "Collectibles Legend" title · Golden Register (cosmetic) |
 | *other levels* | **Perk levels**: a decor set, fixture variants, efficiency perks (+5% storage, −2% supplier prices, +1 daily-objective reroll), avatar cosmetics. No level is empty |
 
+**During development:** an unlock whose feature isn't built yet is hidden behind a feature flag, and its level grants a placeholder perk instead (a decor item plus a small efficiency perk). That way every build keeps "no empty levels".
+
 **Reputation gates** (stars = `round½(rep / 20)`, so 1★ = 15–24 … 5★ = 95+): Harbor Hobby 2★ · Starforge 3★ · Competitive customers 1.5★ · Hunters 1★ · Investors 2.5★ · Collectors 3★ · Influencers 4★.
 
 ---
@@ -393,6 +414,10 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 | Collector Tin | 3 packs, promo | 3 | $21.99 | $15.50 | $14 | $13 |
 | Starter Deck | 60 cards, 1 guaranteed holo | 2 | $14.99 | $10.00 | $9.00 | $8.40 |
 | Prerelease Kit | 4 packs, 20-card evolution pack, prerelease promo | 3 | $24.99 | — | — | $15.50 (release window only) |
+| Poster Collection *(special sets only)* | 3 packs, poster, promo | 3 | $19.99 | — | $12.50 | $11.50 |
+| League Promo Kit *(event supply, not for resale)* | 20 league promos + 10 prize packs for one event (optional: +30% attendance, +Community) | — | — | — | — | $45 (Lv 10) |
+
+**Third-party Mystery Boxes** (Budget Box Co., from Lv 1; also from Liquidator events): Small $12.99 / cost $8.00 · Medium $29.99 / $18.00 · Large $99.99 / $60.00. SU 2 / 4 / 8. Contents recipes are in §17.
 
 **Accessories** (Harbor Hobby, Lv 9): Sleeves (65) $9.99 / $4.50 · Deck Box $6.99 / $3.00 · 9-Pocket Binder $24.99 / $11.00 · Playmat $24.99 / $10.00 · Toploaders (25) $4.99 / $1.80 · Storage Box (800) $7.99 / $3.20 · Dice Set $5.99 / $2.20.
 **Manga** (Kaze Manga Direct, Lv 5): Volume $10.99 / $6.60 (min 5 per volume) · Deluxe Hardcover $24.99 / $15.00 (min 3) · Box Set: MSRP N × $8.50, cost N × $5.40.
@@ -401,7 +426,7 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 ### 10.2 Supplier rules
 - **Delivery:** Budget next morning · Harbor 2 days · Kaze 3 days · Starforge on release date (otherwise 2 days) · FoilMarket 2 days (+$4 singles, +$12 sealed) · Sakura 5 days.
 - **Volume discounts (Harbor):** −3% at ≥ $500 · −6% at ≥ $1,500 · −10% at ≥ $5,000.
-- **Allocation (Starforge 1st Edition boxes per release):** by tier 1 / 3 / 6 / 12 / 24 boxes × `(0.5 + rep/100)`, +25% if last season's Glimmerkin sales were in your top quartile.
+- **Allocation (Starforge 1st Edition boxes per release):** by tier 1 / 3 / 6 / 12 / 24 boxes × `(0.5 + rep/100)`, +25% if last season's Glimmerkin sales were in your top quartile. **Special sets** (no boxes) are allocated as ECBs and collections instead (×3 units per box-equivalent). Harbor Hobby gets small, capped release-week stock of every release, so players without a Starforge account still take part.
 - **Limited stock:** hyped products have supplier stock caps per day. They sell out and restock slowly. In the "last call" phase, stock caps shrink to 0 over 14 days.
 - **Insurance** costs 2% of order value and covers damaged units at full cost.
 - **Damaged shipment:** chance per order by difficulty (§2). It affects 10–40% of units, which become "Damaged box" SKUs (sell at −40% or open normally).
@@ -432,7 +457,8 @@ Cumulative to reach Lv 10 ≈ 9.7k XP.
 
 ### 11.3 EV targets (unit-tested per set)
 - **Market EV** of a modern pack at release: **0.85–1.10 × MSRP**.
-- **Realizable EV** (bulk valued at a $0.02 buylist, others at 85% of market): **0.62–0.80 × MSRP**, which is just above Harbor wholesale ($2.95 = 0.66 × MSRP).
+- **Realizable EV** (non-reverse commons and uncommons valued at a $0.02 buylist, everything else at 85% of market): **0.66–0.80 × MSRP**, at or just above Harbor wholesale ($2.95 = 0.66 × MSRP).
+- *Check with typical values (§7.1):* market EV ≈ $0.50 (C) + $0.60 (U) + $0.45 (reverse) + $3.02 (rare slot) ≈ **$4.57 = 1.02 × MSRP**. Realizable ≈ $0.16 + $0.38 + $2.56 ≈ **$3.10 = 0.69 × MSRP**. Relative popularity (§7.1) averages 1.0 per set, so it doesn't shift these.
 - **Result:** selling sealed at MSRP gives a safe ~30–40% margin. Opening is a gamble with a slight edge at wholesale cost, plus XP and collection value. Hype events can push EV above MSRP, and then everyone rips, which drains sealed stock.
 
 ---
@@ -473,11 +499,26 @@ F_sealed(t) = MSRP × SealedCurve(age, printStatus) × Hype_set(t) × EVfactor
 ## 13. Reputation (`balance/reputation.ts`)
 
 - **Model:** `rep = 0.25·Prices + 0.20·Service + 0.20·Selection + 0.25·Trust + 0.10·Community` (each sub-score 0–100).
-- **Start:** all sub-scores 20, except Community 10.
-- **Update:** each visit emits signals in −1…+1 (price fairness, wait vs patience, found-wanted, trust events). Daily: `sub += η × Σ(signal × influence) × diminishing(sub)`, with `η ≈ 0.10` and `diminishing = (1 − sub/110)` for positive totals. Influence: normal 1 · regular 2 · influencer 5.
-- **Community** is raised by hosted events, League Night attendance, kids' delight and charity events.
+- **Start:** all five sub-scores at 20, so rep = 20 (1★).
+- **Signals:** each visit emits signals in −1…+1 for the sub-scores it touched: price fairness, wait vs patience, found-what-they-wanted, and trust events (fair buys, fakes, special orders). Influence weights: normal 1 · regular 2 · influencer 5.
+- **Daily update per sub-score k:**
+  `Δ_k = G_k × S̄_k × min(1, n_k / 15) × H`, where
+  - `S̄_k` is today's influence-weighted average signal and `n_k` the number of signals.
+  - `G_k` (max daily change) is 10 for Prices, Service and Selection, 8 for Trust and 5 for Community.
+  - `H = (1 − sub/110)` for gains and `(0.5 + sub/200)` for losses.
+- **Direct deltas** (§6.3, events, hosted events, charity) are added on top. **Community** grows mainly through hosted events, League Nights, kids' delight and charity.
 - **Drift:** each sub-score decays 1% per day toward 20, so reputation needs upkeep.
-- **Stars:** `round½(rep / 20)`.
+- **Stars:** `round½(rep / 20)`, so 1.5★ ≥ 25 · 2★ ≥ 35 · 2.5★ ≥ 45 · 3★ ≥ 55 · 4★ ≥ 75 · 5★ ≥ 95.
+
+**Pacing check** (deterministic model; League Nights from day 12):
+| Play quality (avg signal) | 2★ | 3★ | 4★ | 5★ |
+|---------------------------|----|----|----|----|
+| Mediocre (0.2) | day 15 | day 54 | — | — |
+| **Balanced (0.5)** | **day 6** | **day 16** | day 35 | — |
+| Good (0.7) | day 4 | day 11 | day 23 | — |
+| Near-perfect (0.9) | day 3 | day 8 | day 17 | day 43 |
+
+This matches the gates: Harbor (Lv 4 + 2★) around day 4–7, and Starforge (Lv 10 + 3★) around day 11–17.
 
 ---
 
@@ -495,14 +536,15 @@ F_sealed(t) = MSRP × SealedCurve(age, printStatus) × Hype_set(t) × EVfactor
 
 - **Morale** (0–100) → performance × (0.7 + 0.004 × morale). The employee warns below 30 and quits after 3 days below 15.
 - **Employee XP:** +10/day plus task XP. Level-up every `200 × level` XP gives +1 skill point.
-- **Traits:** *Speedy* (+20% speed) · *Chatty* (+10% satisfaction, −10% speed) · *Eagle Eye* (+15% fake detection) · *Kid Whisperer* (+Kid satisfaction) · *Night Owl* (+10% after 17:00) · *Meticulous* (−errors) · *Clumsy* (0.5% chance per day to damage one displayed single's surface) · *Hype Machine* (+event attendance) · *Bargain Hunter* (+5% better buy offers).
+- **Traits:** *Speedy* (+20% speed) · *Chatty* (+10% satisfaction, −10% speed) · *Eagle Eye* (+15% fake detection) · *Kid Whisperer* (+Kid satisfaction) · *Night Owl* (+10% after 17:00) · *Meticulous* (−errors) · *Clumsy* (Tycoon: 0.5% chance per day to damage one displayed single's surface; other modes: −10% restock speed) · *Hype Machine* (+event attendance) · *Bargain Hunter* (+5% better buy offers).
 
 ---
 
 ## 15. Manga Economics (`balance/manga.ts`)
 
 - **Series popularity** `P ∈ [0.3, 3.0]`, a random walk plus events. Daily demand per volume ∝ `P × fanbase × recency` (volume 1 and the latest volume sell the most).
-- **Releases:** mega-hits every 28 days (Tuesdays), others every 42–56 days. Completed series have no new volumes.
+- **Releases** always land on **Tuesdays** (New Manga Day): mega-hits every 4 weeks, others every 6, 7 or 8 weeks. Completed series have no new volumes.
+- **Popularity profiles:** Mega-hit · Popular · Rising · Cult Classic · Evergreen · Seasonal · Fading. These shape the random walk (drift, volatility, seasonal spikes).
 - **Out-of-print volumes:** early volumes of popular series cycle through "limited" supplier stock. Market price is `MSRP × (1 + 0.3P)`, up to ×2.5.
 - **Complete runs** sell at `Σ volumes × (1.1 + 0.05P)`. Completed series get +10%.
 - **Anime announcement:** `P × 1.8` for 14 days, then it settles at ×1.3.
@@ -522,6 +564,13 @@ F_sealed(t) = MSRP × SealedCurve(age, printStatus) × Hype_set(t) × EVfactor
 
 - Customer satisfaction from a mystery box depends on `valueRatio = Σ contents market value / price`: `< 0.6` bad (Trust −) · `0.6–0.9` meh · `0.9–1.2` good · `> 1.2` great (buzz +).
 - Demand is highest among Kids, Casuals, Influencers and Tourists. Price tolerance is anchored to box size (S $10–20 · M $25–50 · L $75–150).
+- **Third-party box recipes** (when you open one yourself, or a customer does):
+  | Size | Contents | Value ratio range |
+  |------|----------|-------------------|
+  | Small | 2 packs (random in-print sets) + 5 singles (Common to Holo Rare) | 0.70–1.20 × price |
+  | Medium | 5 packs + 1 promo + 10 singles + 1 guaranteed Holo Rare or better | 0.80–1.30 × price |
+  | Large | 12 packs (or 1 bundle) + 3 promos + 1 CC-graded slab. 5% chance of a sealed vintage pack | 0.75–1.40 × price |
+- **Player-built boxes** (Mystery Box Builder, Lv 14): you choose the contents. The satisfaction rule above decides how customers react.
 
 ---
 
@@ -540,12 +589,13 @@ It outputs a Markdown or CSV report: level by day, cash and debt curves, reputat
 |-----|--------|
 | Day-1 revenue / profit | $100–180 / $30–70 |
 | Cash at end of week 1 (after rent) | $1,200–2,000 |
-| First booster box affordable | day 4–6 |
-| First grading submission | ≈ day 10 |
+| Harbor Hobby account (Lv 4 + 2★) reached | day 4–7 |
+| Starforge account (Lv 10 + 3★) reached | day 11–17 |
+| First grading submission *(from Phase 4)* | ≈ day 10 |
 | Tier 2 affordable ($6,000) | day 10–14 |
 | Sealed margin at MSRP | 30–40% |
 | Bankruptcies (Standard) | 0 |
 | Stuck states (no way to earn) | 0. The bargain bin and bulk always sell, and loans exist |
 | Level pacing | within ±20% of §9.2 targets |
 
-CI runs a short smoke version (10 days × 5 seeds) to catch economy-breaking changes.
+KPIs apply once the features they measure exist (see the phases in `ROADMAP.md`). CI runs a short smoke version (10 days × 5 seeds) to catch economy-breaking changes.
