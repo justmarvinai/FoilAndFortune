@@ -17,6 +17,19 @@ for (const route of ROUTES) {
   });
 }
 
+/** Guards the chunking config: only 3D routes may download the three.js chunk (vite.config.ts). */
+for (const path of ['/', '/debug/ui', '/debug/engine', '/debug/art']) {
+  test(`${path} does not download the 3D engine`, async ({ page }) => {
+    const scripts: string[] = [];
+    page.on('request', (request) => {
+      if (request.resourceType() === 'script') scripts.push(new URL(request.url()).pathname);
+    });
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    expect(scripts.filter((script) => /\/three-[^/]+\.js$/.test(script))).toEqual([]);
+  });
+}
+
 test('unknown routes fall back to the hub', async ({ page }) => {
   await page.goto('/definitely/not/a/page');
   await expect(page.getByRole('heading', { level: 1, name: 'Foil & Fortune' })).toBeVisible();

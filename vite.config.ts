@@ -25,13 +25,20 @@ export default defineConfig({
     rolldownOptions: {
       output: {
         codeSplitting: {
+          // Groups capture their dependencies recursively, so the React runtime (which R3F depends
+          // on) must win by priority, or it lands in `three` and every page downloads the 3D stack.
           groups: [
+            {
+              name: 'react',
+              priority: 20,
+              test: /node_modules[\\/](react|react-dom|scheduler|use-sync-external-store|zustand)[\\/]/,
+            },
             // The 3D stack is only loaded by routes that render a scene.
             {
               name: 'three',
+              priority: 10,
               test: /node_modules[\\/](three|@react-three|postprocessing|n8ao|three-stdlib|three-mesh-bvh|troika-[^\\/]+|camera-controls|maath|meshline|stats-gl|@monogrid)[\\/]/,
             },
-            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
           ],
         },
       },

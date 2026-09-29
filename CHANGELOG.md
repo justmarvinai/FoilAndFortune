@@ -14,7 +14,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **UI kit** (`src/ui`): design tokens, fonts, Button, Panel (paper, clipboard, tablet, receipt), StarRating, ProgressBar, MoneyCounter, SpeedControl, SegmentedControl (native radios), Toasts, Modal, Tooltip, Stamp, Sticker, RarityGem, ElementIcon; an app-wide error boundary with a friendly crash screen; i18n (English) for everything a player sees.
 - **Cards** (`src/cards`): CardView with standard and full-art layouts, our own foil effects (holo, reverse holo, textured full art, gold) with pointer tilt and an idle shimmer, and the Glimmerkin card back.
 - **Debug pages:** hub (`/`), UI kit gallery (`/debug/ui`), card art spike (`/debug/art`), and the **Engine Sandbox** (`/debug/engine`): a prototype HUD, day-cycle clipboard, stock and price editor, ledger, save slots with export/import, a live domain-event log, and a leva dev panel (time scale, skip hour/day/week, grants, raw state).
-- **Tests:** 73 unit tests (sim, saves, state bridge, calendar, money, RNG, content, tokens) and 16 Playwright tests on desktop and phone landscape, all running under the production Content-Security-Policy.
+- **Tests:** 73 unit tests (sim, saves, state bridge, calendar, money, RNG, content, tokens) and 24 Playwright tests on desktop and phone landscape, all running under the production Content-Security-Policy, including guards that non-3D pages never download the three.js chunk.
 - Credits and license texts for the bundled fonts (OFL) and Lucide icons (ISC) in `public/licenses/`.
 
 ### Decisions
