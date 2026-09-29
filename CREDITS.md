@@ -15,6 +15,15 @@ All creature art, card frames, foils, the card back, the 3D shop and its charact
 | Atkinson Hyperlegible (font) | Braille Institute of America, Inc. | `@fontsource/atkinson-hyperlegible` 5.3.0 | OFL-1.1 | Legibility font (receipts, logs, accessibility option) · `licenses/atkinson-hyperlegible-OFL.txt` | 2026-09-29 |
 | Lucide icons | Lucide Icons and Contributors | `lucide-react` 1.48.0 | ISC | UI icons · `licenses/lucide-ISC.txt` | 2026-09-29 |
 
+## Third-party code (adapted, permissive licenses)
+Short snippets adapted into our shaders. Their license notices ship in `public/licenses/third-party-code.txt` (and `apache-2.0.txt`) and are marked at each use site.
+
+| Code | Author | Source | License | Where | Added |
+|------|--------|--------|---------|-------|-------|
+| SDF primitives (ellipsoid bound, exact round cone, quadratic Bézier distance) and polynomial smooth-min | Inigo Quilez | iquilezles.org/articles/distfunctions and the author's Shadertoy examples | MIT | `src/art/clay/shaders/common.ts` | 2026-09-29 |
+| "Hash without Sine" (`hash11`/`hash12`/`hash22`) | David Hoskins | shadertoy.com/view/4djSRW | MIT | `src/art/clay/shaders/common.ts` | 2026-09-29 |
+| PBR Neutral tone mapper | The Khronos Group Inc. | github.com/KhronosGroup/ToneMapping | Apache-2.0 | `src/art/clay/shaders/common.ts` | 2026-09-29 |
+
 ## Candidate sources (researched, not yet used)
 | Source | Content of interest | License |
 |--------|---------------------|---------|

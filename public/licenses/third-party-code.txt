@@ -1,0 +1,65 @@
+Third-party code notices
+========================
+
+Foil & Fortune's own code is original. Short parts of the Clay Critters shader library
+(src/art/clay/shaders/common.ts) are adapted from the works below, under their licenses.
+
+
+1. Signed-distance functions and polynomial smooth-min
+   Author:  Inigo Quilez
+   Source:  https://iquilezles.org/articles/distfunctions/ and the author's Shadertoy examples
+   Used:    ellipsoid bound, exact round cone, quadratic Bezier distance, polynomial smooth-min
+   License: MIT
+
+   The MIT License
+   Copyright (c) Inigo Quilez
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy of this
+   software and associated documentation files (the "Software"), to deal in the Software
+   without restriction, including without limitation the rights to use, copy, modify, merge,
+   publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+   to whom the Software is furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all copies or
+   substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+   FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+
+2. Hash without Sine
+   Author:  David Hoskins
+   Source:  https://www.shadertoy.com/view/4djSRW
+   Used:    hash11, hash12, hash22
+   License: MIT
+
+   The MIT License
+   Copyright (c) David Hoskins
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy of this
+   software and associated documentation files (the "Software"), to deal in the Software
+   without restriction, including without limitation the rights to use, copy, modify, merge,
+   publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+   to whom the Software is furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all copies or
+   substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+   FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+
+3. Khronos PBR Neutral tone mapper
+   Author:  The Khronos Group Inc.
+   Source:  https://github.com/KhronosGroup/ToneMapping
+   Used:    toneNeutral
+   License: Apache License, Version 2.0 (full text: apache-2.0.txt). Modified: ported to a
+            standalone GLSL ES 3.00 function; no other changes to the formula.
