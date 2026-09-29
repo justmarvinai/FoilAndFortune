@@ -32,7 +32,7 @@ export function ProgressBar({
         }}
       />
       {label ? (
-        <span className="absolute inset-0 grid place-items-center font-display text-xs tracking-wide text-ink">
+        <span className="absolute inset-0 grid place-items-center font-display text-xs tracking-wide text-ink [text-shadow:0_0_3px_var(--color-paper),0_0_1px_var(--color-paper)]">
           {label}
         </span>
       ) : null}
