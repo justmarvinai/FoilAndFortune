@@ -1,0 +1,112 @@
+{
+  "format": "ff-save",
+  "saveVersion": 1,
+  "gameVersion": "test",
+  "savedAt": "2026-09-29T12:00:00.000Z",
+  "slot": "slot-1",
+  "summary": {
+    "shopName": "Foil & Fortune",
+    "day": 1,
+    "level": 1,
+    "cashCents": 60000,
+    "playTimeMs": 0
+  },
+  "state": {
+    "meta": {
+      "saveVersion": 1,
+      "gameVersion": "test",
+      "seed": 20260929,
+      "createdAt": "2026-09-29T12:00:00.000Z",
+      "playTimeMs": 0,
+      "difficulty": "standard",
+      "shopName": "Foil & Fortune"
+    },
+    "rng": {
+      "customers": [82266232, 1811792578, 1207607550, 2062968961],
+      "market": [503077108, 3148767865, 3612599514, 172984925],
+      "packs": [2904041805, 2178134494, 2829695040, 1355173597],
+      "grading": [3922390159, 1201571, 3341979371, 3765699030],
+      "events": [3231811051, 567493033, 1309476225, 2826584696],
+      "staff": [1220237205, 983763969, 1042188255, 2767022455],
+      "misc": [1663930525, 3378234834, 3223729482, 3178711326]
+    },
+    "clock": {
+      "day": 1,
+      "minute": 480,
+      "phase": "prep",
+      "speed": 1
+    },
+    "finance": {
+      "cashCents": 60000,
+      "loan": {
+        "principalCents": 0
+      },
+      "ledger": [],
+      "today": {
+        "revenue": 0,
+        "cogs": 0,
+        "wages": 0,
+        "rent": 0,
+        "other": 0,
+        "customers": 0
+      }
+    },
+    "progression": {
+      "level": 1,
+      "xp": 0
+    },
+    "reputation": {
+      "sub": {
+        "prices": 20,
+        "service": 20,
+        "selection": 20,
+        "trust": 20,
+        "community": 20
+      }
+    },
+    "shop": {
+      "tier": 1
+    },
+    "inventory": {
+      "sealed": {
+        "gk.emberdawn.booster": [
+          {
+            "qty": 24,
+            "unitCostCents": 325,
+            "acquiredDay": 0
+          }
+        ],
+        "gk.emberdawn.blister": [
+          {
+            "qty": 4,
+            "unitCostCents": 1050,
+            "acquiredDay": 0
+          }
+        ],
+        "gk.emberdawn.starter-ember": [
+          {
+            "qty": 2,
+            "unitCostCents": 1000,
+            "acquiredDay": 0
+          }
+        ],
+        "gk.emberdawn.box": [
+          {
+            "qty": 1,
+            "unitCostCents": 10400,
+            "acquiredDay": 0
+          }
+        ]
+      }
+    },
+    "pricing": {
+      "prices": {
+        "gk.emberdawn.booster": 449,
+        "gk.emberdawn.blister": 1499,
+        "gk.emberdawn.starter-ember": 1499,
+        "gk.emberdawn.box": 16164
+      }
+    },
+    "stats": {}
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "appName": "Foil & Fortune",
+  "tagline": "Rip packs, read customers, ride the market.",
+  "actions": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "load": "Load",
+    "continue": "Continue",
+    "newGame": "New Game",
+    "export": "Export backup",
+    "import": "Import backup"
+  },
+  "difficulty": {
+    "cozy": "Cozy",
+    "standard": "Standard",
+    "tycoon": "Tycoon",
+    "cozyBlurb": "No rent, no failing. Just shopkeeping.",
+    "standardBlurb": "Weekly rent and bank loans. No game over.",
+    "tycoonBlurb": "Tighter margins, savvier customers. Bankruptcy is possible."
+  },
+  "phase": {
+    "prep": "Prep",
+    "open": "Open",
+    "night": "Closed"
+  },
+  "sign": {
+    "open": "OPEN",
+    "closed": "CLOSED"
+  },
+  "weekday": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  },
+  "season": {
+    "spring": "Spring",
+    "summer": "Summer",
+    "autumn": "Autumn",
+    "winter": "Winter"
+  },
+  "date": "{{weekday}} · {{season}} {{day}} · Y{{year}}",
+  "level": "Lv {{level}}",
+  "xp": "{{xp}} / {{needed}} XP",
+  "reputation": "Reputation",
+  "speed": {
+    "label": "Game speed",
+    "pause": "Pause",
+    "normal": "Normal speed",
+    "fast": "Fast (2×)",
+    "fastest": "Fastest (4×)"
+  },
+  "app": {
+    "loading": "Shuffling the deck…",
+    "crashTitle": "Oops, the shop hit a snag",
+    "crashBody": "Something broke on this screen. Your saves are safe; reloading usually fixes it.",
+    "crashDetails": "Technical details",
+    "reload": "Reload"
+  }
+}

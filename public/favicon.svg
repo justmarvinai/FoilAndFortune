@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Foil &amp; Fortune</title>
+  <defs>
+    <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7FF6FF"/>
+      <stop offset="0.3" stop-color="#B78BFF"/>
+      <stop offset="0.55" stop-color="#FF8BD1"/>
+      <stop offset="0.8" stop-color="#FFE58A"/>
+      <stop offset="1" stop-color="#8BFFB0"/>
+    </linearGradient>
+  </defs>
+  <rect x="14" y="6" width="36" height="50" rx="6" fill="#1B1F4B" stroke="#1E2340" stroke-width="3" transform="rotate(-8 32 31)"/>
+  <rect x="16" y="8" width="36" height="50" rx="6" fill="url(#foil)" stroke="#1E2340" stroke-width="3"/>
+  <path d="M34 17 L27 34 H33 L30 49 L41 29 H35 L38 17 Z" fill="#FFC93C" stroke="#1E2340" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>

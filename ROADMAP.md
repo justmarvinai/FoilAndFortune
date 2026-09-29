@@ -36,16 +36,16 @@
 
 ## Phase 1 · Foundation & Art Spike (v0.1.0)
 **Goal:** a solid, tested skeleton deployed on Vercel, plus visual prototypes so you can **see and choose** the art direction before we build on it.
-- [ ] Scaffold: Vite 8, React 19, TypeScript 7, Tailwind 4, Biome, Vitest, Playwright, path aliases, npm scripts, `vercel.json`, CI workflow
-- [ ] `core/`: seeded RNG streams, money (cents) and formatting, calendar utilities (Day 1 = Spring 8 = Monday), IDs, event bus
-- [ ] `content/`: Zod schemas (brand, species, set, card, pack, product), registry, `content:validate`, balance config skeleton
-- [ ] `sim/`: GameState v1, `createNewGame`, `dispatch`, `tick`, phase transitions, first commands, with unit tests
-- [ ] `state/`: Zustand bridge, GameLoop, presentation bus
-- [ ] `save/`: IndexedDB slots, autosave ring and weekly autosave, export/import, migration framework with a fixture test
-- [ ] `i18n/` setup (English) · fonts · UI tokens · first UI kit components · `/debug/ui` gallery · debug panel
+- [x] Scaffold: Vite 8, React 19, TypeScript 7, Tailwind 4, Biome, Vitest, Playwright, path aliases, npm scripts, `vercel.json`, CI workflow
+- [x] `core/`: seeded RNG streams, money (cents) and formatting, calendar utilities (Day 1 = Spring 8 = Monday), event bus. *(Instance IDs arrive with card instances in Phase 2.)*
+- [x] `content/`: Zod schemas (brand, species, set, card, pack, product), registry, `content:validate`, balance config skeleton
+- [x] `sim/`: GameState v1, `createNewGame`, `dispatch`, `tick`, phase transitions, first commands, with unit tests
+- [x] `state/`: Zustand bridge, GameLoop, presentation bus
+- [x] `save/`: IndexedDB slots, autosave ring and weekly autosave, export/import, migration framework with a fixture test
+- [x] `i18n/` setup (English) · fonts · UI tokens · first UI kit components · `/debug/ui` gallery · debug panel (`/debug/engine`, leva)
 - [ ] **Art Spike A:** 3D diorama corner (shell, shelf, counter, day/evening lighting, one walking Peg-folk with expressions)
 - [ ] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art`
-- [ ] Evaluate React Compiler (adopt or reject → DECISIONS)
+- [x] Evaluate React Compiler (adopt or reject → DECISIONS): **adopted**, ADR-029
 - [ ] Deploy a preview. **You pick** the shop style (Q1) and creature style (Q2), recorded in DECISIONS
 - **Done when:** `npm run check` is green, the preview URL works on desktop and phone, and the art direction is chosen.
 

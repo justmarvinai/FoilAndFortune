@@ -1,5 +1,8 @@
 # ❓ Questions for You
 
+> ✅ **Answered 2026-09-29:** "Use your recommendations". Every ⭐ default below now applies (see `docs/DECISIONS.md`).
+> **Still open:** **Q2**: pick the creature art style on `/debug/art` (reply *A*, *B*, or what you'd mix). Q25 (logo wishes) and Q26 (games you love) are always welcome, and you can overrule any default at any time.
+
 Hi! Before coding starts, these answers make sure **Foil & Fortune** turns out exactly as you imagine it.
 
 **How to answer (whatever is easiest):**

@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "../ui/tokens.css";
+@import "../ui/ui.css";
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-sky);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foil-text {
+      animation: none;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Animated holographic text fill (logo, big moments). */
+@utility foil-text {
+  background-image: linear-gradient(
+    115deg,
+    #7ff6ff 0%,
+    #b78bff 20%,
+    #ff8bd1 40%,
+    #ffe58a 60%,
+    #8bffb0 80%,
+    #7ff6ff 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-ink);
+  paint-order: stroke fill;
+  animation: foil-shift 6s linear infinite;
+}
+
+@keyframes foil-shift {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Soft starfield for night stages (pure CSS, no assets). */
+.hub-stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff8 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 72%, #fff6 50%, transparent 51%),
+    radial-gradient(2px 2px at 44% 32%, #ffe58a99 50%, transparent 51%),
+    radial-gradient(1px 1px at 63% 12%, #fff7 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 78% 58%, #b78bff99 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 28%, #fff6 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 8% 88%, #7ff6ff88 50%, transparent 51%),
+    radial-gradient(1px 1px at 54% 90%, #fff5 50%, transparent 51%),
+    radial-gradient(60% 50% at 50% 0%, #2a2f7a 0%, transparent 70%);
+}

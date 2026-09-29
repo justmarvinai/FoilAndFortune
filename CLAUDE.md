@@ -6,10 +6,10 @@ Guidance for Claude Code (and humans) working in this repository. Keep this file
 **Foil & Fortune** is a browser-based collectibles-shop tycoon. The player grows a tiny card and manga shop into a collectibles empire: buy wholesale, rip packs, grade cards, haggle with customers, ride a simulated market, expand the shop and hire staff. The main focus is TCGs, with a fictional Pokémon-inspired TCG called **Glimmerkin**. It is a static SPA on **Vercel** with **no backend or database**. Saves live in IndexedDB with export/import.
 
 ## ⚠️ Current status
-- **Phase 0 (Planning) is complete.** **Do NOT write game code until the user explicitly says to start** (e.g., "Start Phase 1"). Editing docs is fine.
-- Open questions are in `USER_QUESTIONS.md`. Once the user says go, unanswered questions use the ⭐ recommended defaults.
-- Next up: **Phase 1, Foundation & Art Spike** (`ROADMAP.md`).
-- *When coding starts, update this section to name the current phase.*
+- **Phase 1 (Foundation & Art Spike) is in progress.** The owner said "use your recommendations" on 2026-09-29, so every ⭐ default in `USER_QUESTIONS.md` applies (`docs/DECISIONS.md`).
+- **Waiting on the owner:** pick the creature art style on `/debug/art` (Q2 → ADR-006). Don't build more card art in either style until then.
+- Next up: **Phase 2, Vertical Slice** (`ROADMAP.md`).
+- Debug routes: `/debug/engine` (sim sandbox + leva dev panel), `/debug/ui` (UI kit), `/debug/art` (A vs B), `/debug/scene` (diorama), `/debug/clay`, `/debug/sticker`.
 
 ## Read before working
 | Task | Read |
@@ -23,17 +23,18 @@ Guidance for Claude Code (and humans) working in this repository. Keep this file
 | Why things are the way they are | `docs/DECISIONS.md` |
 
 ## Stack (versions checked 2026-09-26; pin exact versions at scaffold)
-TypeScript 7 (strict) · Vite 8 · React 19.3 · three r186 + @react-three/fiber 9 + drei 10 + postprocessing 3 · Zustand 5 + Immer 11 · Tailwind CSS 4 · Motion 13 · Howler 2 + ZzFX · Zod 4 · idb-keyval + fflate · i18next · @tanstack/react-virtual · Biome 2 · Vitest 5 · fast-check · Playwright · tsx · vite-plugin-pwa · npm, Node ≥ 22.
+TypeScript 7 (strict) · Vite 8 · React 19.3 + React Compiler 1.0 · three r186 + @react-three/fiber 9 + drei 10 + postprocessing 3 · Zustand 5 + Immer 11 · Tailwind CSS 4 · Motion 13 · Howler 2 + ZzFX · Zod 4 · idb-keyval + fflate · i18next · @tanstack/react-virtual · Biome 2 · Vitest 5 · fast-check · Playwright · tsx · vite-plugin-pwa · npm, Node ≥ 22.
 
-## Commands (available after the Phase 1 scaffold)
+## Commands
 ```bash
 npm run dev               # dev server
 npm run build             # production build → dist/
 npm run check             # typecheck + lint + unit tests + content validation (run before every commit)
-npm run test              # vitest run        · npm run test:e2e   # playwright
-npm run content:validate  # schemas, IDs, references, pull tables, EV targets, name blocklist
-npm run balance:sim       # headless economy simulation with bot players (docs/02 §18)
-npm run art:render -- --set <slug>   # pre-render card art to public/art/
+npm run test              # vitest run        · npm run test:e2e   # playwright (builds, then serves on :4173)
+npm run content:validate  # schemas, IDs, references, card numbering, name blocklist
+npm run format            # biome check --write
+npx tsx --tsconfig tsconfig.node.json scripts/dev/screenshot.ts <url> <out.png> [WxH] [waitMs] [full]
+# Planned: npm run balance:sim (docs/02 §18) · npm run art:render -- --set <slug> (after the art pick)
 ```
 
 ## Golden rules (architecture)
@@ -44,7 +45,7 @@ npm run art:render -- --set <slug>   # pre-render card art to public/art/
 5. **Stable IDs forever.** Never rename or remove a released content ID. Any `GameState` shape change bumps `saveVersion` and adds a **migration** plus a fixture test.
 6. **Money is integer cents** (`Cents`). Format only through `core/money`.
 7. **Per-frame data stays out of React.** Agent positions, particles and bubble screen positions live in mutable runtime objects read in `useFrame` or the overlay updater, not in Zustand.
-8. **No user-facing string literals** in components or sim. Use i18n keys.
+8. **No user-facing string literals** in components or sim. Use i18n keys. Debug pages (`src/debug`, `*Playground.tsx`) are exempt (ADR-031).
 9. **Assets:** self-made or CC0 / OFL / MIT / ISC / Apache-2.0 only. Add a `CREDITS.md` row in the **same commit**. **Never copy GPL code**, including popular open-source holo-card CSS demos. Write our own foil effects.
 10. **No runtime network requests** (self-host fonts and assets; no CDNs). drei `<Environment preset>` fetches HDRIs from a CDN, so use Lightformer environments instead.
 11. **Fictional brands only.** No real TCG, company or person names in content.
@@ -52,7 +53,7 @@ npm run art:render -- --set <slug>   # pre-render card art to public/art/
 ## Code conventions
 - TypeScript strict, `noUncheckedIndexedAccess`. No `any` (use `unknown` and narrow). No non-null `!` outside tests.
 - Files: components `PascalCase.tsx`, modules `camelCase.ts`, folders `kebab-case`. Content IDs are dotted lowercase (`gk.emberdawn.045`). Import via `@/`.
-- React: function components and hooks. Select **narrow** store slices (`useShallow` for objects). No business logic in components: call commands and selectors. Lazy-load heavy features.
+- React: function components and hooks. Select **narrow** store slices (`useShallow` for objects). No business logic in components: call commands (`useCommand`) and selectors. Lazy-load heavy features. The **React Compiler** is on (ADR-029): don't hand-write `useMemo`/`useCallback`/`memo` for performance.
 - Styling: Tailwind utilities plus tokens from `src/ui/tokens.css`. Complex effects (foil, glass) go in dedicated CSS files. No raw hex colors in components.
 - Comments explain *why*. Link doc sections for rules and formulas.
 - Tests are colocated (`x.test.ts`). Randomness tests use fixed seeds and statistical tolerances.
@@ -84,3 +85,6 @@ npm run art:render -- --set <slug>   # pre-render card art to public/art/
 - Don't use drei `<Html>` per customer bubble (too slow). Use the single `WorldOverlay` layer.
 - Browsers may evict IndexedDB. Call `navigator.storage.persist()` and keep the export-backup reminder.
 - Audio must unlock on a user gesture (Safari/iOS).
+- The app shell (`main.tsx`, `App.tsx`, `src/app`) imports UI components **by file**, never via the `@/ui/components` barrel, which pulls Motion into the entry chunk (+48 KB gz).
+- Keep `@babel/core` on 7.x: the React Compiler plugin is built against Babel 7 ASTs (ADR-029).
+- Right after a new dependency is first imported, the Vite dev server may answer `504 (Outdated Optimize Dep)` once. Reload before debugging a blank page.

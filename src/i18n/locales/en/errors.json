@@ -1,0 +1,9 @@
+{
+  "WRONG_PHASE": "You can't do that right now.",
+  "INVALID_SPEED": "That speed isn't available.",
+  "UNKNOWN_PRODUCT": "We don't carry that product.",
+  "INVALID_PRICE": "That price doesn't look right.",
+  "INVALID_AMOUNT": "That amount doesn't look right.",
+  "saveDamaged": "This save file is damaged.",
+  "saveNewer": "This save was made with a newer version of the game."
+}

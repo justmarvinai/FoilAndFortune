@@ -1,0 +1,37 @@
+{
+  "element": {
+    "ember": "Ember",
+    "tide": "Tide",
+    "bloom": "Bloom",
+    "volt": "Volt",
+    "terra": "Terra",
+    "mystic": "Mystic",
+    "shade": "Shade",
+    "frost": "Frost",
+    "neutral": "Neutral"
+  },
+  "rarity": {
+    "common": "Common",
+    "uncommon": "Uncommon",
+    "rare": "Rare",
+    "holoRare": "Holo Rare",
+    "ultraRare": "Ultra Rare",
+    "illustrationRare": "Illustration Rare",
+    "secretRare": "Secret Rare",
+    "mythicRare": "Mythic Rare",
+    "promo": "Promo"
+  },
+  "stage": {
+    "basic": "Basic",
+    "stage1": "Stage 1",
+    "stage2": "Stage 2",
+    "nova": "Nova",
+    "legend": "Legend"
+  },
+  "hp": "HP",
+  "weakness": "weak",
+  "resistance": "resist",
+  "retreat": "retreat",
+  "illustrator": "Illus. {{name}}",
+  "ability": "Ability"
+}

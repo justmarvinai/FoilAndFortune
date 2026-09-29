@@ -24,6 +24,7 @@
 | Language | **TypeScript** (strict) | 7.0 (native compiler) | Type safety across content, sim and UI. TS 7's native compiler makes typechecks about 10× faster |
 | Build and dev server | **Vite** | 8.x | Instant HMR, first-class static output, the Vercel default for SPAs |
 | UI framework | **React** | 19.3 | The biggest ecosystem. R3F needs it. Suspense and transitions for smooth UI |
+| Memoization | **React Compiler** (`babel-plugin-react-compiler` via `@rolldown/plugin-babel`, Babel 7) | 1.0 | Automatic memoization, so components stay plain and readable (ADR-029) |
 | 3D | **three.js** + **@react-three/fiber** + **@react-three/drei** + **@react-three/postprocessing** | r186 · 9.8 · 10.7 · 3.1 | Declarative 3D in React with helpers (camera controls, instancing, lightformers, contact shadows) and post effects |
 | State | **Zustand** + **Immer** | 5.x · 11.x | A minimal, fast, React-agnostic store. Immer gives immutable updates with simple mutation syntax |
 | Styling | **Tailwind CSS** + CSS custom properties (design tokens) + dedicated effect CSS | 4.3 | Fast iteration and consistent tokens. Foil effects live in hand-written CSS layers |
@@ -40,7 +41,7 @@
 | Tests | **Vitest** · **fast-check** · **Playwright** | 5.x · 4.x · 1.63 | Unit and statistical tests, property tests, end-to-end and screenshots |
 | Scripts | **tsx** | 4.x | Runs TS scripts (content validation, balance sim, art rendering) |
 | Offline and install | **vite-plugin-pwa** | 1.x | Precaching, offline play, update prompt |
-| Debug (dev only) | **leva**, **r3f-perf** | 0.10 · 7.x | Tweak panels and 3D performance overlay |
+| Debug (dev only) | **leva**, drei **`<StatsGl>`** | 0.10 · (drei) | Tweak panels and 3D performance overlay (ADR-030) |
 | Hosting | **Vercel** (static) | — | Preview deploys per branch, CDN, zero config |
 | Package manager | **npm** (Node ≥ 22) | — | Simple, the Vercel default |
 
@@ -312,7 +313,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 | Save size (typical late game) | < 2 MB |
 | Card art | ≤ 30 KB (art window WebP) · ≤ 70 KB (full art) |
 
-Tools: `r3f-perf` in debug, Chrome performance traces, a bundle visualizer, and the balance sim for CPU time per simulated day.
+Tools: drei `<StatsGl>` in debug, Chrome performance traces, a bundle visualizer, and the balance sim for CPU time per simulated day.
 
 ---
 
@@ -322,7 +323,7 @@ No accounts, no tracking, **no runtime network requests** (fonts and assets are 
 ---
 
 ## 19. Debug Tools (`src/debug`, dev builds or `?debug=1`)
-A **dev panel** (leva): time warp (jump to hour or day), add cash, XP or reputation, spawn a customer by archetype, trigger any event, unlock everything, bulk-open N packs with a stats readout, set the RNG seed. **Scenario loader** (JSON presets: "Day 1", "Mid-game Tier 3", "Late-game empire"). **Galleries:** `/debug/ui` (all components), `/debug/art` (all species × poses × styles), `/debug/cards` (every frame and foil). **Save inspector** (view and diff state). `r3f-perf` overlay.
+A **dev panel** (leva): time warp (jump to hour or day), add cash, XP or reputation, spawn a customer by archetype, trigger any event, unlock everything, bulk-open N packs with a stats readout, set the RNG seed. **Scenario loader** (JSON presets: "Day 1", "Mid-game Tier 3", "Late-game empire"). **Galleries:** `/debug/ui` (all components), `/debug/art` (all species × poses × styles), `/debug/cards` (every frame and foil). **Save inspector** (view and diff state). drei `<StatsGl>` overlay. Debug pages are exempt from i18n (ADR-031).
 
 ---
 

@@ -1,0 +1,51 @@
+/*
+ * Design tokens (docs/04_ART_DIRECTION.md §2–3). Mirrors src/ui/palette.ts; a unit test keeps
+ * the two in sync. `@theme` exposes them as Tailwind utilities, e.g. `bg-paper`, `text-ink`,
+ * `font-display`.
+ */
+@theme {
+  --color-ink: #1e2340;
+  --color-paper: #fff6e5;
+  --color-paper2: #f6e7cb;
+  --color-wood: #a86b3c;
+  --color-woodDark: #6e4323;
+  --color-teal: #1fb5a6;
+  --color-coral: #ff6f59;
+  --color-sun: #ffc93c;
+  --color-sky: #4da8ff;
+  --color-grape: #8e5cf7;
+  --color-mint: #43d17a;
+  --color-night: #121634;
+  --color-tablet: #20264f;
+  --color-tabletBezel: #10142e;
+  --color-mintLight: #dff7e8;
+  --color-sunLight: #fff0d6;
+
+  --color-rarity-common: #9aa3b2;
+  --color-rarity-uncommon: #43d17a;
+  --color-rarity-rare: #4da8ff;
+  --color-rarity-holo: #1fb5a6;
+  --color-rarity-ultra: #8e5cf7;
+  --color-rarity-illustration: #ff7bc0;
+  --color-rarity-secret: #ffc93c;
+  --color-rarity-mythic: #ff3d6e;
+
+  --font-display: "Lilita One", "Nunito Variable", system-ui, sans-serif;
+  --font-ui: "Nunito Variable", system-ui, sans-serif;
+  --font-card: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+  --font-card-body: "Barlow", system-ui, sans-serif;
+  --font-hand: "Caveat Variable", "Nunito Variable", cursive;
+  --font-legible: "Atkinson Hyperlegible", system-ui, sans-serif;
+
+  --radius-panel: 18px;
+  --radius-button: 14px;
+
+  --shadow-chunky: 0 4px 0 var(--color-ink);
+  --shadow-chunky-sm: 0 2px 0 var(--color-ink);
+  --shadow-soft: 0 10px 30px -10px rgb(30 35 64 / 0.35);
+}
+
+:root {
+  --foil-gradient: linear-gradient(115deg, #7ff6ff, #b78bff, #ff8bd1, #ffe58a, #8bffb0);
+  --outline: 3px solid var(--color-ink);
+}
