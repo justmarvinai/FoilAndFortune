@@ -3,7 +3,7 @@ import { hexColor } from './common';
 
 /**
  * Creature genome: a renderer-agnostic, semantic description of a species' look (docs/04 §6,
- * docs/07 §2.6). Every art style (Clay Critters SDF, Sticker Pop SVG, …) interprets the same
+ * docs/07 §2.6). Every art style (today: Clay Critters SDF, ADR-006) interprets the same
  * genome, so one species definition drives all card art, and evolutions can derive from their
  * parent's genome.
  */

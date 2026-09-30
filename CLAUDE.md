@@ -6,10 +6,8 @@ Guidance for Claude Code (and humans) working in this repository. Keep this file
 **Foil & Fortune** is a browser-based collectibles-shop tycoon. The player grows a tiny card and manga shop into a collectibles empire: buy wholesale, rip packs, grade cards, haggle with customers, ride a simulated market, expand the shop and hire staff. The main focus is TCGs, with a fictional Pokémon-inspired TCG called **Glimmerkin**. It is a static SPA on **Vercel** with **no backend or database**. Saves live in IndexedDB with export/import.
 
 ## ⚠️ Current status
-- **Phase 1 (Foundation & Art Spike) is in progress.** The owner said "use your recommendations" on 2026-09-29, so every ⭐ default in `USER_QUESTIONS.md` applies (`docs/DECISIONS.md`).
-- **Waiting on the owner:** pick the creature art style on `/debug/art` (Q2 → ADR-006). Don't build more card art in either style until then.
-- Next up: **Phase 2, Vertical Slice** (`ROADMAP.md`).
-- Debug routes: `/debug/engine` (sim sandbox + leva dev panel), `/debug/ui` (UI kit), `/debug/art` (A vs B), `/debug/scene` (diorama), `/debug/clay`, `/debug/sticker`.
+- **Phase 2 (Vertical Slice: "One Day at the Nook") is in progress.** Phase 1 shipped as 0.1.0. Every ⭐ default in `USER_QUESTIONS.md` applies, the shop is the 3D diorama (Q1) and **all card art is Clay Critters** (Q2, ADR-006).
+- Debug routes: `/debug/engine` (sim sandbox + leva dev panel), `/debug/ui` (UI kit), `/debug/art` (card gallery), `/debug/scene` (diorama), `/debug/clay` (art renderer workshop).
 
 ## Read before working
 | Task | Read |

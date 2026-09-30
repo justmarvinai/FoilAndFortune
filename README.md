@@ -4,7 +4,7 @@
 
 **Foil & Fortune** is a cozy but addictive **card and manga shop tycoon** that runs in the browser. You buy stock wholesale and sell it at a profit. You rip booster packs hoping for a Mythic Rare, send your best pulls to grading companies, haggle with a cast of quirky regulars, and speculate on sealed boxes that climb in value once a set goes out of print. Step by step, you expand a tiny shop in the coastal city of **Brightbay** into a collectibles empire, and on the way you unlock the secret of your mentor's vault.
 
-**Status:** 🛠️ **Phase 1 · Foundation & Art Spike.** The engine, save system and UI kit run; the art direction is being chosen on `/debug/art`. See [`ROADMAP.md`](ROADMAP.md) and [`USER_QUESTIONS.md`](USER_QUESTIONS.md).
+**Status:** 🛠️ **Phase 2 · Vertical Slice** ("One Day at the Nook"). Phase 1 shipped as 0.1.0: engine, saves, UI kit, the 3D diorama shop and Clay Critters card art. See [`ROADMAP.md`](ROADMAP.md) and [`USER_QUESTIONS.md`](USER_QUESTIONS.md).
 
 ## Planned highlights
 - 🏪 A living **3D toy-diorama shop**: customers browse, shelves empty, and the shop physically grows through 5 tiers
@@ -45,7 +45,7 @@ npm run dev        # http://localhost:5173
 npm run check      # typecheck + lint + unit tests + content validation
 npm run test:e2e   # Playwright smoke tests (desktop + phone landscape)
 ```
-The hub at `/` links to every Phase 1 page: **Card Art Spike** (`/debug/art`), **Shop Diorama** (`/debug/scene`), **Engine Sandbox** (`/debug/engine`) and the **UI Kit** (`/debug/ui`).
+The hub at `/` links to the debug pages: **Card Art** (`/debug/art`), **Shop Diorama** (`/debug/scene`), **Engine Sandbox** (`/debug/engine`), **Clay Workshop** (`/debug/clay`) and the **UI Kit** (`/debug/ui`).
 
 ## Deploying (Vercel)
 Import the GitHub repository in Vercel (**Add New → Project**). Vercel detects Vite from `vercel.json`: build `npm run build`, output `dist/`, with SPA rewrites and security headers. Every branch gets its own preview URL, and there is no backend or database to configure.

@@ -44,9 +44,10 @@
 - [x] `save/`: IndexedDB slots, autosave ring and weekly autosave, export/import, migration framework with a fixture test
 - [x] `i18n/` setup (English) · fonts · UI tokens · first UI kit components · `/debug/ui` gallery · debug panel (`/debug/engine`, leva)
 - [x] **Art Spike A:** 3D diorama corner (shell, shelf, counter, day/evening lighting, one walking Peg-folk with expressions) → `/debug/scene` (the whole Tier-1 Nook, a scripted customer loop, 3 quality tiers)
-- [x] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art` (workshops: `/debug/clay`, `/debug/sticker`)
+- [x] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art` (workshop: `/debug/clay`)
 - [x] Evaluate React Compiler (adopt or reject → DECISIONS): **adopted**, ADR-029
-- [ ] Deploy a preview. **You pick** the shop style (Q1) and creature style (Q2), recorded in DECISIONS
+- [x] **You pick** the shop style (Q1: 3D diorama) and creature style (Q2: **Clay Critters for all cards**), recorded in DECISIONS
+- [ ] Deploy a preview (owner: import the repo in Vercel; every branch then gets a preview URL)
 - **Done when:** `npm run check` is green, the preview URL works on desktop and phone, and the art direction is chosen.
 
 ## Phase 2 · Vertical Slice: "One Day at the Nook" (v0.2.0)

@@ -3,7 +3,14 @@
 All notable changes to **Foil & Fortune** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/) (`0.x` until the v1.0 release; each roadmap phase bumps the minor version).
 
-## [Unreleased] · Phase 1: Foundation & Art Spike (becomes 0.1.0 once the art style is picked)
+## [Unreleased] · Phase 2: Vertical Slice "One Day at the Nook"
+### Changed
+- The owner chose **Clay Critters for all card art** (ADR-006). `/debug/art` is now a Clay card gallery.
+
+### Removed
+- Style B "Sticker Pop" renderer and its workshop page (not chosen; recoverable from git at `9efe6c0`).
+
+## [0.1.0] – 2026-09-30 · Phase 1: Foundation & Art Spike
 ### Added
 - **Project scaffold:** Vite 8 (Rolldown), React 19.3 with the **React Compiler**, TypeScript 7 (strict), Tailwind CSS 4, Biome 2, Vitest 5, Playwright, `vercel.json` (SPA rewrites, strict CSP, immutable asset caching) and a GitHub Actions CI workflow (check, build, E2E).
 - **Core** (`src/core`): seeded sfc32 RNG with independent streams, integer-cents money with formatting, the game calendar (Day 1 = Spring 8, a Monday), a typed event bus, math helpers, and a CSP-safe Zod setup.

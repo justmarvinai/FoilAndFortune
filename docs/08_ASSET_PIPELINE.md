@@ -113,7 +113,7 @@ Names: `kebab-case`, no spaces, lowercase. Versioned folders are bumped whenever
 
 | Generator | Output | Where |
 |-----------|--------|-------|
-| **Creature art engine** (SDF "Clay Critters" / SVG "Sticker Pop") | Card art WebP, runtime bitmaps | `src/art/sdf`, `src/art/svg`, `scripts/art/render.ts` |
+| **Creature art engine** (SDF "Clay Critters", ADR-006) | Card art WebP, runtime bitmaps | `src/art/clay`, `scripts/art/render.ts` |
 | **Card composer** | Full card (frame + art + text + foil) as DOM | `src/cards` |
 | **Pack and box art composer** | Wrapper and box textures, 3D atlas | `src/art/packs` |
 | **Manga cover templates** | Covers and spines | `src/art/manga` |

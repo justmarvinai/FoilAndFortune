@@ -5,8 +5,7 @@ const ROUTES = [
   { path: '/', heading: 'Foil & Fortune' },
   { path: '/debug/ui', heading: 'UI Kit Gallery' },
   { path: '/debug/engine', heading: 'Engine Sandbox' },
-  { path: '/debug/art', heading: 'Card Art Spike' },
-  { path: '/debug/sticker', heading: 'Sticker Pop' },
+  { path: '/debug/art', heading: 'Card Art' },
   { path: '/debug/clay', heading: 'Clay Critters' },
   // Low quality: the smoke test checks the page works; software WebGL in CI is slow.
   { path: '/debug/scene?quality=low', heading: 'Shop Diorama Spike' },
@@ -22,14 +21,7 @@ for (const route of ROUTES) {
 }
 
 /** Guards the chunking config: only 3D routes may download the three.js chunk (vite.config.ts). */
-for (const path of [
-  '/',
-  '/debug/ui',
-  '/debug/engine',
-  '/debug/art',
-  '/debug/sticker',
-  '/debug/clay',
-]) {
+for (const path of ['/', '/debug/ui', '/debug/engine', '/debug/art', '/debug/clay']) {
   test(`${path} does not download the 3D engine`, async ({ page }) => {
     const scripts: string[] = [];
     page.on('request', (request) => {

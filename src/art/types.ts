@@ -3,7 +3,7 @@ import type { CreatureGenome } from '@/content/schema/genome';
 
 /**
  * Contract between card/UI code and creature art styles (docs/04 §6). Every style module
- * (`src/art/clay`, `src/art/sticker`, …) exports a `CreatureArtRenderer`.
+ * (`src/art/clay`; ADR-006 chose Clay Critters for all card art) exports a `CreatureArtRenderer`.
  */
 
 /** Background scenes. Each species has a default biome (SpeciesDef.biome). */
@@ -34,7 +34,7 @@ export interface CreatureArtRequest {
 }
 
 export interface CreatureArtRenderer {
-  id: 'clay' | 'sticker';
+  id: 'clay';
   /** Short display label, e.g. "Clay Critters". */
   label: string;
   /** Renders to an image Blob (PNG or WebP). Must be deterministic for a given request. */

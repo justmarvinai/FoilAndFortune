@@ -147,13 +147,13 @@ A clear acrylic case (glass gradient and highlight), the card inset with a soft 
 
 ---
 
-## 6. Creature Art **(Q2)**
+## 6. Creature Art **(Q2: decided, Clay Critters for all cards, ADR-006)**
 
 Every card needs a charming, consistent creature illustration, and we need **hundreds** of them. The system is **genome-based**. Each species is defined once as data (a "genome"), and card art is composed from genome × pose × expression × background × composition. Evolutions inherit their parent's genome (same palette and key features, bigger and fancier), so lines look related.
 
 ### 6.1 Candidate styles (both are prototyped in the Art Spike)
 
-| | **A · "Clay Critters"** *(recommended)* | **B · "Sticker Pop"** |
+| | **A · "Clay Critters"** ✅ *chosen for all card art* | **B · "Sticker Pop"** *(prototyped, not chosen, removed)* |
 |---|---|---|
 | Look | Soft 3D "vinyl toy / claymation" creatures with glossy eyes, rim light, soft shadows and AO | Bold-outline 2D vector with cel shading, like premium stickers |
 | Technique | Signed-distance-field (SDF) creatures ray-marched in a WebGL shader. Smooth unions give organic, cute shapes | Parametric SVG part library (bodies, heads, ears, tails, wings…) |

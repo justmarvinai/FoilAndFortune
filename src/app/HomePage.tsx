@@ -13,11 +13,10 @@ interface HubCard {
 const cards: readonly HubCard[] = [
   {
     to: '/debug/art',
-    title: 'Card Art Spike',
-    blurb: 'Sparkit, Emberpup and Sploot in two art styles on real holo cards. Pick your favorite!',
+    title: 'Card Art',
+    blurb: 'Glimmerkin cards with Clay Critters art and our own holo foils. Tilt them!',
     emoji: '🃏',
     accent: 'var(--color-grape)',
-    badge: 'Vote!',
   },
   {
     to: '/debug/scene',
@@ -26,7 +25,6 @@ const cards: readonly HubCard[] = [
       'A corner of the toy-diorama shop: shelves, counter, day & evening light, a walking customer.',
     emoji: '🏪',
     accent: 'var(--color-teal)',
-    badge: 'Vote!',
   },
   {
     to: '/debug/engine',
@@ -45,16 +43,9 @@ const cards: readonly HubCard[] = [
   {
     to: '/debug/clay',
     title: 'Clay Workshop',
-    blurb: 'Style A up close: soft 3D "vinyl toy" creatures.',
+    blurb: 'The card-art renderer up close: soft 3D "vinyl toy" creatures, every pose and biome.',
     emoji: '🧸',
     accent: 'var(--color-sun)',
-  },
-  {
-    to: '/debug/sticker',
-    title: 'Sticker Workshop',
-    blurb: 'Style B up close: bold-outline vector creatures.',
-    emoji: '✏️',
-    accent: 'var(--color-mint)',
   },
 ];
 

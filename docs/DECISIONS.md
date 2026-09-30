@@ -1,7 +1,8 @@
 # Decision Log (ADRs)
 
 > Architecture and design decisions in brief. **Status:** ✅ Accepted · 🟡 Proposed (waiting on a user answer in `USER_QUESTIONS.md`) · ❌ Rejected · 🔁 Superseded.
-> **2026-09-29:** the owner answered "use your recommendations", so every ADR that waited on a ⭐ default is now ✅. Only ADR-006 stays 🟡 until the art style is picked on `/debug/art` (Q2).
+> **2026-09-29:** the owner answered "use your recommendations", so every ADR that waited on a ⭐ default is now ✅.
+> **2026-09-30:** after the Art Spike the owner chose **Clay Critters for all card art** (ADR-006 ✅).
 > Add a new entry for every significant decision. Never delete entries. Supersede them instead.
 
 | ADR | Decision | Status | Linked |
@@ -11,7 +12,7 @@
 | 003 | **React 19** for app shell and UI | ✅ | `06 §2` |
 | 004 | Shop view as a **3D toy diorama** (three.js + React Three Fiber), isometric orthographic camera | ✅ | Q1 |
 | 005 | Cards as **layered DOM/SVG with CSS foil** (our own implementation) | ✅ | `04 §5`, `06 §8` |
-| 006 | Creature art: **genome-based procedural engine**. Style A "Clay Critters" (SDF) recommended, B "Sticker Pop" (SVG) as alternative. The user picks after the Phase 1 Art Spike | 🟡 | Q2 |
+| 006 | Creature art: **genome-based procedural engine**, **Style A "Clay Critters" (SDF) for all card art** (owner's pick after the Art Spike). Style B was removed | ✅ | Q2 |
 | 007 | **Pure TypeScript simulation** (`src/sim`) with a Zustand + Immer bridge. The sim decides, the view animates | ✅ | `06 §5–6` |
 | 008 | **Determinism:** seeded RNG streams, integer cents, no wall clock in sim | ✅ | `06 §5.4` |
 | 009 | **Persistence:** IndexedDB slots + autosave ring, versioned migrations, export/import file | ✅ | `06 §11` |
@@ -48,10 +49,11 @@
 **Consequences:** the 3D stack is one lazy `three` chunk: 1.32 MB, **428 KB gzip** (three core, R3F, postprocessing + N8AO, drei parts). That's larger than the planning estimate of ~170 KB, and only 3D routes load it: E2E tests fail if any other page requests it. Quality tiers (Low/Medium/High: 134/238/349 draw calls at 1440×900) cover phones. Trim candidate: replace drei `<Environment>` (whose module bundles HDR/EXR/gain-map loaders we don't use) with a small PMREM-from-Lightformers helper.
 **Validation:** Phase 1 Art Spike (a diorama corner with lighting and a walking customer) on `/debug/scene`. Accepted with the ⭐ default for Q1; revisit only if the spike disappoints the owner.
 
-## ADR-006 · Genome-based creature art (🟡 Proposed)
+## ADR-006 · Genome-based creature art: Clay Critters for everything (✅ Accepted 2026-09-30)
 **Context:** 1,000+ card illustrations are needed. There is no budget for artists, and style consistency is required.
 **Decision:** a data-driven **genome** per species feeds an art engine. Style A (SDF clay renders) and Style B (SVG stickers) are both prototyped. Curated sets are pre-rendered to WebP, and procedural sets render at runtime with caching. Any card can be overridden by user-supplied art.
 **Consequences:** there is an up-front engine investment, and then content scales cheaply. Evolutions share genomes, so lines look related.
+**Outcome (Art Spike, 2026-09-30):** both styles were built and compared on real cards (`/debug/art`). The owner chose **Style A, Clay Critters, for every rarity**. Style B (Sticker Pop) was removed to keep one art pipeline; it is recoverable from git (commit `9efe6c0`). Clay art for curated sets is pre-rendered to WebP by `npm run art:render` (docs/06 §9), and Clay also renders at runtime as the fallback.
 
 ## ADR-014 · TypeScript 7 + Biome (✅ Accepted)
 **Context:** TypeScript 7.0 (the native Go compiler) is `latest` on npm, with roughly 10× faster typechecks. `typescript-eslint@8.x` declares `typescript <6.1`.

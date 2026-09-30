@@ -8,10 +8,9 @@ export interface RouteDef {
 /** Route table. Heavy pages are lazy so the 3D stack only loads where it's used. */
 export const routes: readonly RouteDef[] = [
   { path: '/', component: lazy(() => import('./HomePage')) },
-  { path: '/debug/art', component: lazy(() => import('@/debug/ArtSpikePage')) },
+  { path: '/debug/art', component: lazy(() => import('@/debug/CardArtPage')) },
   { path: '/debug/scene', component: lazy(() => import('@/scene/ScenePlayground')) },
   { path: '/debug/clay', component: lazy(() => import('@/art/clay/ClayPlayground')) },
-  { path: '/debug/sticker', component: lazy(() => import('@/art/sticker/StickerPlayground')) },
   { path: '/debug/ui', component: lazy(() => import('@/debug/UiGalleryPage')) },
   { path: '/debug/engine', component: lazy(() => import('@/debug/EngineSandboxPage')) },
 ];
