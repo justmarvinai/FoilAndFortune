@@ -9,7 +9,7 @@ import { closeShop, openShop, startNextDay, tickClock } from './systems/clock';
 import { addToBinder, removeFromBinder } from './systems/collection';
 import { checkoutCustomer, tickCustomers } from './systems/customers';
 import { changeCash } from './systems/finance';
-import { openProduct } from './systems/opening';
+import { openProduct, unboxProduct } from './systems/opening';
 import { placeOrder } from './systems/orders';
 import { addXp } from './systems/progression';
 import { clearSlot, fillSlot, restockAll, setSlotPrice } from './systems/stock';
@@ -66,6 +66,8 @@ export function dispatch(state: GameState, command: Command, ctx: SimContext): C
       return placeOrder(state, ctx, command);
     case 'open/openProduct':
       return openProduct(state, ctx, command.productId);
+    case 'open/unboxProduct':
+      return unboxProduct(state, ctx, command.productId);
     case 'customers/checkout':
       if (state.clock.phase !== 'open') return fail('WRONG_PHASE', { phase: state.clock.phase });
       return checkoutCustomer(state, ctx, command.uid);

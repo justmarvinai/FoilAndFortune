@@ -22,7 +22,9 @@ const CONDITIONS: readonly Condition[] = ['mint', 'nearMint', 'good', 'played', 
 
 /**
  * Stack key `${cardId}|${finish}|${stamps}|${condition}` (docs/07 §3 `cardStacks`). Everything
- * is Near Mint and unstamped until conditions and 1st Edition waves arrive.
+ * is Near Mint and unstamped until conditions and 1st Edition waves arrive. Misprints are stamps
+ * too, named `misprint.<kind>` (e.g. `misprint.miscut`), so they stack separately and keep their
+ * premium (docs/02 §7.2).
  */
 export function cardKey(print: {
   cardId: string;

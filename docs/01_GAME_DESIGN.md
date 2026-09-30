@@ -307,7 +307,7 @@ Haggling appears when customers **buy** high-value items and when they **sell** 
 - **1st Edition:** products from a set's first print wave carry the 1st Edition stamp on every card (§17.4).
 
 ### 14.4 Open or keep sealed?
-A strategic decision the game makes legible. **Expected Value (EV)** per pack is shown once you own the POS upgrade or have a TCG Expert. Usually EV < MSRP but > wholesale cost. Opening gives XP, collection progress and singles to sell (which takes time). Keeping sealed offers safe margins and appreciation potential. Hype can push EV above MSRP, which drains sealed stock across town.
+A strategic decision the game makes legible. A booster box has a third option: **break the box** into 36 loose packs and sell them singly from the shelf, which is how a shop without a Box Wall Rack sells it. **Expected Value (EV)** per pack is shown once you own the POS upgrade or have a TCG Expert. Usually EV < MSRP but > wholesale cost. Opening gives XP, collection progress and singles to sell (which takes time). Keeping sealed offers safe margins and appreciation potential. Hype can push EV above MSRP, which drains sealed stock across town.
 
 ---
 

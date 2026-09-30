@@ -37,6 +37,9 @@ export type Command =
   // opening (docs/01 §14): opens one unit from storage. A booster box opens all its packs at once;
   // "rip one by one" versus Quick Rip is purely how the view presents the result.
   | { type: 'open/openProduct'; productId: string }
+  // Breaks one sealed multi-pack product (e.g. a booster box) into loose packs in storage, to sell
+  // them singly: the other side of the "open or sell?" choice (docs/01 §14.4).
+  | { type: 'open/unboxProduct'; productId: string }
   // customers (docs/01 §11.1): ring up the customer at the pay spot (or a specific uid)
   | { type: 'customers/checkout'; uid?: number }
   // collection (docs/01 §24)
