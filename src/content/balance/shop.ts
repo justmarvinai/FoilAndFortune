@@ -12,6 +12,11 @@ export interface ShopTierBalance {
   staffCap: number;
 }
 
+/** On-site storage (docs/02 §4.3). Phase 2 has the Closet only. */
+export const storageBalance = {
+  closet: { storageUnits: 200, singlesCap: 5000 },
+} as const;
+
 /** Shop tiers (docs/02 §4.1). */
 export const shopTiers: readonly ShopTierBalance[] = [
   {

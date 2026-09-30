@@ -6,8 +6,13 @@ import type { SimContext } from './context';
 import type { DomainEvent } from './events';
 import type { GameState } from './state/types';
 import { closeShop, openShop, startNextDay, tickClock } from './systems/clock';
+import { addToBinder, removeFromBinder } from './systems/collection';
+import { checkoutCustomer, tickCustomers } from './systems/customers';
 import { changeCash } from './systems/finance';
+import { openProduct } from './systems/opening';
+import { placeOrder } from './systems/orders';
 import { addXp } from './systems/progression';
+import { clearSlot, fillSlot, restockAll, setSlotPrice } from './systems/stock';
 
 /**
  * Simulation entry points (docs/06 §5.2). Everything here mutates a *draft* GameState: callers
@@ -49,6 +54,25 @@ export function dispatch(state: GameState, command: Command, ctx: SimContext): C
       ctx.emit({ type: 'pricing/changed', productId: command.productId, cents: command.cents });
       return ok;
     }
+    case 'pricing/setSlotPrice':
+      return setSlotPrice(state, ctx, command, MAX_PRICE_CENTS);
+    case 'stock/fillSlot':
+      return fillSlot(state, ctx, command);
+    case 'stock/clearSlot':
+      return clearSlot(state, ctx, command);
+    case 'stock/restockAll':
+      return restockAll(state, ctx);
+    case 'suppliers/placeOrder':
+      return placeOrder(state, ctx, command);
+    case 'open/openProduct':
+      return openProduct(state, ctx, command.productId);
+    case 'customers/checkout':
+      if (state.clock.phase !== 'open') return fail('WRONG_PHASE', { phase: state.clock.phase });
+      return checkoutCustomer(state, ctx, command.uid);
+    case 'collection/addToBinder':
+      return addToBinder(state, ctx, command);
+    case 'collection/removeFromBinder':
+      return removeFromBinder(state, ctx, command);
     case 'debug/grantCash': {
       if (!isCents(command.cents) || command.cents === 0) return fail('INVALID_AMOUNT');
       changeCash(state, ctx, command.cents, 'debug', 'debug');
@@ -66,8 +90,10 @@ export function dispatch(state: GameState, command: Command, ctx: SimContext): C
 
 /** Advances the simulation by one game-minute (docs/06 §5.3 tick order). */
 export function tick(state: GameState, ctx: SimContext): void {
+  if (state.clock.phase !== 'open') return;
   tickClock(state, ctx);
-  // Phase 2+: customer spawn, agents, staff automation, checkout, reputation signals.
+  if (state.clock.phase === 'open') tickCustomers(state, ctx);
+  // Later phases: scheduled events, staff automation, vending (docs/06 §5.3).
 }
 
 /** Adds real play time (tracked for the save summary). */
@@ -77,7 +103,10 @@ export function addPlayTime(state: GameState, ms: number): void {
 
 export type PureContext = Omit<SimContext, 'emit'>;
 
-/** Immutable convenience wrapper: applies a command and returns the new state and events. */
+/**
+ * Immutable wrapper: applies a command and returns the new state and events. Failed commands are
+ * atomic: the original state comes back unchanged and no events are emitted.
+ */
 export function runCommand(
   state: GameState,
   command: Command,
@@ -88,6 +117,7 @@ export function runCommand(
   const next = produce(state, (draft) => {
     result = dispatch(draft, command, { ...ctx, emit: (event) => events.push(event) });
   });
+  if (!result.ok) return { state, result, events: [] };
   return { state: next, result, events };
 }
 

@@ -54,6 +54,41 @@ describe('new game', () => {
     expect(game.pricing.prices['gk.emberdawn.booster']).toBe(dollars(4.49));
   });
 
+  it('opens the Nook starter layout with empty fixtures (docs/02 §2)', () => {
+    const game = newTestGame();
+    const layout = ctx.content.layouts.get(game.shop.layoutId);
+    expect(game.shop.fixtures.map((f) => f.uid)).toEqual(layout?.fixtures.map((f) => f.uid));
+    for (const fixture of game.shop.fixtures) {
+      const def = ctx.content.fixtures.get(fixture.fixtureId);
+      expect(fixture.slots).toHaveLength(def?.slots.count ?? -1);
+      expect(fixture.slots.every((slot) => slot.qty === 0)).toBe(true);
+    }
+  });
+
+  it("stocks Theo's binder and bulk shoebox as owned Emberdawn singles", () => {
+    const game = newTestGame();
+    const keys = Object.keys(game.inventory.cardStacks);
+    expect(keys.length).toBeGreaterThan(0);
+    let copies = 0;
+    for (const key of keys) {
+      const cardId = key.split('|')[0] ?? '';
+      expect(ctx.content.cards.get(cardId)?.setId).toBe('gk.emberdawn');
+      expect(game.collection.owned[cardId]).toBe(0);
+      copies += game.inventory.cardStacks[key] ?? 0;
+    }
+    // 20 + 200 commons/uncommons at least; rares and holos when the set has them.
+    expect(copies).toBeGreaterThanOrEqual(220);
+    expect(newTestGame().inventory.cardStacks).toEqual(game.inventory.cardStacks);
+  });
+
+  it('grants the level-1 unlocks up front', () => {
+    const game = newTestGame();
+    expect(game.progression.unlocked['unlock.supplier.budget-box']).toBe(1);
+    expect(game.progression.unlocked['unlock.feature.singles-case']).toBeUndefined();
+    expect(game.progression.perks).toEqual([]);
+    expect(game.dayLog.repStart).toBeCloseTo(20);
+  });
+
   it('is fully JSON-serializable', () => {
     const game = newTestGame();
     expect(JSON.parse(JSON.stringify(game))).toEqual(game);
@@ -180,10 +215,16 @@ describe('commands', () => {
   it('levels up exactly on the XP curve (docs/02 §9.2)', () => {
     const game = newTestGame();
     const once = run(game, { type: 'debug/grantXp', amount: xpToNextLevel(1) });
-    expect(once.state.progression).toEqual({ level: 2, xp: 0 });
+    expect(once.state.progression).toMatchObject({ level: 2, xp: 0 });
     const many = run(game, { type: 'debug/grantXp', amount: 80 + 234 + 439 + 5 });
-    expect(many.state.progression).toEqual({ level: 4, xp: 5 });
+    expect(many.state.progression).toMatchObject({ level: 4, xp: 5 });
     expect(many.events.filter((e) => e.type === 'level/up').map((e) => e.type)).toHaveLength(3);
+    // Level-ups grant that level's unlocks (stamped with the day), and unbuilt ones grant their
+    // placeholder perk instead (docs/02 §9.3).
+    expect(many.state.progression.unlocked['unlock.feature.singles-case']).toBe(1);
+    expect(many.state.progression.perks).toEqual(
+      expect.arrayContaining(['perk.storage-10', 'perk.supplier-2']),
+    );
   });
 });
 
@@ -207,6 +248,36 @@ describe('determinism & invariants', () => {
       cents,
     })),
     fc.integer({ min: 1, max: 700 }).map((count) => ({ type: 'tick' as const, count })),
+    fc
+      .record({
+        fixtureUid: fc.constantFrom('shelf-a', 'shelf-b', 'case-1', 'register', 'nope'),
+        slot: fc.integer({ min: -1, max: 6 }),
+        productId: fc.constantFrom(
+          'gk.emberdawn.booster',
+          'gk.emberdawn.blister',
+          'gk.emberdawn.starter-ember',
+          'gk.emberdawn.box',
+        ),
+        qty: fc.option(fc.integer({ min: -2, max: 20 }), { nil: undefined }),
+      })
+      .map<Command>((fill) => ({ type: 'stock/fillSlot', ...fill })),
+    fc
+      .record({
+        fixtureUid: fc.constantFrom('shelf-a', 'shelf-b', 'case-1'),
+        slot: fc.integer({ min: 0, max: 5 }),
+      })
+      .map<Command>((clear) => ({ type: 'stock/clearSlot', ...clear })),
+    fc.constant<Command>({ type: 'stock/restockAll' }),
+    fc
+      .record({
+        productId: fc.constantFrom('gk.emberdawn.booster', 'gk.emberdawn.starter-volt'),
+        qty: fc.integer({ min: 0, max: 60 }),
+      })
+      .map<Command>((line) => ({
+        type: 'suppliers/placeOrder',
+        supplierId: 'sup.budget-box',
+        lines: [line],
+      })),
   );
 
   function apply(state: GameState, step: Command | { type: 'tick'; count: number }): GameState {
@@ -235,6 +306,22 @@ describe('determinism & invariants', () => {
         expect(state.progression.level).toBeGreaterThanOrEqual(1);
         expect(state.progression.xp).toBeGreaterThanOrEqual(0);
         expect(state.finance.loan.principalCents).toBeGreaterThanOrEqual(0);
+        for (const fixture of state.shop.fixtures) {
+          const def = ctx.content.fixtures.get(fixture.fixtureId);
+          for (const slot of fixture.slots) {
+            const product = slot.productId ? ctx.content.products.get(slot.productId) : undefined;
+            const capacity =
+              def?.slots.accepts.kind === 'singles' ? 1 : (product?.perShelfSlot ?? 0);
+            expect(slot.qty).toBeGreaterThanOrEqual(0);
+            expect(slot.qty).toBeLessThanOrEqual(capacity);
+            expect(slot.costCents).toBeGreaterThanOrEqual(0);
+            if (slot.qty === 0) expect(slot.costCents).toBe(0);
+          }
+        }
+        for (const lots of Object.values(state.inventory.sealed)) {
+          expect(lots.length).toBeGreaterThan(0);
+          for (const lot of lots) expect(lot.qty).toBeGreaterThan(0);
+        }
         expect(JSON.parse(JSON.stringify(state))).toEqual(state);
       }),
       { numRuns: 80 },

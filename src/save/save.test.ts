@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { runCommand, runTicks } from '@/sim/engine';
-import type { GameState } from '@/sim/state/types';
+import { type GameState, SAVE_VERSION } from '@/sim/state/types';
 import { newTestGame, testContext } from '@/sim/testing';
 import { decodeSave, exportSave, SaveImportError } from './exportImport';
 import { migrateState, SaveVersionError } from './migrations';
@@ -71,7 +71,17 @@ describe('save manager', () => {
     ) as unknown;
     const file = manager.parse(raw);
     expect(file.state.clock.day).toBe(1);
-    expect(file.state.meta.saveVersion).toBe(1);
+    // Migrated to the current format, with every v2 slice present.
+    expect(file.state.meta.saveVersion).toBe(SAVE_VERSION);
+    expect(file.state.shop.fixtures.map((f) => f.uid)).toContain('register');
+    expect(file.state.customers).toEqual({
+      active: [],
+      lane: [],
+      nextUid: 1,
+      nextArrivalMinute: null,
+    });
+    expect(file.state.reputation.signals.prices).toEqual({ sum: 0, weight: 0, count: 0 });
+    expect(file.state.inventory.cardStacks).toEqual({});
   });
 });
 

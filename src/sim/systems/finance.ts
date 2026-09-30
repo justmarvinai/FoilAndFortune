@@ -9,7 +9,16 @@ import type { DailyTotals, GameState, LedgerKind } from '../state/types';
 const LEDGER_DAYS = 60;
 
 export function emptyDailyTotals(): DailyTotals {
-  return { revenue: 0, cogs: 0, wages: 0, rent: 0, other: 0, customers: 0 };
+  return {
+    revenue: 0,
+    cogs: 0,
+    wages: 0,
+    rent: 0,
+    other: 0,
+    purchases: 0,
+    opened: 0,
+    customers: 0,
+  };
 }
 
 /** Adds (or with a negative amount removes) cash and records it in the ledger. */

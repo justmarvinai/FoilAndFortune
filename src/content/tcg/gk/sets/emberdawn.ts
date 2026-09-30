@@ -258,6 +258,17 @@ export const emberdawnProducts: readonly ProductDef[] = [
     contents: [],
   },
   {
+    id: 'gk.emberdawn.starter-volt',
+    kind: 'starterDeck',
+    name: 'Emberdawn Starter Deck: Volt Surge',
+    brandId: 'gk',
+    setId: 'gk.emberdawn',
+    msrpCents: dollars(14.99),
+    storageUnits: 2,
+    perShelfSlot: 4,
+    contents: [],
+  },
+  {
     id: 'gk.emberdawn.box',
     kind: 'box',
     name: 'Emberdawn Booster Box (36 packs)',

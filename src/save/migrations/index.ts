@@ -1,4 +1,5 @@
 import { SAVE_VERSION } from '@/sim/state/types';
+import { migrateV1toV2 } from './001-phase2-shop';
 
 /**
  * Save migrations (docs/06 §11). Each entry upgrades a raw state object from version `n` to
@@ -10,8 +11,10 @@ import { SAVE_VERSION } from '@/sim/state/types';
  */
 export type Migration = (state: Record<string, unknown>) => Record<string, unknown>;
 
-/** v1 is the first shipped format, so there's nothing to migrate yet. */
-export const migrations: Readonly<Record<number, Migration>> = {};
+/** Keyed by the version they upgrade FROM. */
+export const migrations: Readonly<Record<number, Migration>> = {
+  1: migrateV1toV2,
+};
 
 export class SaveVersionError extends Error {
   override name = 'SaveVersionError';

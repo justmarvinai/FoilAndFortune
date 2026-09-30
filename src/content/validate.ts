@@ -1,7 +1,10 @@
 import type { ZodType } from '@/core/zod';
 import type { ContentSource } from './registry';
+import { archetypeSchema, perkSchema, unlockSchema } from './schema/customers';
+import { fixtureSchema, layoutSchema, supplierSchema } from './schema/shop';
 import { speciesSchema } from './schema/species';
 import { brandSchema, cardSchema, packConfigSchema, productSchema, setSchema } from './schema/tcg';
+import { accessTiles, backTouchesWall, footprintTiles, inGrid, tileKey } from './shop/geometry';
 
 /**
  * Content validation (docs/06 §12): schemas, unique IDs, cross-references, card numbering
@@ -104,6 +107,68 @@ export function validateContent(source: ContentSource): ValidationIssue[] {
       if (entry.type === 'pack' && !productIds.has(entry.productId)) {
         add(where, `contents reference unknown product ${entry.productId}`);
       }
+    }
+  }
+
+  // Shop content (docs/07 §2.2).
+  const fixtureIds = check(fixtureSchema, source.fixtures, 'fixture');
+  check(layoutSchema, source.layouts, 'layout');
+  check(supplierSchema, source.suppliers, 'supplier');
+  check(archetypeSchema, source.archetypes, 'archetype');
+  check(unlockSchema, source.unlocks, 'unlock');
+  const perkIds = check(perkSchema, source.perks, 'perk');
+  const fixturesById = new Map(source.fixtures.map((fixture) => [fixture.id, fixture]));
+
+  for (const layout of source.layouts) {
+    const where = `layout ${layout.id}`;
+    const occupied = new Map<string, string>();
+    const uids = new Set<string>();
+    for (const placed of layout.fixtures) {
+      if (uids.has(placed.uid)) add(where, `duplicate fixture uid ${placed.uid}`);
+      uids.add(placed.uid);
+      const def = fixturesById.get(placed.fixtureId);
+      if (!def || !fixtureIds.has(placed.fixtureId)) {
+        add(where, `${placed.uid}: unknown fixture ${placed.fixtureId}`);
+        continue;
+      }
+      for (const tile of footprintTiles(placed, def)) {
+        if (!inGrid(tile, layout.grid)) add(where, `${placed.uid} sticks out of the grid`);
+        if (!def.blocksFloor) continue;
+        const other = occupied.get(tileKey(tile));
+        if (other) add(where, `${placed.uid} overlaps ${other} at ${tileKey(tile)}`);
+        occupied.set(tileKey(tile), placed.uid);
+      }
+      if (def.wallMounted && !backTouchesWall(placed, def, layout.grid)) {
+        add(where, `${placed.uid} is wall-mounted but its back doesn't touch a wall`);
+      }
+    }
+    const doorTile = { x: 0, z: layout.door.z };
+    if (!inGrid(doorTile, layout.grid) || occupied.has(tileKey(doorTile))) {
+      add(where, `the door tile ${tileKey(doorTile)} must be free floor`);
+    }
+    for (const placed of layout.fixtures) {
+      const def = fixturesById.get(placed.fixtureId);
+      if (!def || def.category === 'decor') continue;
+      const reachable = accessTiles(placed, def).some(
+        (tile) => inGrid(tile, layout.grid) && !occupied.has(tileKey(tile)),
+      );
+      if (!reachable) add(where, `${placed.uid} has no free access tile`);
+    }
+  }
+
+  for (const supplier of source.suppliers) {
+    for (const item of supplier.items) {
+      if (!productIds.has(item.productId)) {
+        add(`supplier ${supplier.id}`, `unknown product ${item.productId}`);
+      }
+    }
+  }
+
+  for (const unlock of source.unlocks) {
+    if (!unlock.built && !unlock.perkId)
+      add(`unlock ${unlock.id}`, 'unbuilt unlocks need a perkId');
+    if (unlock.perkId && !perkIds.has(unlock.perkId)) {
+      add(`unlock ${unlock.id}`, `unknown perk ${unlock.perkId}`);
     }
   }
 

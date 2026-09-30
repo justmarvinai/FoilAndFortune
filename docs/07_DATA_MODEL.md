@@ -375,7 +375,7 @@ Grouped by domain. Each is a discriminated union member `{ type: '<domain>/<verb
 | stock | `fillSlot` · `clearSlot` · `restockAll` · `moveInstance` |
 | pricing | `setPrice` · `setRule` · `applyRules` |
 | suppliers | `placeOrder` · `placePreorder` · `cancelPreorder` |
-| open | `openProduct` (returns results for the reveal UI) · `quickRipBox` |
+| open | `openProduct` (a box opens all its packs; one-by-one vs Quick Rip is presentation only) |
 | customers | `checkout` · `haggleRespond` · `makeBuyOffer` · `appraise` · `acceptSpecialOrder` · `fulfillSpecialOrder` · `dismiss` |
 | lots | `sortLot` (manual choices or auto) |
 | collection | `addToBinder` · `removeFromBinder` · `toTrophy` · `fromTrophy` |

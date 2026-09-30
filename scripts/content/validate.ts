@@ -14,5 +14,7 @@ if (issues.length > 0) {
 const s = defaultContentSource;
 console.log(
   `✔ content valid: ${s.brands.length} brand(s), ${s.species.length} species, ${s.sets.length} set(s), ` +
-    `${s.cards.length} card(s), ${s.packConfigs.length} pack config(s), ${s.products.length} product(s)`,
+    `${s.cards.length} card(s), ${s.packConfigs.length} pack config(s), ${s.products.length} product(s), ` +
+    `${s.fixtures.length} fixture(s), ${s.layouts.length} layout(s), ${s.suppliers.length} supplier(s), ` +
+    `${s.archetypes.length} archetype(s), ${s.unlocks.length} unlock(s)`,
 );

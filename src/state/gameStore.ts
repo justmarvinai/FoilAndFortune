@@ -2,13 +2,18 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { defaultBalance } from '@/content/balance';
 import { getRegistry } from '@/content/registry';
-import { type Command, type CommandResult, ok } from '@/sim/commands';
+import type { Command, ErrorCode } from '@/sim/commands';
 import type { SimContext } from '@/sim/context';
-import { addPlayTime, dispatch as simDispatch, tick } from '@/sim/engine';
+import { addPlayTime, runCommand, tick } from '@/sim/engine';
 import type { DomainEvent } from '@/sim/events';
 import { createNewGame, type NewGameOptions } from '@/sim/state/createNewGame';
 import type { GameState } from '@/sim/state/types';
 import { publish } from './presentationBus';
+
+/** A command's outcome as seen by the UI: success carries the events it produced. */
+export type DispatchResult =
+  | { ok: true; events: readonly DomainEvent[] }
+  | { ok: false; code: ErrorCode; params?: Record<string, string | number> };
 
 /**
  * Bridge between React and the pure simulation (docs/06 §6). `game` is the persisted
@@ -19,7 +24,7 @@ export interface GameStore {
   startNewGame(options: Omit<NewGameOptions, 'createdAt' | 'gameVersion'>): void;
   loadGame(state: GameState): void;
   /** The single way the UI changes the game (CLAUDE.md rule 2). */
-  dispatch(command: Command): CommandResult;
+  dispatch(command: Command): DispatchResult;
   /** Called by the GameLoop: simulate `ticks` game-minutes and account `realMs` of play time. */
   advance(ticks: number, realMs: number): void;
   unload(): void;
@@ -30,13 +35,14 @@ const pureContext = () => ({ content: getRegistry(), balance: defaultBalance });
 export const useGameStore = create<GameStore>()(
   immer((set, get) => {
     /** Runs `mutate` inside one Immer transaction, then publishes the collected events. */
-    const transact = (mutate: (game: GameState, ctx: SimContext) => void) => {
+    const transact = (mutate: (game: GameState, ctx: SimContext) => void): DomainEvent[] => {
       const events: DomainEvent[] = [];
       const ctx: SimContext = { ...pureContext(), emit: (event) => events.push(event) };
       set((draft) => {
         if (draft.game) mutate(draft.game, ctx);
       });
       if (events.length > 0) publish(events);
+      return events;
     };
 
     return {
@@ -55,12 +61,14 @@ export const useGameStore = create<GameStore>()(
       },
 
       dispatch(command) {
-        if (!get().game) return { ok: false, code: 'WRONG_PHASE' };
-        let result: CommandResult = ok;
-        transact((game, ctx) => {
-          result = simDispatch(game, command, ctx);
-        });
-        return result;
+        const game = get().game;
+        if (!game) return { ok: false, code: 'WRONG_PHASE' };
+        // Run on a separate draft so a failed command is atomic: no state change, no events.
+        const { state, result, events } = runCommand(game, command, pureContext());
+        if (!result.ok) return result;
+        set({ game: state });
+        if (events.length > 0) publish(events);
+        return { ok: true, events };
       },
 
       advance(ticks, realMs) {

@@ -7,7 +7,21 @@ export const progressionBalance = {
   /** XP per revenue dollar = 0.5 · f(L), with f(L) = 1 / (1 + 0.08 L). */
   xpPerRevenueDollar: 0.5,
   xpRevenueLevelFalloff: 0.08,
+  /** Other XP sources (docs/02 §9.1). */
+  xpPerSatisfiedCustomer: 1,
+  xpPerPackOpened: 2,
+  xpPerNewCard: 1,
+  xpPerPull: { holoRare: 3, ultraRare: 10, illustrationRare: 15, secretRare: 30, mythicRare: 100 },
 } as const;
+
+/** XP for a sale: revenue$ × 0.5 × f(L), f(L) = 1 / (1 + 0.08 L) (docs/02 §9.1). */
+export function xpForRevenue(revenueCents: number, level: number): number {
+  const dollarsEarned = revenueCents / 100;
+  return (
+    (dollarsEarned * progressionBalance.xpPerRevenueDollar) /
+    (1 + progressionBalance.xpRevenueLevelFalloff * level)
+  );
+}
 
 export function xpToNextLevel(level: number): number {
   if (level >= progressionBalance.levelCap) return Number.POSITIVE_INFINITY;

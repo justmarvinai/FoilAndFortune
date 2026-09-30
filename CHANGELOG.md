@@ -4,8 +4,14 @@ All notable changes to **Foil & Fortune** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/) (`0.x` until the v1.0 release; each roadmap phase bumps the minor version).
 
 ## [Unreleased] · Phase 2: Vertical Slice "One Day at the Nook"
+### Added
+- **GameState v2** (save migration `001-phase2-shop` with a fixture test): owner avatar, the shop layout with fixture slots, singles as card stacks, customer agents and the register lane, supplier orders, the binder, unlocks and placeholder perks, reputation signals and the day log.
+- **Shop content:** fixtures, the Nook starter layout on a 1 m tile grid (validated for bounds, overlaps, wall contact and free access), Budget Box Co., the Kid and Casual customer archetypes, level 1–5 unlocks with placeholder perks, and balance tables for customers, card values and packs.
+- **Sim systems:** stocking (fill, clear, Restock All, per-slot prices), pricing and market references with price-reaction buckets, supplier orders (paid up front, closet space checked, delivered at dawn), the binder, XP sources with level-up unlocks, nightly reputation from customer signals, and shared tile navigation with the register lane.
+
 ### Changed
 - The owner chose **Clay Critters for all card art** (ADR-006). `/debug/art` is now a Clay card gallery.
+- Failed commands are atomic: no partial state change and no events.
 
 ### Removed
 - Style B "Sticker Pop" renderer and its workshop page (not chosen; recoverable from git at `9efe6c0`).

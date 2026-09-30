@@ -1,5 +1,6 @@
 import { defaultBalance } from '@/content/balance';
 import type { GameState } from '@/sim/state/types';
+import { simClock } from './simClock';
 
 /**
  * Converts real time into whole simulation ticks (one tick = one game-minute).
@@ -82,10 +83,20 @@ export class GameLoop {
       );
       this.accumulator = result.accumulatorMs;
       this.pendingPlayMs += delta;
+      const msPerMinute = this.deps.msPerGameMinute?.() ?? time.realSecondsPerGameMinute * 1000;
       // Only touch the store when something changed, not every frame (CLAUDE.md rule 7).
       if (result.ticks > 0 || this.pendingPlayMs >= PLAY_TIME_FLUSH_MS) {
         this.deps.advance(result.ticks, this.pendingPlayMs);
         this.pendingPlayMs = 0;
+      }
+      // Publish continuous time for the view (read after advancing, so it matches the state).
+      const clock = this.deps.getGame()?.clock;
+      if (clock) {
+        simClock.day = clock.day;
+        simClock.minute = clock.minute;
+        simClock.speed = clock.phase === 'open' ? clock.speed : 0;
+        simClock.fraction =
+          clock.phase === 'open' ? Math.min(0.999, this.accumulator / msPerMinute) : 0;
       }
     }
     this.frameId = requestAnimationFrame(this.frame);

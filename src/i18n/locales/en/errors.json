@@ -5,5 +5,19 @@
   "INVALID_PRICE": "That price doesn't look right.",
   "INVALID_AMOUNT": "That amount doesn't look right.",
   "saveDamaged": "This save file is damaged.",
-  "saveNewer": "This save was made with a newer version of the game."
+  "saveNewer": "This save was made with a newer version of the game.",
+  "UNKNOWN_FIXTURE": "That fixture isn't in your shop.",
+  "INVALID_SLOT": "That slot doesn't exist.",
+  "SLOT_INCOMPATIBLE": "That product doesn't fit on this fixture.",
+  "SLOT_OCCUPIED": "Something else is already in that slot.",
+  "NOT_ENOUGH_STOCK": "You don't have enough of that in the backroom.",
+  "LOCKED": "You haven't unlocked that yet.",
+  "UNKNOWN_SUPPLIER": "We don't know that supplier.",
+  "EMPTY_ORDER": "Your order is empty.",
+  "BELOW_MINIMUM": "This supplier sells at least {{min}} of those per order.",
+  "NOT_ENOUGH_CASH": "Not enough cash for that.",
+  "STORAGE_FULL": "Your backroom has no room for that ({{free}} units free).",
+  "NOT_OPENABLE": "That can't be opened.",
+  "NO_CUSTOMER": "Nobody is waiting at the register.",
+  "UNKNOWN_CARD": "You don't have that card."
 }
