@@ -10,6 +10,14 @@ export const cardBalance = {
   finishMultiplier: {} as Partial<Record<Finish, number>>,
   /** Condition multipliers; everything is Near Mint until conditions arrive (Phase 4). */
   condition: { mint: 1.2, nearMint: 1, good: 0.75, played: 0.5, damaged: 0.25 },
+  /** Misprint premiums, applied from the card's `misprint.<kind>` stamp. */
+  misprintMultiplier: {
+    crimped: 2,
+    miscut: 3,
+    inkError: 4,
+    missingFoil: 5,
+    wrongBack: 25,
+  } as Record<'miscut' | 'inkError' | 'missingFoil' | 'crimped' | 'wrongBack', number>,
   /** In-print sealed product market price as a share of MSRP (docs/02 §12.2). */
   sealedInPrintFactor: 1,
 } as const;

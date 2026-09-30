@@ -2,6 +2,7 @@ import type { BalanceConfig } from '@/content/balance';
 import type { ContentRegistry } from '@/content/registry';
 import type { Cents } from '@/core/money';
 import { cardMarketValue, parseCardKey, productMarketValue } from './cards';
+import { misprintOf } from './packs/misprints';
 import type { FixtureSlot, GameState } from './state/types';
 
 /**
@@ -14,7 +15,10 @@ type PricingContext = { content: ContentRegistry; balance: Pick<BalanceConfig, '
 
 export type PriceReaction = 'steal' | 'fair' | 'pricey' | 'ripoff';
 
-/** Market value of one unit of a sealed product or a single card print, or null if unknown. */
+/**
+ * Market value of one unit of a sealed product or a single card print, or null if unknown.
+ * Singles: base value × finish × condition × misprint premium (docs/02 §7.2).
+ */
 export function itemMarketValue(
   ctx: PricingContext,
   item: { productId?: string; cardKey?: string },
@@ -24,7 +28,9 @@ export function itemMarketValue(
     const card = print ? ctx.content.cards.get(print.cardId) : undefined;
     if (!print || !card) return null;
     const condition = ctx.balance.cards.condition[print.condition];
-    return Math.round(cardMarketValue(card, print.finish, ctx.balance) * condition);
+    const misprint = misprintOf(print.stamps);
+    const premium = misprint ? ctx.balance.cards.misprintMultiplier[misprint] : 1;
+    return Math.round(cardMarketValue(card, print.finish, ctx.balance) * condition * premium);
   }
   const product = item.productId ? ctx.content.products.get(item.productId) : undefined;
   return product ? productMarketValue(product, ctx.balance) : null;

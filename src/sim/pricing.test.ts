@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { cardKey } from './cards';
+import { type MisprintKind, pulledCardKey } from './packs/misprints';
+import { ALPHA, packTestContext } from './packs/testing';
 import { askingPrice, itemMarketValue, priceReaction } from './pricing';
 import { newTestGame, testContext } from './testing';
 
@@ -39,6 +41,36 @@ describe('itemMarketValue', () => {
     });
     expect(played).toBe(Math.round(common.baseValueCents * 0.5));
     expect(itemMarketValue(ctx, { cardKey: 'nonsense' })).toBeNull();
+  });
+
+  it('applies the misprint premium from the misprint.<kind> stamp (docs/02 §7.2)', () => {
+    const packCtx = packTestContext();
+    const holoId = `${ALPHA}.025`; // a Holo Rare at the typical $2.20
+    const holo = packCtx.content.cards.get(holoId);
+    expect(holo?.rarity).toBe('holoRare');
+    const premiums: [MisprintKind, number][] = [
+      ['crimped', 2],
+      ['miscut', 3],
+      ['inkError', 4],
+      ['missingFoil', 5],
+      ['wrongBack', 25],
+    ];
+    for (const [kind, premium] of premiums) {
+      const key = cardKey({ cardId: holoId, finish: 'holo', stamps: [`misprint.${kind}`] });
+      expect(key).toBe(pulledCardKey({ cardId: holoId, finish: 'holo', misprint: kind }));
+      expect(itemMarketValue(packCtx, { cardKey: key })).toBe(220 * premium);
+    }
+    // Reverse holo floor first, then the premium; condition multiplies too.
+    const common = cardKey({
+      cardId: `${ALPHA}.001`,
+      finish: 'reverseHolo',
+      stamps: ['misprint.miscut'],
+      condition: 'played',
+    });
+    expect(itemMarketValue(packCtx, { cardKey: common })).toBe(Math.round(30 * 0.5 * 3));
+    // Unknown misprint kinds carry no premium.
+    const odd = cardKey({ cardId: holoId, finish: 'holo', stamps: ['misprint.upsideDown'] });
+    expect(itemMarketValue(packCtx, { cardKey: odd })).toBe(220);
   });
 });
 

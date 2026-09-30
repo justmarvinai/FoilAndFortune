@@ -19,6 +19,14 @@ export interface PackResult {
   productId: string;
   cards: PulledCard[];
   godPack?: boolean;
+  /**
+   * What this group of cards is (always set by the sim; absent means `pack`), listed in reveal
+   * order (docs/01 §14.2):
+   * - `promo`: the outer product's promo cards, revealed first; `productId` is the outer product.
+   * - `deck`: a starter deck's list in order, the guaranteed holo last; `productId` is the deck.
+   * - `pack`: one booster, cards in slot order with the rare slot last (a god pack sorts best last).
+   */
+  kind?: 'pack' | 'deck' | 'promo';
 }
 
 export interface SoldItem {
@@ -55,10 +63,25 @@ export type DomainEvent =
       packs: PackResult[];
       /** Card ids the player had never owned before this opening. */
       newCardIds: string[];
+      /** Cost basis of the opened unit, for "value vs cost" in the summary (docs/01 §14.1). */
+      costCents?: Cents;
     }
-  /** Rare-slot hits (Holo Rare and better), for XP toasts, highlights and stingers. */
+  /** A multi-pack product broken into loose sealed packs in storage (docs/01 §14.4). */
+  | {
+      type: 'product/unboxed';
+      productId: string;
+      packs: { productId: string; qty: number }[];
+      /** Promo cards that came with it, now in the card stacks. */
+      promos?: PulledCard[];
+    }
+  /**
+   * Hits (Holo Rare and better, in reveal order), for XP toasts, highlights and stingers.
+   * `isNew` marks the first copy of a card the player had never owned.
+   */
   | { type: 'card/pulled'; cardId: string; finish: Finish; rarity: Rarity; isNew: boolean }
   | { type: 'customer/arrived'; uid: number; archetypeId: string }
+  /** Emitted on the tick nearest the moment the agent crosses the door line (door bell). */
+  | { type: 'customer/entered'; uid: number }
   | { type: 'customer/bubble'; uid: number; bubble: BubbleKind }
   | { type: 'customer/queued'; uid: number }
   | { type: 'customer/left'; uid: number; satisfaction: number; bought: boolean }

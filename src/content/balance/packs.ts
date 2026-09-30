@@ -3,7 +3,7 @@ import type { Rarity } from '@/content/schema/common';
 /** Pack-opening rules that sit on top of the per-set pack configs (docs/02 §11). */
 export const packBalance = {
   /** Booster box guarantees, applied by adjusting the last packs if needed. */
-  boxMapping: { minHoloRare: 6, minUltraPlus: 2 },
+  boxMapping: { minHoloRare: 6, minUltraPlus: 2 } as { minHoloRare: number; minUltraPlus: number },
   godPack: {
     chance: 1 / 2000,
     table: [
@@ -28,7 +28,7 @@ export const packBalance = {
   /** Hidden onboarding luck (docs/02 §11.1). */
   onboarding: {
     /** The very first pack a player opens contains this Holo Rare (Sparkit). */
-    firstPackCardId: 'gk.emberdawn.035',
+    firstPackCardId: 'gk.emberdawn.035' as string,
     /** The first box opened holds at least one card of this rarity or better. */
     firstBoxMinRarity: 'illustrationRare' as Rarity,
   },

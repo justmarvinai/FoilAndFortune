@@ -1,6 +1,6 @@
 import type { Cents } from '@/core/money';
-import { cardKey } from '../cards';
 import type { PulledCard } from '../events';
+import { pulledCardKey } from '../packs/misprints';
 import type { GameState } from '../state/types';
 
 /**
@@ -77,11 +77,12 @@ export function takeCardStack(state: GameState, key: string, count: number): num
 /**
  * Puts pulled cards into storage and records first ownership. Returns the card ids the player
  * had never owned before (NEW badges, docs/01 §14.1), in pull order without duplicates.
+ * A misprint becomes a `misprint.<kind>` stamp in the stack key (src/sim/cards.ts).
  */
 export function addPulledCards(state: GameState, cards: readonly PulledCard[]): string[] {
   const fresh: string[] = [];
   for (const card of cards) {
-    addCardStack(state, cardKey({ cardId: card.cardId, finish: card.finish }), 1);
+    addCardStack(state, pulledCardKey(card), 1);
     if (state.collection.owned[card.cardId] === undefined) {
       state.collection.owned[card.cardId] = state.clock.day;
       fresh.push(card.cardId);
