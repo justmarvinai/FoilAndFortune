@@ -30,6 +30,8 @@ export interface GameLoopDeps {
   advance(ticks: number, realMs: number): void;
   /** Debug override for the length of a game-minute (the engine sandbox's time-scale slider). */
   msPerGameMinute?(): number;
+  /** Interaction pause (docs/05 §1.7): while true the clock stands still, whatever the speed. */
+  isPaused?(): boolean;
 }
 
 /** Play time is flushed at least this often even while nothing ticks (prep, night, pause). */
@@ -73,7 +75,8 @@ export class GameLoop {
     const game = this.deps.getGame();
     if (game && !document.hidden) {
       const { time } = defaultBalance;
-      const speed = game.clock.phase === 'open' ? game.clock.speed : 0;
+      const paused = this.deps.isPaused?.() ?? false;
+      const speed = game.clock.phase === 'open' && !paused ? game.clock.speed : 0;
       const result = computeTicks(
         this.accumulator,
         delta,
@@ -94,7 +97,7 @@ export class GameLoop {
       if (clock) {
         simClock.day = clock.day;
         simClock.minute = clock.minute;
-        simClock.speed = clock.phase === 'open' ? clock.speed : 0;
+        simClock.speed = clock.phase === 'open' && !paused ? clock.speed : 0;
         simClock.fraction =
           clock.phase === 'open' ? Math.min(0.999, this.accumulator / msPerMinute) : 0;
       }

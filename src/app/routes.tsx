@@ -5,9 +5,14 @@ export interface RouteDef {
   component: LazyExoticComponent<ComponentType>;
 }
 
-/** Route table. Heavy pages are lazy so the 3D stack only loads where it's used. */
+/**
+ * Route table. Heavy pages are lazy so the 3D stack only loads where it's used. The first route
+ * is also the fallback for unknown paths.
+ */
 export const routes: readonly RouteDef[] = [
-  { path: '/', component: lazy(() => import('./HomePage')) },
+  { path: '/', component: lazy(() => import('@/game/title/TitlePage')) },
+  { path: '/play', component: lazy(() => import('@/game/PlayPage')) },
+  { path: '/debug', component: lazy(() => import('./HomePage')) },
   { path: '/debug/art', component: lazy(() => import('@/debug/CardArtPage')) },
   { path: '/debug/scene', component: lazy(() => import('@/scene/ScenePlayground')) },
   { path: '/debug/clay', component: lazy(() => import('@/art/clay/ClayPlayground')) },

@@ -3,6 +3,7 @@ import { expect, test } from './fixtures';
 /** Every Phase 1 screen boots and renders its header without errors. */
 const ROUTES = [
   { path: '/', heading: 'Foil & Fortune' },
+  { path: '/debug', heading: 'Foil & Fortune' },
   { path: '/debug/ui', heading: 'UI Kit Gallery' },
   { path: '/debug/engine', heading: 'Engine Sandbox' },
   { path: '/debug/art', heading: 'Card Art' },
@@ -21,7 +22,7 @@ for (const route of ROUTES) {
 }
 
 /** Guards the chunking config: only 3D routes may download the three.js chunk (vite.config.ts). */
-for (const path of ['/', '/debug/ui', '/debug/engine', '/debug/art', '/debug/clay']) {
+for (const path of ['/', '/debug', '/debug/ui', '/debug/engine', '/debug/art', '/debug/clay']) {
   test(`${path} does not download the 3D engine`, async ({ page }) => {
     const scripts: string[] = [];
     page.on('request', (request) => {
@@ -33,7 +34,7 @@ for (const path of ['/', '/debug/ui', '/debug/engine', '/debug/art', '/debug/cla
   });
 }
 
-test('unknown routes fall back to the hub', async ({ page }) => {
+test('unknown routes fall back to the title screen', async ({ page }) => {
   await page.goto('/definitely/not/a/page');
   await expect(page.getByRole('heading', { level: 1, name: 'Foil & Fortune' })).toBeVisible();
 });

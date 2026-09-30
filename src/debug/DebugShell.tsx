@@ -28,7 +28,7 @@ export function DebugShell({
         }`}
       >
         <Link
-          to="/"
+          to="/debug"
           className={`rounded-xl border-[3px] px-3 py-1 font-display text-sm tracking-wide shadow-[0_3px_0_var(--color-ink)] transition active:translate-y-[3px] active:shadow-none ${
             dark ? 'border-ink bg-sun text-ink' : 'border-ink bg-white text-ink'
           }`}
