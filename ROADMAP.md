@@ -43,8 +43,8 @@
 - [x] `state/`: Zustand bridge, GameLoop, presentation bus
 - [x] `save/`: IndexedDB slots, autosave ring and weekly autosave, export/import, migration framework with a fixture test
 - [x] `i18n/` setup (English) · fonts · UI tokens · first UI kit components · `/debug/ui` gallery · debug panel (`/debug/engine`, leva)
-- [ ] **Art Spike A:** 3D diorama corner (shell, shelf, counter, day/evening lighting, one walking Peg-folk with expressions)
-- [ ] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art`
+- [x] **Art Spike A:** 3D diorama corner (shell, shelf, counter, day/evening lighting, one walking Peg-folk with expressions) → `/debug/scene` (the whole Tier-1 Nook, a scripted customer loop, 3 quality tiers)
+- [x] **Art Spike B:** CardView (frame, text, 3 foil types) with **Sparkit, Emberpup and Sploot** in **Style A (Clay)** and **Style B (Sticker)** → `/debug/art` (workshops: `/debug/clay`, `/debug/sticker`)
 - [x] Evaluate React Compiler (adopt or reject → DECISIONS): **adopted**, ADR-029
 - [ ] Deploy a preview. **You pick** the shop style (Q1) and creature style (Q2), recorded in DECISIONS
 - **Done when:** `npm run check` is green, the preview URL works on desktop and phone, and the art direction is chosen.

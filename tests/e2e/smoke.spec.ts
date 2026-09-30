@@ -8,6 +8,8 @@ const ROUTES = [
   { path: '/debug/art', heading: 'Card Art Spike' },
   { path: '/debug/sticker', heading: 'Sticker Pop' },
   { path: '/debug/clay', heading: 'Clay Critters' },
+  // Low quality: the smoke test checks the page works; software WebGL in CI is slow.
+  { path: '/debug/scene?quality=low', heading: 'Shop Diorama Spike' },
 ] as const;
 
 for (const route of ROUTES) {

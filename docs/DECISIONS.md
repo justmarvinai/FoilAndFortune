@@ -45,7 +45,7 @@
 **Decision:** render the shop as a stylized **3D miniature diorama** with an orthographic isometric camera. Fixtures, props and characters are generated procedurally in code (rounded, chunky "toy" shapes). Lighting and post-processing do the heavy lifting.
 **Why not 2D isometric:** high-quality 2D iso art needs a large hand-drawn sprite set from multiple angles, which we can't produce or source at the same quality. In 3D, procedural geometry plus lighting looks polished for free.
 **Why not first-person:** worse overview for management, harder on mobile, more motion sickness risk.
-**Consequences:** the three.js chunk (~170 KB gz) is lazy-loaded. Quality presets are needed for phones.
+**Consequences:** the 3D stack is one lazy `three` chunk: 1.32 MB, **428 KB gzip** (three core, R3F, postprocessing + N8AO, drei parts). That's larger than the planning estimate of ~170 KB, and only 3D routes load it: E2E tests fail if any other page requests it. Quality tiers (Low/Medium/High: 134/238/349 draw calls at 1440×900) cover phones. Trim candidate: replace drei `<Environment>` (whose module bundles HDR/EXR/gain-map loaders we don't use) with a small PMREM-from-Lightformers helper.
 **Validation:** Phase 1 Art Spike (a diorama corner with lighting and a walking customer) on `/debug/scene`. Accepted with the ⭐ default for Q1; revisit only if the spike disappoints the owner.
 
 ## ADR-006 · Genome-based creature art (🟡 Proposed)

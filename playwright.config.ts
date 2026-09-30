@@ -16,6 +16,9 @@ export default defineConfig({
   timeout: 90_000,
   expect: { timeout: 15_000 },
   retries: process.env.CI ? 1 : 0,
+  // Locally, one browser at a time: software WebGL (SwiftShader) on a few shared cores can
+  // starve the machine. CI runners get Playwright's default parallelism.
+  workers: process.env.CI ? undefined : 1,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:4173',

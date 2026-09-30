@@ -23,7 +23,7 @@ export function DebugShell({
   return (
     <div className={dark ? 'min-h-full bg-night text-paper' : 'min-h-full bg-paper text-ink'}>
       <header
-        className={`sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b-[3px] px-4 py-3 ${
+        className={`sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b-[3px] px-4 py-3 [@media(max-height:500px)]:py-1.5 ${
           dark ? 'border-black/40 bg-night/90 backdrop-blur' : 'border-ink bg-paper2'
         }`}
       >
@@ -39,7 +39,12 @@ export function DebugShell({
           <h1 className="truncate font-display text-xl leading-tight tracking-wide sm:text-2xl">
             {title}
           </h1>
-          {subtitle ? <p className="truncate text-sm opacity-75">{subtitle}</p> : null}
+          {/* Phone landscape: every vertical pixel goes to the content. */}
+          {subtitle ? (
+            <p className="truncate text-sm opacity-75 [@media(max-height:500px)]:hidden">
+              {subtitle}
+            </p>
+          ) : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </header>
