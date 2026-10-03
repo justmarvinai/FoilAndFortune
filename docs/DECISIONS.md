@@ -19,7 +19,7 @@
 | 010 | **Content as typed TS data**, validated by Zod and `content:validate` | ✅ | `06 §12` |
 | 011 | **Tailwind CSS 4** + CSS design tokens + hand-written effect CSS | ✅ | `06 §2` |
 | 012 | **Motion** for UI animation. 3D animation is code-driven (procedural) | ✅ | `06 §2` |
-| 013 | Audio: **Howler + Web Audio** (ZzFX SFX, blip voices) + CC0 music | ✅ | Q15 |
+| 013 | Audio: **Howler + Web Audio** (ZzFX SFX, blip voices) + CC0 music. **Amended 2026-10-03:** Web Audio only, procedural music (see below) | ✅ | Q15 |
 | 014 | Tooling: **TypeScript 7 (native) + Biome 2**. `typescript-eslint` doesn't support TS ≥ 6.1 yet (checked 2026-09-26). If a TS-API-dependent tool becomes essential, run it against TS 6.0 in isolation | ✅ | `06 §15` |
 | 015 | Testing: **Vitest + fast-check + Playwright + headless balance sim** | ✅ | `06 §14` |
 | 016 | i18n with **i18next**. English first, German planned | ✅ | Q4 |
@@ -55,6 +55,11 @@
 **Consequences:** there is an up-front engine investment, and then content scales cheaply. Evolutions share genomes, so lines look related.
 **Outcome (Art Spike, 2026-09-30):** both styles were built and compared on real cards (`/debug/art`). The owner chose **Style A, Clay Critters, for every rarity**. Style B (Sticker Pop) was removed to keep one art pipeline; it is recoverable from git (commit `9efe6c0`). Clay art for curated sets is pre-rendered to WebP by `npm run art:render` (docs/06 §9), and Clay also renders at runtime as the fallback.
 
+## ADR-013 · Audio stack (✅ Accepted; amended 2026-10-03 for Audio v1)
+**Context:** the plan was Howler for music and sampled SFX, ZzFX for generated SFX and CC0 lo-fi tracks for music (Q15: cozy lo-fi / jazz-hop). Asset hosts are blocked from the dev environment, so no CC0 tracks or samples could be fetched, and every sound the game needs can be synthesized.
+**Decision:** Audio v1 is **Web Audio only, zero audio files**. SFX are ZzFX patches plus our own layered synthesis (noise, bells, instruments), rendered once into cached `AudioBuffer`s after unlock. Music is a **procedural lo-fi generator** (seeded bars of drums, bass, extended-chord keys, melody) played with short-lived Web Audio nodes on a lookahead scheduler. Voices are blips with formant filters. **Howler is not used:** with no sample files it would only add an unlock helper and ~10 KB gzip (the `howler` dependency can be removed). ZzFX is a **TypeScript port** of its generator (MIT, credited), because the `zzfx` package opens an AudioContext at import time (a second context in the browser; it throws in Node tests).
+**Consequences:** no downloads and fully deterministic, testable audio (`src/audio/README.md`). Revisit Howler or CC0 tracks if we add recorded music or samples (docs/08 §3), for example a licensed lo-fi pack on a later phase.
+
 ## ADR-014 · TypeScript 7 + Biome (✅ Accepted)
 **Context:** TypeScript 7.0 (the native Go compiler) is `latest` on npm, with roughly 10× faster typechecks. `typescript-eslint@8.x` declares `typescript <6.1`.
 **Decision:** use TS 7 for type-checking (`tsc --noEmit`) and **Biome** for lint and format (it doesn't depend on the TS JS API).
@@ -74,4 +79,3 @@
 ## ADR-031 · Debug pages are exempt from i18n (✅ Accepted 2026-09-29)
 **Context:** golden rule 8 forbids user-facing string literals. Debug galleries, playgrounds and the engine sandbox are developer tools that change constantly.
 **Decision:** code under `src/debug/` and the `*Playground.tsx` spike pages may use plain English strings, marked with a `// Debug page: exempt from i18n` comment. Anything that ships to players (HUD, screens, toasts, errors, the app shell) must use i18n keys. Components promoted from a debug page into the game get translated at that point.
-

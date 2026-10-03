@@ -1,6 +1,6 @@
 import { Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { playSfx } from '@/audio';
+import { installAudioReactions, playSfx } from '@/audio';
 import { dayToDate } from '@/core/calendar';
 import { runCommand } from '@/game/actions';
 import i18n from '@/i18n';
@@ -225,6 +225,7 @@ export function useGameSession(): SessionStatus {
       installShellReactions(),
       installShortcuts(),
       installAudioUnlock(),
+      installAudioReactions(),
       installMusic(),
     ];
     return () => {

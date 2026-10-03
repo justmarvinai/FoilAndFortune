@@ -20,6 +20,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   - **Day Summary receipt**: prints line by line with rolling numbers; served and lost customers, revenue, cost of goods, opened stock, rent, profit, reputation change, XP, best pull, and a "Tomorrow" teaser with arriving orders. Next Day starts the dawn.
   - **Level-up celebration** with confetti and unlock cards; a Settings board (audio volumes, quality, motion, text size, pause on interaction).
   - Keyboard: Space pause, 1/2/3 speed, I/P/O/C sheets, Esc back (or Settings as the pause menu). Autosaves at New Game and every dawn.
+- **Audio v1** (`src/audio`, lab at `/debug/audio`), all synthesized, with zero audio files:
+  - A procedural lo-fi music director with five contexts (title, day, evening, night, pack opening), seeded 8-bar phrases with extended-chord keys, swing drums, bass and melody, plus tape warmth, crossfades and ducking under big reveals.
+  - 54 sound effects (ZzFX patches plus our own synthesis), including a crinkly pack tear, a door bell, the register, coins and an ascending family of rarity stingers.
+  - Blip voices per customer, and rate-limited reactions to shop events.
+  - The engine loads on the first gesture, and the channel volumes follow the settings.
 - **Management sheets** (`src/game/sheets`, preview at `/debug/sheets`), each a physical object:
   - **Backroom** (wood panel): sealed stock with in-storage, on-shelf and incoming counts; Rip, Break box (with a three-way "open, keep sealed or break" explainer), stock a shelf and Restock All; a felt singles grid with filters, Add to binder and Put in display case (Lv 2).
   - **Price Board** (clipboard): SKU and case prices with MSRP, Match market, Market +X% and Round .99 helpers, undo, and a live customer-reaction preview.

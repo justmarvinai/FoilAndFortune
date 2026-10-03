@@ -3,7 +3,7 @@
 Every asset that isn't self-made must be listed here **in the same commit that adds it** (policy: `docs/08_ASSET_PIPELINE.md §1`). Only CC0 / Public Domain, OFL (fonts) and MIT / ISC / Apache-2.0 (code, icons) are allowed without extra approval. The in-game Credits screen is generated from this list (`src/content/credits.ts`).
 
 ## Assets in use
-All creature art, card frames, foils, the card back, the 3D shop and its characters are **self-made in code** (procedural). Only fonts and UI icons come from third parties. License texts ship with the game in `public/licenses/`.
+All creature art, card frames, foils, the card back, the 3D shop and its characters are **self-made in code** (procedural), and so are the music, sound effects and voices (synthesized in `src/audio`). Only fonts and UI icons come from third parties. License texts ship with the game in `public/licenses/`.
 
 | Asset / pack | Author | Source | License | Files / usage | Added |
 |--------------|--------|--------|---------|---------------|-------|
@@ -23,6 +23,7 @@ Short snippets adapted into our shaders. Their license notices ship in `public/l
 | SDF primitives (ellipsoid bound, exact round cone, quadratic Bézier distance) and polynomial smooth-min | Inigo Quilez | iquilezles.org/articles/distfunctions and the author's Shadertoy examples | MIT | `src/art/clay/shaders/common.ts` | 2026-09-29 |
 | "Hash without Sine" (`hash11`/`hash12`/`hash22`) | David Hoskins | shadertoy.com/view/4djSRW | MIT | `src/art/clay/shaders/common.ts` | 2026-09-29 |
 | PBR Neutral tone mapper | The Khronos Group Inc. | github.com/KhronosGroup/ToneMapping | Apache-2.0 | `src/art/clay/shaders/common.ts` | 2026-09-29 |
+| ZzFX sound generator (`ZZFX.buildSamples`, ported to TypeScript) | Frank Force | `zzfx` 1.3.2 · github.com/KilledByAPixel/ZzFX | MIT | `src/audio/sfx/zzfx.ts` (SFX synthesis) · `licenses/zzfx-MIT.txt` | 2026-10-03 |
 
 ## Candidate sources (researched, not yet used)
 | Source | Content of interest | License |
