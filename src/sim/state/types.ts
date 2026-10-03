@@ -2,6 +2,7 @@ import type { Difficulty } from '@/content/balance/difficulty';
 import type { RepSub } from '@/content/balance/reputation';
 import type { GameSpeed } from '@/content/balance/time';
 import type { Finish } from '@/content/schema/common';
+import type { Preference } from '@/content/schema/customers';
 import type { Rotation } from '@/content/schema/shop';
 import type { Cents } from '@/core/money';
 import type { RngState } from '@/core/rng';
@@ -158,6 +159,13 @@ export interface CustomerAgent {
   waitedMinutes: number;
   /** Fixture uids still to browse this visit, in order. */
   toBrowse: string[];
+  /**
+   * Wanted units not looked for yet, one entry per unit, drawn from the archetype preferences
+   * (docs/02 §5.2). A want leaves the list once it's bought, declined or found out of stock.
+   */
+  wants: Preference[];
+  /** Price reactions to every item considered this visit, bought or not (docs/02 §5.3–5.4). */
+  reactions: Extract<BubbleKind, 'steal' | 'fair' | 'pricey' | 'ripoff'>[];
   /** Items wanted but not found (out of stock), for satisfaction and Selection signals. */
   missed: number;
   /** Running satisfaction contributions (docs/02 §5.4). */

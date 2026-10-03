@@ -4,8 +4,8 @@ export const progressionBalance = {
   /** XP to go from level L to L+1 = round(80 · L^1.55). */
   xpCurveBase: 80,
   xpCurveExponent: 1.55,
-  /** XP per revenue dollar = 0.5 · f(L), with f(L) = 1 / (1 + 0.08 L). */
-  xpPerRevenueDollar: 0.5,
+  /** XP per revenue dollar = 1 · f(L), with f(L) = 1 / (1 + 0.08 L) (balance-sim tuned, docs/02 §9). */
+  xpPerRevenueDollar: 1,
   xpRevenueLevelFalloff: 0.08,
   /** Other XP sources (docs/02 §9.1). */
   xpPerSatisfiedCustomer: 1,
@@ -14,7 +14,7 @@ export const progressionBalance = {
   xpPerPull: { holoRare: 3, ultraRare: 10, illustrationRare: 15, secretRare: 30, mythicRare: 100 },
 } as const;
 
-/** XP for a sale: revenue$ × 0.5 × f(L), f(L) = 1 / (1 + 0.08 L) (docs/02 §9.1). */
+/** XP for a sale: revenue$ × 1 × f(L), f(L) = 1 / (1 + 0.08 L) (docs/02 §9.1). */
 export function xpForRevenue(revenueCents: number, level: number): number {
   const dollarsEarned = revenueCents / 100;
   return (

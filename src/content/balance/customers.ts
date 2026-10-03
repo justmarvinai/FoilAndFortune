@@ -29,10 +29,21 @@ export const customerBalance = {
   browseMinutes: [3, 6] as const,
   /** Fixtures browsed per visit (uniform), before deciding. */
   fixturesPerVisit: [1, 3] as const,
+  /**
+   * Interest in a fixture = Σ preference weight of the wants it displays (docs/01 §10.3), plus
+   * this for any fixture, so one that can't satisfy a want is picked only rarely.
+   */
+  browseIdleInterest: 2,
   /** Holding items makes customers more patient in the queue than when idly waiting. */
   queuePatienceMultiplier: 2.5,
+  /** The queue bubble turns from 🛒 to ⏳ once this share of queue patience is used. */
+  waitingBubbleAt: 0.5,
   /** Customers in line (including the one paying). Beyond this, newcomers give up. */
   maxQueue: 4,
+  /** Manual checkout: the customer lingers this long for the scan animation (docs/02 §14). */
+  checkoutMinutes: 1,
+  /** How long reaction bubbles (prices, out of stock, angry, delight) stay up. */
+  reactionBubbleMinutes: 3,
 
   /** Willingness to pay (docs/02 §5.3). */
   perceivedValueSigma: 0.35,
@@ -52,11 +63,28 @@ export const customerBalance = {
     ripoff: -1.5,
     foundWanted: 1,
     outOfStock: -1,
-    /** Per game-minute waited beyond 50% of patience. */
+    /** Per game-minute waited beyond `waitPenaltyAfter` × (queue) patience. */
     waitPenaltyPerMinute: 0.1,
+    waitPenaltyAfter: 0.5,
     waitPenaltyCap: 2,
     delight: 1,
     clamp: 3,
+    /** Served at or above this counts as satisfied: +XP (docs/02 §9.1). */
+    satisfiedAt: 1,
+    /** Leaving at or above this shows the ❤️ bubble. */
+    delightBubbleAt: 2,
+  },
+
+  /** Reputation signals per visit, −1…+1 for each sub-score it touched (docs/02 §13). */
+  signals: {
+    /** Prices: averaged over every item they considered, bought or not. */
+    prices: { steal: 1, fair: 0.5, pricey: -0.5, ripoff: -1 },
+    /** Service: from rung up at once to the end of their queue patience, linearly. */
+    serviceInstant: 1,
+    serviceAtPatienceEnd: -1,
+    /** Service when they gave up: patience ran out, or the lane was full. */
+    serviceLost: -1,
+    /** Selection = (found − missed) / (found + missed), so it needs no constants. */
   },
 } as const;
 

@@ -10,8 +10,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Sim systems:** stocking (fill, clear, Restock All, per-slot prices), pricing and market references with price-reaction buckets, supplier orders (paid up front, closet space checked, delivered at dawn), the binder, XP sources with level-up unlocks, nightly reputation from customer signals, and shared tile navigation with the register lane.
 - **Pack generator and opening** (`src/sim/packs`): slot tables with a rarity fallback for partial sets, god packs, misprints (stored as `misprint.<kind>` stamps with their value premium), booster-box mapping (≥ 6 Holo Rares and ≥ 2 Ultra-or-better, Mythic never forced), hidden onboarding luck (a Sparkit holo in the first pack, an Illustration Rare or better in the first box), starter decks with a guaranteed holo last, and blister promos. Opening grants XP per pack, new card and hit, updates the day log and the best pull, and records the opened cost. **Break the box** turns a booster box into 36 loose packs with an exactly split cost. A pack EV helper checks the docs/02 §11.3 target.
 
+- **Customers** (`src/sim/systems/customers`): Kid and Casual Collector visits driven by a Poisson arrival process (tier traffic × reputation × appeal × weekday × hour; the first Day-1 customer arrives 3 minutes after opening). Customers walk the shared tile grid, browse the fixtures that hold what they want, decide with the docs/02 §5.3 willingness-to-pay model, pick items off the shelves (which visibly empty), react with price bubbles, queue in the register lane and wait for a **manual checkout**. Satisfaction at exit feeds reputation signals (prices, service, selection) and XP. Impatient customers drop their items back and leave; at closing the owner serves the line. A new `customer/entered` event syncs the door bell.
+- **Balance simulator** (`npm run balance:sim -- --days 7 --seeds 20 --bot balanced|cautious|ripper`): headless bots play the pure sim through commands and report daily revenue, profit, satisfaction, reputation, level and cash, with the Phase 2 KPIs flagged (docs/02 §18).
+
 ### Changed
 - The owner chose **Clay Critters for all card art** (ADR-006). `/debug/art` is now a Clay card gallery.
+- **Balance:** sales XP is 1.0 per revenue dollar (was 0.5), and the early pacing targets follow the simulator: a level-up on days 1, 2, 4 and 7 (docs/02 §9).
 - Failed commands are atomic: no partial state change and no events.
 
 ### Removed

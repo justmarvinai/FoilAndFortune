@@ -61,6 +61,33 @@ describe('rng', () => {
     }
   });
 
+  it('exponential() has mean 1/rate and is never negative', () => {
+    const rng = createRng(seedStream(17, 'test'));
+    const values = Array.from({ length: 40_000 }, () => rng.exponential(0.25));
+    expect(Math.min(...values)).toBeGreaterThanOrEqual(0);
+    expect(mean(values)).toBeCloseTo(4, 1);
+    // Memorylessness shows as P(X > 1/rate) = e^-1.
+    expect(values.filter((v) => v > 4).length / values.length).toBeCloseTo(Math.exp(-1), 2);
+  });
+
+  it('poisson() matches mean and variance, including large means', () => {
+    const rng = createRng(seedStream(19, 'test'));
+    for (const lambda of [0.03, 1.3, 2, 45]) {
+      const values = Array.from({ length: 30_000 }, () => rng.poisson(lambda));
+      const m = mean(values);
+      const variance = mean(values.map((v) => (v - m) ** 2));
+      expect(values.every((v) => Number.isInteger(v) && v >= 0)).toBe(true);
+      // ±4 standard errors of the mean; the variance of a Poisson equals its mean.
+      expect(Math.abs(m - lambda)).toBeLessThan(4 * Math.sqrt(lambda / values.length));
+      expect(variance / lambda).toBeGreaterThan(0.9);
+      expect(variance / lambda).toBeLessThan(1.1);
+    }
+    const zero = createRng(seedStream(19, 'test'));
+    expect(zero.poisson(0)).toBe(0);
+    const p0 = Array.from({ length: 20_000 }, () => rng.poisson(1.3)).filter((v) => v === 0);
+    expect(p0.length / 20_000).toBeCloseTo(Math.exp(-1.3), 2);
+  });
+
   it('weighted() respects weights', () => {
     const rng = createRng(seedStream(11, 'test'));
     const counts = { a: 0, b: 0, c: 0 };
@@ -89,6 +116,10 @@ describe('rng', () => {
     expect(() => rng.int(5, 1)).toThrow();
     expect(() => rng.weighted([{ value: 1, weight: 0 }])).toThrow();
     expect(() => rng.gamma(0, 1)).toThrow();
+    expect(() => rng.exponential(0)).toThrow();
+    expect(() => rng.exponential(Number.NaN)).toThrow();
+    expect(() => rng.poisson(-1)).toThrow();
+    expect(() => rng.poisson(Number.POSITIVE_INFINITY)).toThrow();
   });
 
   it('hashString is stable', () => {

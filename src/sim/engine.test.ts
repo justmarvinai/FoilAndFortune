@@ -278,6 +278,9 @@ describe('determinism & invariants', () => {
         supplierId: 'sup.budget-box',
         lines: [line],
       })),
+    fc
+      .option(fc.integer({ min: 1, max: 40 }), { nil: undefined })
+      .map<Command>((uid) => ({ type: 'customers/checkout', uid })),
   );
 
   function apply(state: GameState, step: Command | { type: 'tick'; count: number }): GameState {

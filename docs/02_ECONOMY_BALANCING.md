@@ -187,6 +187,10 @@ P(buy | p)        = 0.95                              if p ≤ p_max
 ### 5.4 Satisfaction (at exit, clamped −3…+3)
 `+1.0` steal / `+0.5` fair / `−0.5` pricey / `−1.5` rip-off (averaged over items) · `+1` found what they wanted / `−1` wanted item out of stock · `−0.1` per game-minute waited beyond 50% of patience (cap −2) · `±0.5` haggle success or fail · `+1` delight (e.g., a kid pulls a holo from a pack opened at the counter) · `+0.3` cashier charisma bonus.
 
+Price reactions are averaged over every item the customer considered, bought or not. "Found what they wanted" needs a purchase, and the wait is measured against queue patience (patience × 2.5). Served customers at ≥ 1 earn the +1 XP (§9.1), and ≥ 2 shows ❤️.
+
+**Reputation signals per visit** (§13; `signals` in `balance/customers.ts`): **Prices** = mean over the items considered (steal +1 · fair +0.5 · pricey −0.5 · rip-off −1). **Service** (only for those who queued) = +1 when rung up at once, falling linearly to −1 at the end of queue patience; −1 when they gave up (patience ran out, or the lane was full). **Selection** = (found − missed) / (found + missed), where *found* counts wanted items seen in stock. Customers only want what the shop can stock today: sealed kinds that exist in the catalog, and singles once the case is unlocked (Lv 2).
+
 ---
 
 ## 6. Haggling (`balance/haggle.ts`)
@@ -334,7 +338,7 @@ The slab fee is lost. There is a 3% chance (Standard) of surface −0.5 while cr
 ### 9.1 XP sources
 | Action | XP |
 |--------|----|
-| Sales revenue | `revenue$ × 0.5 × f(L)`, with `f(L) = 1 / (1 + 0.08 L)` (diminishes with level) |
+| Sales revenue | `revenue$ × 1.0 × f(L)`, with `f(L) = 1 / (1 + 0.08 L)` (diminishes with level) |
 | Customer served with satisfaction ≥ 1 | +1 |
 | Haggle won (sale or buy) | +5 (× streak bonus) |
 | Buy offer closed | +5 + 1 per $20 of lot value (cap +100) |
@@ -358,7 +362,9 @@ Cumulative to reach Lv 10 = 9,747 XP.
 
 **Rank titles:** Corner Stall (Lv 1) → Hobby Shop (Lv 7) → Local Favorite (Lv 15) → Collector's Haven (Lv 25) → Collectibles Empire (Lv 35) → **Collectibles Legend** (Lv 50).
 
-**Pacing targets** (1×, "balanced" bot, Standard): Lv 2 on day 1 · Lv 5 by day 4 · Lv 10 by day 12 · Lv 15 by day 25 · Lv 20 by day 40 · Lv 30 by day 90 · Lv 40 by day 170 · Lv 50 by day 300.
+**Pacing targets** (1×, "balanced" bot, Standard): Lv 2 on day 1 · Lv 4 by day 4 · Lv 5 by day 7 · Lv 10 by day 12 · Lv 15 by day 25 · Lv 20 by day 40 · Lv 30 by day 90 · Lv 40 by day 170 · Lv 50 by day 300.
+
+*Phase 2 tuning (balance sim, 20 seeds):* the Nook earns $140–310 a day, so the revenue rate was raised from 0.5 to 1.0 XP per dollar and the early targets set to the measured rhythm of a level-up on days 1, 2, 4 and 7. The targets from Lv 10 on assume the XP sources of later phases (haggles, buy offers, grading, objectives) and are re-tuned when those land.
 
 ### 9.3 Unlock table
 
@@ -599,3 +605,5 @@ It outputs a Markdown or CSV report: level by day, cash and debt curves, reputat
 | Level pacing | within ±20% of §9.2 targets |
 
 KPIs apply once the features they measure exist (see the phases in `ROADMAP.md`). CI runs a short smoke version (10 days × 5 seeds) to catch economy-breaking changes.
+
+**Phase 2 runner** (`scripts/balance/`): Standard difficulty, the Nook and Budget Box Co. only. The bots play only through commands. They stock the shelves (and the case from Lv 2), Restock All every hour, ring up whoever reaches the pay spot within 1–2 game-minutes, and reorder at night up to their stock targets, keeping a week's rent in reserve. **Cautious** never opens anything. **Balanced** rips 3 packs a day and opens Theo's box once the case unlocks. **Ripper** opens the box on day 1 and everything beyond one shelf of packs.

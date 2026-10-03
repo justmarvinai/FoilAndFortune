@@ -81,9 +81,16 @@ export interface Rng {
   gauss(mean: number, sd: number): number;
   /** Gamma distribution with shape `k` and scale `theta` (mean kθ). Marsaglia–Tsang. */
   gamma(k: number, theta: number): number;
+  /** Exponential distribution with rate `rate` (mean 1 / rate), always ≥ 0. */
+  exponential(rate: number): number;
+  /** Poisson-distributed count with mean `mean` (Knuth's product method). */
+  poisson(mean: number): number;
   /** Returns a shuffled copy (Fisher–Yates). */
   shuffle<T>(items: readonly T[]): T[];
 }
+
+/** Knuth's product method underflows for large means; a sum of independent Poissons is Poisson. */
+const POISSON_CHUNK = 30;
 
 export function createRng(state: RngState): Rng {
   const next = () => nextUint32(state) / 4294967296;
@@ -117,6 +124,30 @@ export function createRng(state: RngState): Rng {
     }
   };
 
+  const exponential = (rate: number): number => {
+    if (!(rate > 0) || !Number.isFinite(rate)) {
+      throw new RangeError('exponential: rate must be a finite number > 0');
+    }
+    // 1 - next() is in (0, 1], so the log is finite and the result is ≥ 0.
+    return -Math.log(1 - next()) / rate;
+  };
+
+  const poisson = (mean: number): number => {
+    if (!(mean >= 0) || !Number.isFinite(mean)) {
+      throw new RangeError('poisson: mean must be a finite number ≥ 0');
+    }
+    let count = 0;
+    for (let remaining = mean; remaining > 0; remaining -= POISSON_CHUNK) {
+      const limit = Math.exp(-Math.min(remaining, POISSON_CHUNK));
+      let product = next();
+      while (product > limit) {
+        count += 1;
+        product *= next();
+      }
+    }
+    return count;
+  };
+
   return {
     next,
     float: (min, max) => min + (max - min) * next(),
@@ -147,6 +178,8 @@ export function createRng(state: RngState): Rng {
     },
     gauss,
     gamma,
+    exponential,
+    poisson,
     shuffle: (items) => {
       const copy = [...items];
       for (let i = copy.length - 1; i > 0; i--) {
