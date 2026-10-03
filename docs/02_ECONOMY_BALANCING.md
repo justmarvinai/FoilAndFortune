@@ -244,7 +244,7 @@ Fairness `f = offer / V_true` (true value includes hidden cards the seller *did*
 | Promo | $1 | $4 | $40 |
 
 Each card's `baseValue` = typical × **relative popularity** × **playability bump** (competitive staples +0–150% at Rare and above) × **art appeal** (0.8–1.5, IR/SR/MR only). The value is clamped to the band.
-**Relative popularity** = species popularity ÷ the mean popularity of all species in *that set* (clamped 0.4–2.5). It averages 1.0 within every set, so fan favorites are pricier without inflating the set's pack EV (§11.3). The content generator computes `baseValue` and stores it in the card definition, so it can be hand-edited.
+**Relative popularity** = species popularity ÷ the mean popularity of all species in *that set* (clamped 0.4–2.5). It averages 1.0 within every set, so fan favorites are pricier without inflating the set's pack EV (§11.3). The content generator computes `baseValue` and stores it in the card definition, so it can be hand-edited. Authored sets also normalize the formula **within each rarity** (the mean of each rarity stays at its typical value), because a set's chase slots are usually all fan favorites and would otherwise push pack EV above the §11.3 target. *Emberdawn's Phase 2 subset gives a market EV of 1.02 × MSRP and a realizable EV of 0.69 × MSRP (unit-tested).*
 
 ### 7.2 Multipliers
 | Factor | Multipliers |

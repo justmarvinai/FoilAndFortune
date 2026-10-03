@@ -7,13 +7,8 @@ import type { BrandDef, CardDef, PackConfigDef, ProductDef, SetDef } from './sch
 import { fixtureCatalog } from './shop/fixtures';
 import { layoutCatalog } from './shop/layouts';
 import { supplierCatalog } from './suppliers/budgetBox';
+import { gkCards, gkPackConfigs, gkProducts, gkSets } from './tcg/gk';
 import { glimmerkin } from './tcg/gk/brand';
-import {
-  emberdawn,
-  emberdawnCards,
-  emberdawnProducts,
-  gkModernBooster,
-} from './tcg/gk/sets/emberdawn';
 import { gkSpecies } from './tcg/gk/species';
 
 /**
@@ -53,10 +48,10 @@ export interface ContentSource {
 export const defaultContentSource: ContentSource = {
   brands: [glimmerkin],
   species: gkSpecies,
-  sets: [emberdawn],
-  cards: emberdawnCards,
-  packConfigs: [gkModernBooster],
-  products: emberdawnProducts,
+  sets: gkSets,
+  cards: gkCards,
+  packConfigs: gkPackConfigs,
+  products: gkProducts,
   fixtures: fixtureCatalog,
   layouts: layoutCatalog,
   suppliers: supplierCatalog,

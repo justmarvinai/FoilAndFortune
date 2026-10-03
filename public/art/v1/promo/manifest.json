@@ -1,0 +1,37 @@
+{
+  "format": "ff-art-manifest@1",
+  "set": "gk.promo",
+  "renderer": {
+    "id": "clay",
+    "version": "1.1",
+    "digest": "fcbd78ecf7536911"
+  },
+  "cards": {
+    "gk.promo.001": {
+      "file": "001.webp",
+      "composition": "window",
+      "width": 560,
+      "height": 378,
+      "seed": 90001,
+      "subject": "creature",
+      "genomeHash": "b04679a6cb29a62b",
+      "quality": 0.86,
+      "bytes": 15622,
+      "renderer": "clay@1.1",
+      "hash": "7844153609198f8c"
+    },
+    "gk.promo.002": {
+      "file": "002.webp",
+      "composition": "window",
+      "width": 560,
+      "height": 378,
+      "seed": 90002,
+      "subject": "creature",
+      "genomeHash": "68ca7ba92b25be3c",
+      "quality": 0.86,
+      "bytes": 14412,
+      "renderer": "clay@1.1",
+      "hash": "f44a9df420c8a5ec"
+    }
+  }
+}

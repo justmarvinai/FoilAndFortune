@@ -1,6 +1,4 @@
-import type { BiomeId, CreatureArtRenderer, CreatureArtRequest } from '@/art/types';
-import type { SpeciesDef } from '@/content/schema/species';
-import type { CardDef } from '@/content/schema/tcg';
+import type { CreatureArtRenderer, CreatureArtRequest } from '@/art/types';
 
 /**
  * Discovers art-style modules (`src/art/<style>/renderer.ts`) at build time. Styles are optional
@@ -33,29 +31,7 @@ export function loadRenderers(): Promise<Map<string, CreatureArtRenderer>> {
   return pending;
 }
 
-const BIOMES: readonly BiomeId[] = ['storm-meadow', 'volcano-dawn', 'lagoon'];
-
-function asBiome(value: string): BiomeId | undefined {
-  return BIOMES.find((biome) => biome === value);
-}
-
-/** Card art window ≈ 1.48:1 (see cards.css); full art is the whole 5:7 card. */
-export function artRequestFor(card: CardDef, species: SpeciesDef, scale = 1): CreatureArtRequest {
-  const full = card.art.composition === 'fullArt';
-  const biome = asBiome(card.art.biome ?? species.biome);
-  return {
-    genome: species.genome,
-    element: species.element,
-    width: Math.round((full ? 500 : 648) * scale),
-    height: Math.round((full ? 700 : 438) * scale),
-    composition: card.art.composition,
-    pose: card.art.pose,
-    background: 'biome',
-    ...(biome ? { biome } : {}),
-    timeOfDay: card.art.timeOfDay,
-    seed: card.art.seed,
-  };
-}
+export { artRequestFor } from './cardArt';
 
 /** Sequential render queue: art styles may share one GPU context, and serial is kinder to it. */
 let queue: Promise<unknown> = Promise.resolve();

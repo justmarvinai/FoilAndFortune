@@ -3,11 +3,14 @@ import type { ColorRef, CreatureGenome, GenomeExtra } from '@/content/schema/gen
 import { hexToLinear, mixRgb, type Rgb, scaleRgb } from '../color';
 import {
   add,
+  cross,
   deg,
   dirYawPitch,
   frameAlongX,
   frameAlongY,
+  lerp3,
   type Mat3,
+  mirrorZ,
   mulMM,
   mulMV,
   normalize,
@@ -20,6 +23,15 @@ import {
 } from '../math';
 import { createRng, hashString, range } from '../rng';
 import {
+  buildAntlers,
+  buildHorns,
+  buildMane,
+  buildShell,
+  buildShoulderWings,
+  flameSurface,
+  paintMask,
+} from './features';
+import {
   beadChain,
   type EyeSpec,
   ellipsoidNormal,
@@ -28,6 +40,7 @@ import {
   frameFacingZ,
   fur,
   glossy,
+  leafPart,
   type MouthSpec,
   makeGroup,
   onEllipsoid,
@@ -183,7 +196,14 @@ interface HeadBuild {
   emitters: Emitter[];
 }
 
-function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): HeadBuild {
+/** `tuftScale` grows tufts and crowns: birds carry their crest on a small head. */
+function buildHead(
+  g: CreatureGenome,
+  pal: Palette,
+  R: number,
+  rig: PoseRig,
+  tuftScale = 1,
+): HeadBuild {
   const shape = g.head.shape;
   const skullR = scale(SKULL[shape], R);
   const featureColor = shape === 'axolotl' ? pal.primary : pal.secondary;
@@ -229,7 +249,8 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
   let mouthWidth = 0.08 * R;
   let noseC: Vec3 | null = null;
   let noseR: Vec3 = scale([0.09, 0.078, 0.115], R);
-  switch (g.head.muzzle) {
+  // Beaked heads read `muzzle` as the beak's length instead (see buildBeak).
+  switch (shape === 'beaked' ? 'none' : g.head.muzzle) {
     case 'pointed':
       headParts.push(
         part(
@@ -308,23 +329,7 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
     );
     noseY = noseC[1] - r[1] * 0.7;
   }
-  if (shape === 'beaked') {
-    headParts.push(
-      part(
-        'beak',
-        'nose',
-        {
-          type: 'roundCone',
-          a: scale([0.6, -0.12, 0], R),
-          b: scale([1.15, -0.2, 0], R),
-          ra: 0.26 * R,
-          rb: 0.05 * R,
-        },
-        0.03,
-        glossy(pal.accent, { rough: 0.3, spec: 0.5 }),
-      ),
-    );
-  }
+  if (shape === 'beaked') headParts.push(...buildBeak(g, pal, R, rig));
 
   // Mouth. Happy/action poses open closed smiles.
   const baseMouth: MouthSpec['kind'] =
@@ -365,9 +370,6 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
     paints.push(paintForeheadMark(colorOf(pal, mark.color), mark.shape, 0.45 * R, 0.14 * R));
   }
 
-  const groups: Group[] = [makeGroup('head', 'head', true, 0.11, headParts, paints)];
-  const emitters: Emitter[] = [];
-
   // Eyes: glossy ellipsoids pressed into the skull along its surface normal.
   const eyeSize = R * (0.07 + 0.26 * g.face.eyeSize) * eyeLayout.size;
   const sparkle = g.face.eyes === 'sparkle';
@@ -386,6 +388,16 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
     iris: sparkle ? mixRgb(pal.eyes, pal.glow, 0.8) : mixRgb(pal.eyes, pal.primary, 0.42),
     lid: pal.primary,
   };
+  // Face masks paint around the eyes; panda patches also darken the eyelids.
+  for (const mask of extrasOf(g, 'mask')) {
+    const color = colorOf(pal, mask.color);
+    paints.push(paintMask(mask, color, R, { c: eyeC, size: eyeSize }));
+    if (mask.shape === 'patches') eye.lid = color;
+  }
+
+  const groups: Group[] = [makeGroup('head', 'head', true, 0.11, headParts, paints)];
+  const emitters: Emitter[] = [];
+
   groups.push(
     makeGroup(
       'eyes',
@@ -402,13 +414,22 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
     ),
   );
 
-  // Ears.
+  // Ears, horns and antlers.
   const ears = buildEars(g, pal, R, skullR);
   if (ears) groups.push(ears);
+  for (const horns of extrasOf(g, 'horns')) {
+    groups.push(buildHorns(horns, colorOf(pal, horns.color), R, skullR));
+  }
+  for (const antlers of extrasOf(g, 'antlers')) {
+    const built = buildAntlers(antlers, colorOf(pal, antlers.color), pal.glow, R, skullR, rig.fx);
+    groups.push(built.group);
+    emitters.push(...built.emitters);
+  }
 
   // Head tuft (flame curl, leaf, spark, fluff).
   for (const tuft of extrasOf(g, 'head-tuft')) {
     const base = scale(onEllipsoid(skullR, [0.3, 1, 0]), 0.9);
+    const T = R * tuftScale;
     const c = colorOf(pal, tuft.color);
     if (tuft.shape === 'flame') {
       const tip = mixRgb(pal.primary, [1, 0.12, 0.03], 0.2);
@@ -428,9 +449,9 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
           base,
           [0.25, 1, 0],
           [1, 0, 0],
-          0.62 * R,
-          0.19 * R,
-          0.02 * R,
+          0.62 * T,
+          0.19 * T,
+          0.02 * T,
           0.8,
           0.6,
           0,
@@ -439,41 +460,45 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
         leafPart(
           'tuftL',
           'tuft',
-          add(base, scale([-0.1, -0.02, 0.1], R)),
+          add(base, scale([-0.1, -0.02, 0.1], T)),
           [-0.3, 1, 0.35],
           [1, 0, 0],
-          0.36 * R,
-          0.12 * R,
-          0.015 * R,
+          0.36 * T,
+          0.12 * T,
+          0.015 * T,
           0.8,
           0.25,
-          0.04 * R,
+          0.04 * T,
           flame,
         ),
         leafPart(
           'tuftR',
           'tuft',
-          add(base, scale([-0.12, -0.02, -0.1], R)),
+          add(base, scale([-0.12, -0.02, -0.1], T)),
           [-0.35, 1, -0.3],
           [1, 0, 0],
-          0.32 * R,
-          0.11 * R,
-          0.015 * R,
+          0.32 * T,
+          0.11 * T,
+          0.015 * T,
           0.8,
           0.2,
-          0.04 * R,
+          0.04 * T,
           flame,
         ),
       ];
       groups.push(makeGroup('tuft', 'head', false, 0.03, tuftParts));
       emitters.push({
         frame: 'head',
-        pos: add(base, scale([0.08, 0.28, 0], R)),
+        pos: add(base, scale([0.08, 0.28, 0], T)),
         color: mixRgb(c, pal.primary, 0.3),
         radius: 0.14,
         intensity: 0.55,
         light: 0.3,
       });
+    } else if (tuft.shape === 'flower') {
+      groups.push(buildFlowerCrown(c, pal, T, skullR));
+    } else if (tuft.shape === 'crest') {
+      groups.push(buildCrest(c, pal, T, skullR));
     } else {
       const tuftParts: Part[] = [
         leafPart(
@@ -482,9 +507,9 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
           base,
           [0.3, 1, 0],
           [1, 0, 0],
-          0.4 * R,
-          0.13 * R,
-          0.03 * R,
+          0.4 * T,
+          0.13 * T,
+          0.03 * T,
           0.6,
           0.5,
           0,
@@ -503,31 +528,162 @@ function buildHead(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): He
   return { groups, emitters };
 }
 
-function leafPart(
-  name: string,
-  tag: Part['tag'],
-  base: Vec3,
-  axis: Vec3,
-  faceHint: Vec3,
-  h: number,
-  ra: number,
-  rb: number,
-  thin: number,
-  bend: number,
-  blend: number,
-  surface: Part['surface'],
-): Part {
-  const shape: LeafShape = {
-    type: 'leaf',
-    c: base,
-    rot: frameAlongY(axis, faceHint),
-    h,
-    ra,
-    rb,
-    thin,
-    bend,
-  };
-  return part(name, tag, shape, blend, surface);
+/** Two-part beak for `beaked` heads: `muzzle` sets its length and a `triangle` nose hooks it. */
+function buildBeak(g: CreatureGenome, pal: Palette, R: number, rig: PoseRig): Part[] {
+  const visible = { none: 0.22, short: 0.26, round: 0.4, wide: 0.38, pointed: 0.62 }[g.head.muzzle];
+  const len = (visible + 0.3) * R;
+  const broad = g.head.muzzle === 'wide' ? 1.2 : 1;
+  const hooked = g.head.nose === 'triangle';
+  const open = rig.openMouth ? 1 : 0;
+  const x0 = 0.6 * R;
+  const keratin = glossy(pal.accent, { rough: 0.26, spec: 0.55, sss: 0.3 });
+  const lower = glossy(mixRgb(pal.accent, [0.25, 0.08, 0.02], 0.25), { rough: 0.3, spec: 0.45 });
+  const upperTip: Vec3 = [x0 + len, -0.13 * R, 0];
+  const parts: Part[] = [
+    part(
+      'beak',
+      'beak',
+      {
+        type: 'roundCone',
+        a: [x0, -0.04 * R, 0],
+        b: upperTip,
+        ra: 0.24 * R * broad,
+        rb: 0.035 * R,
+      },
+      0.035 * R,
+      keratin,
+    ),
+    part(
+      'jaw',
+      'beak',
+      {
+        type: 'roundCone',
+        a: [x0, -0.2 * R, 0],
+        b: [x0 + len * 0.82, (-0.22 - 0.17 * open) * R, 0],
+        ra: 0.16 * R * broad,
+        rb: 0.03 * R,
+      },
+      0.02 * R,
+      lower,
+    ),
+  ];
+  if (hooked) {
+    parts.push(
+      part(
+        'hook',
+        'beak',
+        {
+          type: 'roundCone',
+          a: upperTip,
+          b: add(upperTip, [0.03 * R, -0.14 * R, 0]),
+          ra: 0.045 * R,
+          rb: 0.016 * R,
+        },
+        0.02 * R,
+        keratin,
+      ),
+    );
+  }
+  if (open) {
+    // The mouth lining shows between the parted mandibles.
+    parts.push(
+      part(
+        'gape',
+        'beak',
+        { type: 'sphere', c: [x0 + 0.18 * R, -0.2 * R, 0], r: 0.12 * R },
+        0.02 * R,
+        fur(MOUTH_INSIDE, { rough: 0.35, sss: 0.4 }),
+      ),
+    );
+  }
+  return parts;
+}
+
+/** A crown of little blossoms: a big one on the viewer's side, two smaller behind it. */
+function buildFlowerCrown(petal: Rgb, pal: Palette, R: number, skullR: Vec3): Group {
+  const heart = mixRgb(pal.secondary, [1, 0.82, 0.22], 0.75);
+  const petals = fur(petal, {
+    sss: 0.85,
+    rough: 0.5,
+    ramp: { color: mixRgb(petal, WHITE, 0.45), from: 0.4, to: 1 },
+  });
+  const parts: Part[] = [];
+  const blossoms = [
+    { yaw: -38, pitch: 56, size: 1 },
+    { yaw: 16, pitch: 70, size: 0.78 },
+    { yaw: 64, pitch: 50, size: 0.66 },
+  ];
+  blossoms.forEach((b, i) => {
+    const surf = onEllipsoid(skullR, dirYawPitch(deg(b.yaw), deg(b.pitch)));
+    const n = ellipsoidNormal(skullR, surf);
+    const c = add(surf, scale(n, 0.05 * R));
+    const s = b.size * R;
+    const t1 = normalize(cross(n, [1, 0, 0]));
+    const t2 = cross(n, t1);
+    for (let k = 0; k < 5; k++) {
+      const a = (k / 5) * Math.PI * 2 + i * 0.7;
+      const axis = normalize(
+        add(add(scale(t1, Math.cos(a)), scale(t2, Math.sin(a))), scale(n, 0.4)),
+      );
+      parts.push(
+        leafPart(
+          `petal${i}-${k}`,
+          'tuft',
+          c,
+          axis,
+          n,
+          0.26 * s,
+          0.1 * s,
+          0.085 * s,
+          0.32,
+          0.3,
+          0.012 * R,
+          petals,
+        ),
+      );
+    }
+    parts.push(
+      part(
+        `heart${i}`,
+        'tuft',
+        { type: 'sphere', c: add(c, scale(n, 0.04 * s)), r: 0.085 * s },
+        0.012 * R,
+        fur(heart, { sss: 0.5 }),
+      ),
+    );
+  });
+  return makeGroup('flowers', 'head', false, 0.02 * R, parts);
+}
+
+/** Crest: quills sweeping back over the crown (birds of prey, show-offs). */
+function buildCrest(color: Rgb, pal: Palette, R: number, skullR: Vec3): Group {
+  const surface = fur(color, {
+    sss: 0.5,
+    rough: 0.45,
+    ramp: { color: mixRgb(color, pal.secondary, 0.45), from: 0.6, to: 1 },
+  });
+  const base = scale(onEllipsoid(skullR, dirYawPitch(0, deg(66))), 0.86);
+  const quill = (name: string, off: Vec3, axis: Vec3, h: number, blend: number): Part =>
+    leafPart(
+      name,
+      'feather',
+      add(base, scale(off, R)),
+      axis,
+      [-1, 0, 0],
+      h * R,
+      0.13 * R,
+      0.018 * R,
+      0.55,
+      0.45,
+      blend,
+      surface,
+    );
+  return makeGroup('crest', 'head', false, 0.03 * R, [
+    quill('crest0', [0.1, 0, 0], [-0.2, 1, 0], 0.72, 0),
+    quill('crest1', [-0.05, -0.02, 0.1], [-0.55, 1, 0.28], 0.95, 0.02 * R),
+    quill('crest2', [-0.05, -0.02, -0.1], [-0.55, 1, -0.28], 0.9, 0.02 * R),
+    quill('crest3', [-0.2, -0.06, 0], [-0.9, 0.8, 0], 0.8, 0.02 * R),
+  ]);
 }
 
 function buildEars(g: CreatureGenome, pal: Palette, R: number, skullR: Vec3): Group | null {
@@ -713,14 +869,22 @@ function buildTail(
       ]);
       const glowTip = t.shape === 'spark';
       const tipGlow = mixRgb(tipC, WHITE, 0.2);
+      // Ringed tails (raccoons) alternate bead colors: 2n + 1 beads make n rings.
+      const rings = extrasOf(g, 'stripes').find((stripe) => stripe.where === 'tail');
+      const beads = rings ? rings.count * 2 + 1 : 6;
+      const ringColor = rings ? colorOf(pal, rings.color) : body;
       parts.push(
         ...beadChain(
           a,
           b,
           c,
           [0.05, thick + 0.055, thick * 0.66],
-          6,
+          beads,
           (u) => {
+            if (rings) {
+              const ringed = Math.round(u * (beads - 1)) % 2 === 1;
+              return fur(ringed ? ringColor : mixRgb(body, tipC, smoothstep01(0.85, 1, u)));
+            }
             if (!glowTip) return fur(mixRgb(body, tipC, smoothstep01(0.75, 1, u)));
             const g = smoothstep01(0.62, 1, u);
             return fur(mixRgb(body, tipGlow, g), { emit: scaleRgb(tipC, 1.4 * g * g) });
@@ -874,32 +1038,60 @@ function buildTail(
       );
       break;
     case 'bolt': {
-      const p1 = add(base, [-0.12, 0.14, 0]);
-      const p2 = add(base, [-0.04, 0.24, 0]);
-      const p3 = add(base, [-0.2, 0.42, 0]);
-      parts.push(
-        part(
+      // Zig-zag lightning tail; a glow-colored tip sparks and lights the scene.
+      const k = len * (0.75 + 0.5 * t.size);
+      const p1 = add(base, scale([-0.3, 0.36, 0], k));
+      const p2 = add(p1, scale([0.24, 0.26, 0], k));
+      const p3 = add(p2, scale([-0.36, 0.62, 0.04], k));
+      const glowing = t.tipColor === 'glow';
+      const tipSurface = glowing
+        ? fur(body, {
+            ramp: {
+              color: mixRgb(tipC, WHITE, 0.25),
+              emit: scaleRgb(tipC, 1.3 * rig.fx),
+              from: 0.35,
+              to: 1,
+            },
+          })
+        : fur(body, { ramp: { color: tipC, from: 0.4, to: 1 } });
+      const seg = (
+        name: string,
+        a: Vec3,
+        b: Vec3,
+        ra: number,
+        rb: number,
+        surface: Part['surface'],
+        blend: number,
+      ) =>
+        leafPart(
+          name,
           'tail',
-          'tail',
-          { type: 'roundCone', a: base, b: p1, ra: 0.045, rb: 0.035 },
+          a,
+          sub(b, a),
+          [0, 0, 1],
+          Math.hypot(...sub(b, a)),
+          ra,
+          rb,
+          0.7,
           0,
-          fur(body),
-        ),
-        part(
-          'tail2',
-          'tail',
-          { type: 'roundCone', a: p1, b: p2, ra: 0.035, rb: 0.05 },
-          0.02,
-          fur(body),
-        ),
-        part(
-          'tail3',
-          'tail',
-          { type: 'roundCone', a: p2, b: p3, ra: 0.05, rb: 0.015 },
-          0.02,
-          fur(tipC),
-        ),
+          blend,
+          surface,
+        );
+      parts.push(
+        seg('tail', base, p1, 0.045, 0.05, fur(body), 0),
+        seg('tail2', p1, p2, 0.05, 0.06, fur(body), 0.015),
+        seg('tail3', p2, p3, 0.062, 0.012, tipSurface, 0.015),
       );
+      if (glowing) {
+        emitters.push({
+          frame: 'body',
+          pos: lerp3(p2, p3, 0.75),
+          color: tipC,
+          radius: 0.16,
+          intensity: 0.7 * rig.fx,
+          light: 0.5,
+        });
+      }
       break;
     }
   }
@@ -1070,6 +1262,49 @@ function buildQuadruped(g: CreatureGenome, pal: Palette, pose: ArtPose): Creatur
 
   const groups: Group[] = [makeGroup('body', 'body', false, 0, bodyParts, bodyPaints)];
   const emitters: Emitter[] = [];
+  const torso = { bodyL, bodyH, bodyW, bodyY, crouch: rig.crouch, rumpLift: rig.rumpLift };
+
+  for (const shell of extrasOf(g, 'shell')) {
+    groups.push(buildShell(shell, colorOf(pal, shell.color), colorOf(pal, shell.seamColor), torso));
+  }
+  for (const wings of extrasOf(g, 'wings')) {
+    groups.push(
+      buildShoulderWings(
+        wings,
+        colorOf(pal, wings.color),
+        colorOf(pal, wings.tipColor),
+        torso,
+        rig.fx,
+      ),
+    );
+  }
+  for (const mane of extrasOf(g, 'mane')) {
+    if (mane.style === 'fluff') {
+      groups.push(
+        buildRuff(
+          colorOf(pal, mane.color),
+          bodyL * 1.08,
+          bodyY - rig.crouch,
+          bodyH * 1.2,
+          bodyW * 1.15,
+        ),
+      );
+      continue;
+    }
+    const built = buildMane(
+      mane,
+      colorOf(pal, mane.color),
+      colorOf(pal, mane.tipColor),
+      {
+        from: add(headCenter, [-R * 0.62, R * 0.05, 0]),
+        to: [bodyL * 0.15, bodyY + bodyH * 0.88 - rig.crouch * 0.6, 0],
+        R,
+      },
+      rig.fx,
+    );
+    groups.push(built.group);
+    emitters.push(...built.emitters);
+  }
 
   for (const ruff of extrasOf(g, 'ruff')) {
     groups.push(
@@ -1280,6 +1515,451 @@ function buildAmphibian(g: CreatureGenome, pal: Palette, pose: ArtPose): Creatur
   };
 }
 
+// ---- Birds ---------------------------------------------------------------------------------------
+
+type WingsExtra = Extract<GenomeExtra, { kind: 'wings' }>;
+
+const DEFAULT_WINGS: WingsExtra = {
+  kind: 'wings',
+  style: 'feather',
+  size: 0.6,
+  color: 'primary',
+  tipColor: 'secondary',
+};
+
+/** How a bird body sits in the frame: an egg tilted chest-up, `at` maps tilted → body coords. */
+interface BirdFrame {
+  T: Mat3;
+  at: (x: number, y: number, z?: number) => Vec3;
+  rx: number;
+  ry: number;
+  rz: number;
+}
+
+/**
+ * Birds (docs/03 §6: Chirpip's line, Solaryx): an egg-shaped body tilted chest-up on thin legs,
+ * a beaked head, feathered wings and a fan (or flame plumes) for a tail. Idle perches with the
+ * wings folded, happy half-raises them, action takes off with the wings raised in a high V so
+ * the body stays readable in the 3/4 view.
+ */
+function buildBird(g: CreatureGenome, pal: Palette, pose: ArtPose): CreatureScene {
+  const rig = POSES[pose];
+  const P = g.proportions;
+  const flying = pose === 'action';
+  const ry = 0.12 + 0.07 * P.body;
+  const rx = ry * (1.05 + 0.32 * P.body);
+  const rz = ry * 0.9;
+  const legLen = 0.045 + 0.15 * P.legs;
+  const tilt = deg(flying ? 14 : 32 - 12 * P.body);
+  const lift = flying ? 0.16 + legLen * 0.6 : 0;
+  const center: Vec3 = [0, legLen + ry * 0.9 + lift, 0];
+  const T = rotZ(tilt);
+  const at = (x: number, y: number, z = 0): Vec3 => add(center, mulMV(T, [x, y, z]));
+  const frame: BirdFrame = { T, at, rx, ry, rz };
+  const R = 0.1 + 0.11 * P.head;
+  const coat = pal.primary;
+
+  const bodyParts: Part[] = [
+    part('torso', 'body', { type: 'ellipsoid', c: center, r: [rx, ry, rz], rot: T }, 0, fur(coat)),
+    part(
+      'breast',
+      'body',
+      {
+        type: 'ellipsoid',
+        c: at(rx * 0.32, -ry * 0.12),
+        r: [rx * 0.66, ry * 0.92, rz * 0.96],
+        rot: T,
+      },
+      0.06,
+      fur(coat),
+    ),
+    part(
+      'rump',
+      'body',
+      {
+        type: 'ellipsoid',
+        c: at(-rx * 0.6, -ry * 0.04),
+        r: [rx * 0.52, ry * 0.74, rz * 0.82],
+        rot: T,
+      },
+      0.05,
+      fur(coat),
+    ),
+  ];
+  const legR = 0.016 + 0.01 * P.legs;
+  const scaly = fur(pal.accent, { rough: 0.4, spec: 0.4, sss: 0.3 });
+  for (const side of [-1, 1]) {
+    const z = side * rz * 0.42;
+    const hip = at(-rx * 0.04, -ry * 0.6, z);
+    if (flying) {
+      // Tucked legs: short shins pointing back, toes curled into a ball.
+      const foot = add(hip, [-0.08, -0.05, 0]);
+      bodyParts.push(
+        part(
+          'shin',
+          'leg',
+          { type: 'roundCone', a: hip, b: foot, ra: legR * 1.2, rb: legR },
+          0.02,
+          scaly,
+        ),
+        part('foot', 'paw', { type: 'sphere', c: foot, r: legR * 1.8 }, 0.01, scaly),
+      );
+      continue;
+    }
+    const ankle: Vec3 = [hip[0] + 0.012, 0.02, z * 1.05];
+    bodyParts.push(
+      part(
+        'thigh',
+        'leg',
+        { type: 'ellipsoid', c: add(hip, [0, 0.012, 0]), r: [ry * 0.34, ry * 0.36, ry * 0.3] },
+        0.04,
+        fur(coat),
+      ),
+      part(
+        'shin',
+        'leg',
+        { type: 'roundCone', a: add(hip, [0, -ry * 0.2, 0]), b: ankle, ra: legR * 1.1, rb: legR },
+        0.012,
+        scaly,
+      ),
+    );
+    const toe = 0.05 + 0.03 * P.legs;
+    for (const a of [-34, 0, 34]) {
+      const dir: Vec3 = [Math.cos(deg(a)), -0.05, Math.sin(deg(a))];
+      bodyParts.push(
+        part(
+          'toe',
+          'paw',
+          {
+            type: 'roundCone',
+            a: ankle,
+            b: add(ankle, scale(dir, toe)),
+            ra: legR * 0.95,
+            rb: legR * 0.55,
+          },
+          0.008,
+          scaly,
+        ),
+      );
+    }
+    bodyParts.push(
+      part(
+        'heel',
+        'paw',
+        {
+          type: 'roundCone',
+          a: ankle,
+          b: add(ankle, [-toe * 0.55, -0.004, 0]),
+          ra: legR * 0.9,
+          rb: legR * 0.55,
+        },
+        0.008,
+        scaly,
+      ),
+    );
+  }
+  const bodyPaints = [
+    paintBelly({
+      color: pal.belly,
+      y: center[1] - ry * 0.12,
+      rise: 0.75,
+      fromX: -rx * 0.2,
+      soft: 0.035,
+    }),
+  ];
+  for (const spots of extrasOf(g, 'spots')) {
+    bodyPaints.push(
+      paintSpots(
+        colorOf(pal, spots.color),
+        spotLayout(
+          g,
+          spots.count,
+          (u, v) => at(rx * (0.4 - 1.1 * u), ry * Math.cos(v) * 0.95, rz * Math.sin(v) * 0.95),
+          0.024,
+        ),
+      ),
+    );
+  }
+  const groups: Group[] = [makeGroup('body', 'body', false, 0, bodyParts, bodyPaints)];
+  const emitters: Emitter[] = [];
+
+  const wings = buildBirdWings(extrasOf(g, 'wings')[0] ?? DEFAULT_WINGS, pal, frame, pose, rig.fx);
+  groups.push(wings.group);
+  emitters.push(...wings.emitters);
+  const tail = buildBirdTail(g, pal, frame, pose, rig.fx);
+  if (tail.group) groups.push(tail.group);
+  emitters.push(...tail.emitters);
+
+  const head = buildHead(g, pal, R, rig, 1.7);
+  groups.push(...head.groups);
+  emitters.push(...head.emitters);
+  const headCenter = add(at(rx * (flying ? 0.7 : 0.5), ry * (flying ? 0.5 : 0.66)), [
+    R * 0.12,
+    R * 0.56,
+    0,
+  ]);
+  return {
+    key: sceneKey(g, pose),
+    groups,
+    // Flames first: the stage keeps the first three emitters.
+    emitters: [...emitters].sort((a, b) => b.intensity - a.intensity),
+    headCenter,
+    headPose: posedHead({ yaw: deg(34), pitch: deg(2), roll: deg(6) }, rig),
+    headRadius: R,
+  };
+}
+
+function birdFeathers(w: WingsExtra, pal: Palette, fx: number) {
+  const color = colorOf(pal, w.color);
+  const tip = colorOf(pal, w.tipColor);
+  return (from: number): Part['surface'] =>
+    w.style === 'flame'
+      ? fur(color, {
+          sss: 0.55,
+          rough: 0.45,
+          ramp: { color: mixRgb(tip, WHITE, 0.2), emit: scaleRgb(tip, 1.25 * fx), from, to: 1 },
+        })
+      : fur(color, { sss: 0.45, rough: 0.5, ramp: { color: tip, from, to: 1 } });
+}
+
+function buildBirdWings(
+  w: WingsExtra,
+  pal: Palette,
+  f: BirdFrame,
+  pose: ArtPose,
+  fx: number,
+): { group: Group; emitters: Emitter[] } {
+  const feathers = birdFeathers(w, pal, fx);
+  const stubby = w.style === 'stubby';
+  const shoulder = f.at(f.rx * 0.28, f.ry * 0.42, f.rz * 0.74);
+  const parts: Part[] = [];
+  let tipPos: Vec3 = shoulder;
+  if (pose === 'idle' || stubby) {
+    // Folded along the flank; stubby (chick) wings flap up a little when excited.
+    const flap = stubby && pose !== 'idle' ? (pose === 'action' ? 0.9 : 0.45) : 0;
+    const back = normalize(add(mulMV(f.T, [-1, -0.3 + flap, 0]), [0, 0, 0.12 + flap * 0.35]));
+    const len = f.rx * (stubby ? 0.9 : 1.3 + 0.5 * w.size);
+    parts.push(
+      leafPart(
+        'wing',
+        'wing',
+        shoulder,
+        back,
+        [0, 0, 1],
+        len,
+        f.ry * 0.6,
+        f.ry * (stubby ? 0.3 : 0.14),
+        0.3,
+        -0.12,
+        0,
+        feathers(0.55),
+      ),
+    );
+    if (!stubby) {
+      const tipBase = add(shoulder, scale(back, len * 0.6));
+      for (let k = 0; k < 3; k++) {
+        const dir = normalize(add(back, [0, -0.12 * k, 0.04]));
+        parts.push(
+          leafPart(
+            `primary${k}`,
+            'feather',
+            add(tipBase, [0, -0.012 * k, 0.004]),
+            dir,
+            [0, 0, 1],
+            len * (0.55 - 0.08 * k),
+            f.ry * 0.16,
+            f.ry * 0.04,
+            0.3,
+            -0.05,
+            f.ry * 0.05,
+            feathers(0.3),
+          ),
+        );
+      }
+    }
+    tipPos = add(shoulder, scale(back, len));
+  } else {
+    const high = pose === 'action';
+    const arm = normalize(high ? [-0.28, 1, 0.62] : [-0.75, 0.55, 0.62]);
+    const n = normalize([0, arm[2], -arm[1]]);
+    const armLen = (0.15 + 0.15 * w.size) * (high ? 1 : 0.85);
+    parts.push(
+      leafPart(
+        'arm',
+        'wing',
+        shoulder,
+        arm,
+        n,
+        armLen,
+        0.05 + 0.03 * w.size,
+        0.034,
+        0.45,
+        0.1,
+        0,
+        feathers(0.8),
+      ),
+    );
+    const hand = add(shoulder, scale(arm, armLen * 0.92));
+    const back = normalize([-1, -0.15, 0.2]);
+    for (let k = 0; k < 5; k++) {
+      const t = k / 4;
+      const dir = normalize(
+        add(scale(arm, Math.cos(t * deg(80))), scale(back, Math.sin(t * deg(80)))),
+      );
+      const len = (0.2 + 0.16 * w.size) * (1 - 0.18 * t);
+      parts.push(
+        leafPart(
+          `primary${k}`,
+          'feather',
+          hand,
+          dir,
+          n,
+          len,
+          0.045,
+          0.014,
+          0.28,
+          0.12,
+          0.012,
+          feathers(0.35),
+        ),
+      );
+      if (k === 0) tipPos = add(hand, scale(dir, len));
+    }
+    for (let k = 0; k < 3; k++) {
+      const base = add(shoulder, scale(arm, armLen * (0.2 + 0.3 * k)));
+      const dir = normalize(add(back, [0, -0.35, 0]));
+      parts.push(
+        leafPart(
+          `secondary${k}`,
+          'feather',
+          base,
+          dir,
+          n,
+          (0.14 + 0.08 * w.size) * (1 - 0.1 * k),
+          0.05,
+          0.016,
+          0.28,
+          0.1,
+          0.015,
+          feathers(0.4),
+        ),
+      );
+    }
+  }
+  const emitters: Emitter[] =
+    w.style === 'flame'
+      ? [
+          {
+            frame: 'body',
+            pos: mirrorZ(tipPos),
+            color: colorOf(pal, w.tipColor),
+            radius: 0.14,
+            intensity: 0.3 * fx,
+            light: 0.3,
+          },
+        ]
+      : [];
+  return { group: makeGroup('wings', 'body', true, 0.025, parts), emitters };
+}
+
+function buildBirdTail(
+  g: CreatureGenome,
+  pal: Palette,
+  f: BirdFrame,
+  pose: ArtPose,
+  fx: number,
+): { group: Group | null; emitters: Emitter[] } {
+  const t = g.tail;
+  if (t.shape === 'none') return { group: null, emitters: [] };
+  const color = colorOf(pal, t.color);
+  const tip = colorOf(pal, t.tipColor);
+  const P = g.proportions.tail;
+  const base = f.at(-f.rx * 0.82, -f.ry * 0.12);
+  // Tails trail in world space (back, drooping a little), not along the tilted body axis.
+  const down = pose === 'action' ? -0.05 : -0.2;
+  const parts: Part[] = [];
+  const emitters: Emitter[] = [];
+  if (t.shape === 'flame') {
+    // Phoenix plumes: long flame ribbons that curl up at the ends.
+    const plumes = [
+      { z: 0, len: 1, dy: 0 },
+      { z: 0.3, len: 0.82, dy: 0.1 },
+      { z: -0.3, len: 0.82, dy: 0.1 },
+      { z: 0.14, len: 0.66, dy: -0.12 },
+      { z: -0.14, len: 0.66, dy: -0.12 },
+    ];
+    plumes.forEach((pl, i) => {
+      const axis = normalize([-1, down + pl.dy, pl.z]);
+      const h = (0.28 + 0.4 * P) * pl.len * (0.8 + 0.4 * t.size);
+      parts.push(
+        leafPart(
+          `plume${i}`,
+          'tail',
+          base,
+          axis,
+          [0, 1, 0],
+          h,
+          f.ry * 0.3,
+          f.ry * 0.03,
+          0.55,
+          0.35,
+          i ? f.ry * 0.08 : 0,
+          flameSurface(tip, color, fx),
+        ),
+      );
+    });
+    emitters.push({
+      frame: 'body',
+      pos: add(base, scale(normalize([-1, down, 0]), 0.22)),
+      color: mixRgb(tip, color, 0.4),
+      radius: 0.2,
+      intensity: 0.4 * fx,
+      light: 0.5,
+    });
+  } else if (t.shape === 'fluffy') {
+    // A chick's downy stub.
+    [0, 0.05, -0.05].forEach((z, i) => {
+      parts.push(
+        part(
+          `fluff${i}`,
+          'tail',
+          {
+            type: 'sphere',
+            c: add(base, [-f.ry * 0.12, f.ry * 0.05, z]),
+            r: f.ry * (i ? 0.2 : 0.26),
+          },
+          f.ry * 0.1,
+          fur(mixRgb(color, tip, 0.3)),
+        ),
+      );
+    });
+  } else {
+    // A fan of tail feathers, longest in the middle.
+    for (let k = 0; k < 5; k++) {
+      const o = k / 4 - 0.5;
+      const axis = normalize([-1, down - Math.abs(o) * 0.12, o * 0.7]);
+      const h = (0.14 + 0.28 * P) * (1 - Math.abs(o) * 0.35) * (0.8 + 0.4 * t.size);
+      parts.push(
+        leafPart(
+          `feather${k}`,
+          'tail',
+          base,
+          axis,
+          [0, 1, 0],
+          h,
+          f.ry * 0.2,
+          f.ry * 0.07,
+          0.3,
+          0.08,
+          k ? f.ry * 0.05 : 0,
+          fur(color, { sss: 0.45, ramp: { color: tip, from: 0.55, to: 1 } }),
+        ),
+      );
+    }
+  }
+  return { group: makeGroup('tail', 'body', false, 0.04, parts), emitters };
+}
+
 const sceneCache = new Map<string, CreatureScene>();
 
 /** Compiles (and memoizes) the static scene for a genome in a pose. */
@@ -1290,9 +1970,11 @@ export function genomeToScene(genome: CreatureGenome, pose: ArtPose = 'idle'): C
   const pal = resolvePalette(genome);
   // Plans without a dedicated builder yet borrow the closest silhouette family.
   const scene =
-    genome.plan === 'amphibian' || genome.plan === 'fish' || genome.plan === 'serpent'
-      ? buildAmphibian(genome, pal, pose)
-      : buildQuadruped(genome, pal, pose);
+    genome.plan === 'bird'
+      ? buildBird(genome, pal, pose)
+      : genome.plan === 'amphibian' || genome.plan === 'fish' || genome.plan === 'serpent'
+        ? buildAmphibian(genome, pal, pose)
+        : buildQuadruped(genome, pal, pose);
   sceneCache.set(key, scene);
   return scene;
 }

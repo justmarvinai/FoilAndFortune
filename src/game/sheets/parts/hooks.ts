@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { useCardArt } from '@/cards/useCardArt';
 import type { CardDef } from '@/content/schema/tcg';
 import { useSettingsStore } from '@/state/settingsStore';
 
@@ -30,8 +31,6 @@ export function useReducedMotion(): boolean {
  * only. The runtime Clay renderer stays off here, so a binder page or a singles grid never pulls
  * the renderer in; cards without a file show CardView's element placeholder.
  */
-export function useSheetCardArt(_card: CardDef): string | undefined {
-  // Pre-rendered card art lands with the Emberdawn content package; until then every card shows
-  // CardView's element placeholder.
-  return undefined;
+export function useSheetCardArt(card: CardDef): string | undefined {
+  return useCardArt(card).url;
 }

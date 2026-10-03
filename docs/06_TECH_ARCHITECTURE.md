@@ -230,7 +230,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 - **Genome:** a data description of a species (body plan, parts, palette, patterns, features, expression set). Evolutions reference a parent genome plus "growth" modifiers.
 - **Style A, SDF renderer:** WebGL2 full-screen shader. The genome compiles to a uniform buffer and part list (smooth-union SDF primitives). Soft shadows, AO, rim light and glossy eyes. Backgrounds are procedural biomes. It renders into an offscreen canvas and returns an `ImageBitmap` or `Blob`.
 - **Style B, SVG composer:** part library plus palette mapping, producing an optimized SVG string.
-- **Build-time render:** `npm run art:render -- --set emberdawn` drives the renderer in headless Chromium (Playwright), encodes WebP with `sharp`, and writes `public/art/v<N>/<set>/`. Output is committed with a manifest (`genomeVersion`, seed, hash) so builds stay fast and reproducible.
+- **Build-time render:** `npm run art:render -- --set emberdawn` drives the renderer in headless Chromium (Playwright), encodes WebP on a canvas (stepping the quality down until the file fits its budget), and writes `public/art/v<N>/<set>/`. Output is committed with a manifest (renderer version, genome hash, seed, input hash), and unchanged cards are skipped, so builds stay fast and reproducible.
 - **Runtime render** (Set Forge sets): the same code runs in the browser and caches results in IndexedDB (`art-cache` store, key = hash of genome version + card + variant).
 
 ---

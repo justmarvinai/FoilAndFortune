@@ -169,7 +169,13 @@ Every card needs a charming, consistent creature illustration, and we need **hun
 - **Ally cards:** Peg-folk characters (the same models as the shop) rendered in portrait poses. Our regulars and Theo appear here.
 
 ### 6.3 Output
-Curated sets are **pre-rendered** to WebP (art window ~512×360, full art ~700×980) by a build script and committed with generator version and seed. Procedural Set Forge sets render **at runtime** into an IndexedDB cache using the same shader, so the look is identical. User-supplied art can **override** any card via the art registry (`08 §4`).
+Curated sets are **pre-rendered** to WebP by `npm run art:render -- --set <slug>` (`scripts/art/render.ts`): the Clay renderer runs in headless Chromium, the browser encodes WebP, and the files land in `public/art/v<N>/<set>/<nnn>.webp` with a `manifest.json` (renderer id and version, genome hash, seed, composition, size, bytes, input hash). Sizes: art window **560×378**, full art **600×840** (crisp on a ~300 px card at DPR 2); the WebP quality steps down from 0.86 until the file fits the `08 §5` budget. Cards whose inputs (request, Clay sources, quality) hash the same are skipped. Procedural Set Forge sets render **at runtime** with the same code, so the look is identical. `useCardArt` resolves user **override** (`08 §4`) → pre-rendered file → runtime render → placeholder.
+
+### 6.4 Clay renderer subjects and features (Phase 2)
+- **Body plans:** quadruped, amphibian (also used by fish and serpents for now) and **bird**: an egg-shaped body tilted chest-up on thin legs with toes, a two-part beak (`muzzle` sets its length, a `triangle` nose hooks it), wings and a feather fan or phoenix flame plumes. Idle perches with folded wings, happy half-raises them, action takes off with the wings raised in a high V so the body stays readable in the 3/4 view. Birds get a default pair of wings.
+- **Genome extras:** `antlers` (lightning zig-zag or tined, optional glowing tips), `horns`, `wings` (feather, flame, stubby, or small `dragon` wings on four-legged creatures), `shell` (armadillo bands with glowing lava seams), `mane` (flame tongues, crackling spikes or fluff), `mask` (bandit band or panda patches), ringed tails (`stripes` on the tail), and `flower` / `crest` head tufts. Birds scale tufts up for their small heads.
+- **Tactic art:** the request takes a `prop` instead of a genome. Items are clay still lifes (a stoppered potion with a glowing liquid line and a paper label, a floating star or sun charm, a lantern lit from inside). Allies are **Peg-folk** figures (`04 §4.4`) with hair styles, hats, glasses and outfits; happy waves, action cheers. A request with neither renders the biome alone for **Arenas**, framed like a creature card so horizons line up, with the biome's own particles.
+
 
 ---
 

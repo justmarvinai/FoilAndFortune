@@ -35,7 +35,14 @@ export type Shape =
    * Pillowy four-point twinkle facing local +Z (spark tail tip). `pinch` < 1 is the
    * superellipse exponent: lower = thinner, more concave arms.
    */
-  | { type: 'star4'; c: Vec3; rot: Mat3; r: number; pinch: number; thick: number };
+  | { type: 'star4'; c: Vec3; rot: Mat3; r: number; pinch: number; thick: number }
+  /** Ring around local +Y (ring radius `R`, tube radius `r`): bails, handles, rims, glasses. */
+  | { type: 'torus'; c: Vec3; rot: Mat3; R: number; r: number }
+  /**
+   * Cylinder along local +Y centered on `c` (radius `r`, half-height `h`) with edges rounded by
+   * `round`: bottles, lantern caps, hat crowns.
+   */
+  | { type: 'cylinder'; c: Vec3; rot: Mat3; r: number; h: number; round: number };
 
 /** Shading model family; mirrors the `kind` field of the GLSL `Mat` struct. */
 export type SurfaceKind = 'fur' | 'glossy' | 'eye' | 'emissive' | 'fin';
@@ -75,6 +82,16 @@ export const PART_TAGS = {
   fin: 14,
   flame: 15,
   spark: 16,
+  shell: 17,
+  horn: 18,
+  wing: 19,
+  feather: 20,
+  beak: 21,
+  mane: 22,
+  hair: 23,
+  cloth: 24,
+  prop: 25,
+  glass: 26,
 } as const;
 export type PartTag = keyof typeof PART_TAGS;
 

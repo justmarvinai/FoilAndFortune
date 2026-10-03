@@ -82,7 +82,7 @@ Overrides must be user-owned or properly licensed (documented in `CREDITS.md`).
 
 | Type | Format | Budget | Tooling |
 |------|--------|--------|---------|
-| Card art (window / full) | WebP (q≈80) | ≤ 30 KB / ≤ 70 KB | `sharp` |
+| Card art (window / full) | WebP (q≈86, stepped down to fit) | ≤ 30 KB / ≤ 70 KB | `npm run art:render` (canvas encoder in headless Chromium) |
 | UI images and textures | WebP / AVIF, or procedural | ≤ 100 KB each | `sharp` |
 | Vector art | SVG (optimized) | ≤ 20 KB each | SVGO |
 | 3D models (if any CC0) | GLB, meshopt-compressed, KTX2 textures | ≤ 200 KB each | `@gltf-transform/cli` |

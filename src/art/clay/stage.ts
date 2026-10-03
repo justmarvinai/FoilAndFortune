@@ -1,5 +1,6 @@
 import type { ArtComposition, BiomeId, CreatureArtRequest } from '@/art/types';
 import type { ElementId } from '@/content/schema/common';
+import type { ElementFx } from '@/content/schema/genome';
 import { hexToLinear, mixRgb, type Rgb, scaleRgb } from './color';
 import {
   add,
@@ -401,6 +402,23 @@ const ELEMENT_BIOME: Partial<Record<ElementId, BiomeId>> = {
   bloom: 'storm-meadow',
 };
 
+/** Ambient particles of a biome shown alone (Arena art has no subject to take them from). */
+const BIOME_FX: Record<BiomeId, { fx: ElementFx; glow: string }> = {
+  'storm-meadow': { fx: 'sparks', glow: '#9FE6FF' },
+  'volcano-dawn': { fx: 'embers', glow: '#FFB347' },
+  lagoon: { fx: 'bubbles', glow: '#BFF3FF' },
+};
+
+/**
+ * Stand-in silhouette for subject-less scenes (Arenas): framing a creature-sized volume on the
+ * knoll keeps the horizon, the knoll and the sky where every other card of the biome has them.
+ */
+const SCENERY_HULL: readonly HullBall[] = [
+  { c: [0, 0.2, 0], r: 0.2 },
+  { c: [0, 0.45, 0], r: 0.2 },
+];
+const NO_BOX: Vec3 = [0, -1e3, 0];
+
 interface Framing {
   fovY: number;
   /** Fraction of the frame height the creature's silhouette should fill. */
@@ -552,9 +570,12 @@ export function buildStage(request: CreatureArtRequest, scene: CreatureScene): S
   const crPos: Vec3 = [0, 0, 0];
   const worldOf = (p: Vec3): Vec3 => add(crPos, mulMV(toWorld, p));
 
-  const hull: HullBall[] = scene.groups
+  const subjectHull: HullBall[] = scene.groups
     .flatMap((g) => groupHull(g, scene.headCenter, headRot))
     .map((b) => ({ c: worldOf(b.c), r: b.r }));
+  // A scene without parts (an Arena) frames a stand-in volume and marches nothing.
+  const scenery = subjectHull.length === 0;
+  const hull: readonly HullBall[] = scenery ? SCENERY_HULL : subjectHull;
   const lo: [number, number, number] = [Infinity, Infinity, Infinity];
   const hi: [number, number, number] = [-Infinity, -Infinity, -Infinity];
   for (const b of hull) {
@@ -564,8 +585,10 @@ export function buildStage(request: CreatureArtRequest, scene: CreatureScene): S
     }
   }
   lo[1] = Math.max(lo[1], 0);
-  const boxMin: Vec3 = [lo[0] - 0.03, lo[1] - 0.03, lo[2] - 0.03];
-  const boxMax: Vec3 = [hi[0] + 0.03, hi[1] + 0.03, hi[2] + 0.03];
+  // A zero-size box deep underground is never entered (boxHit needs entry < exit), so primary
+  // rays and shadow rays skip the creature pass entirely.
+  const boxMin: Vec3 = scenery ? NO_BOX : [lo[0] - 0.03, lo[1] - 0.03, lo[2] - 0.03];
+  const boxMax: Vec3 = scenery ? NO_BOX : [hi[0] + 0.03, hi[1] + 0.03, hi[2] + 0.03];
   const center: Vec3 = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2];
 
   // ---- Camera: fit the silhouette (height target, width cap), then lens-shift it into place -----
@@ -656,9 +679,10 @@ export function buildStage(request: CreatureArtRequest, scene: CreatureScene): S
   }
 
   // ---- Particles (element FX) -------------------------------------------------------------------
-  if (request.genome.elementFx !== 'none') {
+  const { fx, glow: glowHex } = particleSource(request, biome);
+  if (fx !== 'none') {
     const headWorld = worldOf(scene.headCenter);
-    const headScreen = project(headWorld);
+    const headScreen = scene.headRadius > 0 ? project(headWorld) : null;
     const headPx =
       (scene.headRadius / Math.max(0.1, headScreen?.depth ?? 1) / tanHalf) * (height / 2);
     const centerDepth = dot(sub(center, basis.pos), basis.fwd);
@@ -684,8 +708,8 @@ export function buildStage(request: CreatureArtRequest, scene: CreatureScene): S
       ) {
         continue;
       }
-      if (front && insideBox(sp, creatureBox, 0.35)) continue;
-      const p = makeParticle(request.genome.elementFx, rng, request.genome.palette.glow, tod);
+      if (front && !scenery && insideBox(sp, creatureBox, 0.35)) continue;
+      const p = makeParticle(fx, rng, glowHex, tod);
       const pxPerUnit = (1 / sp.depth / tanHalf) * (height / 2);
       const near = front ? clamp(-rel / 1.2, 0, 1) : 0;
       stage.particles.push({
@@ -702,8 +726,18 @@ export function buildStage(request: CreatureArtRequest, scene: CreatureScene): S
   return stage;
 }
 
+/** Which particles float around the subject: the creature's, the prop's, or the biome's own. */
+function particleSource(
+  request: CreatureArtRequest,
+  biome: BiomeId,
+): { fx: ElementFx; glow: string } {
+  if (request.genome) return { fx: request.genome.elementFx, glow: request.genome.palette.glow };
+  if (request.prop) return { fx: request.prop.fx, glow: request.prop.glow };
+  return BIOME_FX[biome];
+}
+
 function makeParticle(
-  fx: string,
+  fx: ElementFx,
   rng: () => number,
   glowHex: string,
   tod: TimeOfDay,

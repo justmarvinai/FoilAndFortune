@@ -1,10 +1,13 @@
 import type { CreatureArtRenderer, CreatureArtRequest } from '@/art/types';
 import { mat3Uniform } from './math';
 import { genomeToScene } from './sdf/genomeToScene';
+import { propToScene, SCENERY_SCENE } from './sdf/propToScene';
 import { sceneToGlsl } from './sdf/sceneToGlsl';
+import type { CreatureScene } from './sdf/types';
 import { biomeGlsl } from './shaders/biomes';
 import { buildFragmentShader, MAX_PARTICLES, VERTEX_SHADER } from './shaders/frag';
 import { buildStage, type Stage } from './stage';
+import { CLAY_VERSION } from './version';
 
 /**
  * Clay Critters (Art Style A, docs/04 §6.1): soft vinyl-toy creatures, ray-marched from signed
@@ -21,7 +24,17 @@ import { buildStage, type Stage } from './stage';
  * on a given GPU/driver.
  */
 
+export { CLAY_VERSION };
+
 export type ClayQuality = 'draft' | 'final' | 'ultra';
+
+/** The subject standing on the knoll: a creature, a tactic prop, or nothing (an Arena). */
+export function subjectScene(request: CreatureArtRequest): CreatureScene {
+  const pose = request.pose ?? 'idle';
+  if (request.genome) return genomeToScene(request.genome, pose);
+  if (request.prop) return propToScene(request.prop, pose);
+  return SCENERY_SCENE;
+}
 
 export interface ClayRenderOptions {
   /** draft = 1 sample/pixel, final = adaptive 5×, ultra = adaptive 9× on edges. */
@@ -320,7 +333,7 @@ async function renderNow(
   options: ClayRenderOptions,
 ): Promise<ClayRenderResult> {
   const start = performance.now();
-  const scene = genomeToScene(request.genome, request.pose ?? 'idle');
+  const scene = subjectScene(request);
   const stage = buildStage(request, scene);
   const dev = getDevice();
   const { gl } = dev;
@@ -397,5 +410,6 @@ export function renderClayArt(
 export const clayRenderer: CreatureArtRenderer = {
   id: 'clay',
   label: 'Clay Critters',
+  version: CLAY_VERSION,
   render: async (request) => (await renderClayArt(request)).blob,
 };

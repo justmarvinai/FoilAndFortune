@@ -103,9 +103,20 @@ export function validateContent(source: ContentSource): ValidationIssue[] {
     if (product.packConfigId && !packIds.has(product.packConfigId)) {
       add(where, `unknown pack config ${product.packConfigId}`);
     }
+    const cardIds = new Set(source.cards.map((card) => card.id));
     for (const entry of product.contents) {
       if (entry.type === 'pack' && !productIds.has(entry.productId)) {
         add(where, `contents reference unknown product ${entry.productId}`);
+      }
+      // Decks, promo pools and holo pools must only list real cards (opening skips unknown ids).
+      const listed =
+        entry.type === 'fixedCards'
+          ? entry.cards.map((card) => card.cardId)
+          : entry.type === 'promoPool' || entry.type === 'guaranteedHoloPool'
+            ? entry.cardIds
+            : [];
+      for (const cardId of listed) {
+        if (!cardIds.has(cardId)) add(where, `contents reference unknown card ${cardId}`);
       }
     }
   }

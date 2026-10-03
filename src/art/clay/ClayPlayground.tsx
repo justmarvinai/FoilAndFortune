@@ -95,7 +95,22 @@ interface Slot {
 const slotKey = (species: SpeciesDef, composition: ArtComposition) =>
   `${species.id}|${composition}`;
 
-const JOBS = gkSpecies.flatMap((species) =>
+/**
+ * Species shown: `?species=all`, a slug list (`?species=boltbuck,solaryx`) or, by default, the
+ * three spike species plus Solaryx (the bird plan). Each species is two renders on load.
+ */
+const DEFAULT_SPECIES = ['sparkit', 'emberpup', 'sploot', 'solaryx'];
+const requested = new URLSearchParams(window.location.search).get('species');
+const SHOWN =
+  requested === 'all'
+    ? gkSpecies
+    : gkSpecies.filter((species) =>
+        (requested?.split(',') ?? DEFAULT_SPECIES).some(
+          (slug) => species.id === `gk.species.${slug}`,
+        ),
+      );
+
+const JOBS = SHOWN.flatMap((species) =>
   (['window', 'fullArt'] as const).map((composition) => ({ species, composition })),
 );
 
@@ -266,7 +281,7 @@ export default function ClayPlayground() {
           </p>
         </div>
 
-        {gkSpecies.map((species) => (
+        {SHOWN.map((species) => (
           <SpeciesRow
             key={species.id}
             species={species}
@@ -278,7 +293,8 @@ export default function ClayPlayground() {
 
         <p className="pb-6 text-center text-sm text-paper/50">
           Genome → signed-distance part kit → one WebGL2 shader per species/biome/pose. Same
-          request, same image. Card sizes: window 648×438, full art 500×700.
+          request, same image. Card sizes: window 648×438, full art 500×700. Showing {SHOWN.length}{' '}
+          of {gkSpecies.length} species: add ?species=all or ?species=boltbuck,chirpip.
         </p>
       </div>
     </DebugShell>

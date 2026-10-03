@@ -147,6 +147,7 @@ Game time **Day 1 = Spring 8, Year 1** (a Monday; GK Year 26). *Emberdawn* relea
 - Mythic Rares: Solaryx *Gold Crown* · Infernox *Nova Gold* · Sparkit *"Dawn Chase"* (illustration) · Solaryx & Emberpup *"Bond"* art.
 - Pack art: Solaryx, Magmadillo, Boltbuck, Emberpup. Starter decks: *Ember Blaze* (Emberpup line) and *Volt Surge* (Sparkit line).
 - Its Illustration Rares tell the story of one day on the volcanic island, from dawn to night.
+- Full numbering plan, the Phase 2 subset, starter deck lists and promos: **Appendix A**.
 
 **Sparkit & Friends (SPF)**: a special set with 90 cards = 70 main (C 25 · U 20 · R 10 · HR 8 · UR 7) + 20 secret (IR 12 · SR 6 · MR 2). **No booster boxes.**
 - Products: ECB, Booster Bundle, 3 Collection Boxes, 3 Tins, 3-Pack Blisters, Poster Collection.
@@ -397,3 +398,155 @@ Popularity profiles (`02 §15`): Mega-hit · Popular · Rising · Cult Classic �
 8. *SPF* **Staff-stamped Prerelease Sparkit**
 9. **Illustrator Contest Promo "Sparkit's First Spark"** (only 100 exist; event reward)
 10. **"Divine Ten"**: all 10 cards from a single God Pack graded 10
+
+
+---
+
+## Appendix A. *Emberdawn* numbering plan (130 cards)
+
+Every *Emberdawn* card has a fixed number from Phase 2 on, so later phases only fill in the rest (§1, principle 5). The same list is code: `src/content/tcg/gk/sets/emberdawnPlan.ts`, and a unit test checks every authored card against it. **Phase** 2 marks the 42 cards authored for the vertical slice; Phase 3 authors the rest.
+
+**Order.** Main set (001–100): element sections Bloom → Ember → Tide → Volt → Terra → Mystic → Shade → Frost → Neutral. Inside a section, cards group by evolution line (basic → Stage 1 → Stage 2), a **Nova** follows its base card, single-stage species sit between lines and the element's **Legend** closes the section. Then tactics: Items (073–084), Allies (085–093), Arenas (094–100). Secret cards (101–130): the **Illustration Rares** in story order (one day on the volcanic island, dawn → night; Sploot at dusk is card 8 of 16), then Secret Rares, then Mythic Rares. Fixed since Phase 1: 012 Emberpup (C), 024 Sploot (U), 035 Sparkit (HR, the onboarding-luck card), 108 Sploot (IR), 121 Emberpup (SR).
+
+**Counts.** C 40 · U 30 · R 14 · HR 10 · UR 6 (main 100: 72 creatures + 28 tactics) + IR 16 · SR 10 · MR 4. Basics often get a second print (a common and a holo for each starter mascot), as real sets do.
+
+| No. | Name | Kind | Rarity | Species | Note | Phase |
+|-----|------|------|--------|---------|------|-------|
+| 001 | Budbun | Creature | C | Budbun |  | **2** |
+| 002 | Bloomhop | Creature | U | Bloomhop |  | **2** |
+| 003 | Sylvhare | Creature | HR | Sylvhare |  | 3 |
+| 004 | Puffcap | Creature | C | Puffcap |  | 3 |
+| 005 | Fungloo | Creature | C | Fungloo |  | 3 |
+| 006 | Mycelord | Creature | U | Mycelord |  | 3 |
+| 007 | Mossquatch | Creature | R | Mossquatch |  | 3 |
+| 008 | Flickerfly | Creature | C | Flickerfly |  | 3 |
+| 009 | Magmadillo | Creature | C | Magmadillo |  | **2** |
+| 010 | Magmadillo | Creature | HR | Magmadillo |  | **2** |
+| 011 | Magmadillo Nova | Creature | UR | Magmadillo |  | 3 |
+| 012 | Emberpup | Creature | C | Emberpup |  | **2** |
+| 013 | Emberpup | Creature | HR | Emberpup |  | **2** |
+| 014 | Blazehound | Creature | U | Blazehound |  | **2** |
+| 015 | Infernox | Creature | R | Infernox |  | **2** |
+| 016 | Infernox Nova | Creature | UR | Infernox |  | **2** |
+| 017 | Solaryx | Creature | HR | Solaryx | Legend | **2** |
+| 018 | Solaryx Nova | Creature | UR | Solaryx |  | **2** |
+| 019 | Trilobyte | Creature | C | Trilobyte |  | 3 |
+| 020 | Shellby | Creature | C | Shellby |  | 3 |
+| 021 | Bastionaut | Creature | U | Bastionaut |  | 3 |
+| 022 | Tidepup | Creature | C | Tidepup |  | 3 |
+| 023 | Walrusk | Creature | U | Walrusk |  | 3 |
+| 024 | Sploot | Creature | U | Sploot |  | **2** |
+| 025 | Axolagoon | Creature | U | Axolagoon |  | 3 |
+| 026 | Tsunamaw | Creature | R | Tsunamaw |  | 3 |
+| 027 | Maelstryx | Creature | HR | Maelstryx | Legend cameo | 3 |
+| 028 | Zapcoon | Creature | C | Zapcoon |  | **2** |
+| 029 | Voltbandit | Creature | HR | Voltbandit |  | **2** |
+| 030 | Boltbuck | Creature | C | Boltbuck |  | **2** |
+| 031 | Boltbuck | Creature | U | Boltbuck |  | **2** |
+| 032 | Boltbuck | Creature | HR | Boltbuck |  | **2** |
+| 033 | Boltbuck Nova | Creature | UR | Boltbuck |  | 3 |
+| 034 | Sparkit | Creature | C | Sparkit |  | **2** |
+| 035 | Sparkit | Creature | HR | Sparkit |  | **2** |
+| 036 | Voltail | Creature | U | Voltail |  | **2** |
+| 037 | Thundervixen | Creature | R | Thundervixen |  | **2** |
+| 038 | Thundervixen Nova | Creature | UR | Thundervixen |  | **2** |
+| 039 | Pebblit | Creature | C | Pebblit |  | **2** |
+| 040 | Pebblit | Creature | C | Pebblit |  | 3 |
+| 041 | Bouldrake | Creature | U | Bouldrake |  | 3 |
+| 042 | Molemite | Creature | C | Molemite |  | 3 |
+| 043 | Tunnelord | Creature | U | Tunnelord |  | 3 |
+| 044 | Amberwing | Creature | C | Amberwing | Fossil | 3 |
+| 045 | Rexolith | Creature | R | Rexolith | Fossil, evolves from Amber Fossil | 3 |
+| 046 | Mothlume | Creature | C | Mothlume |  | 3 |
+| 047 | Aurorwing | Creature | HR | Aurorwing |  | 3 |
+| 048 | Runeling | Creature | C | Runeling |  | 3 |
+| 049 | Oracleon | Creature | U | Oracleon |  | 3 |
+| 050 | Glowtoad | Creature | C | Glowtoad |  | 3 |
+| 051 | Glowtoad | Creature | C | Glowtoad |  | 3 |
+| 052 | Wisplet | Creature | C | Wisplet |  | 3 |
+| 053 | Wisplet | Creature | C | Wisplet |  | 3 |
+| 054 | Phantomane | Creature | HR | Phantomane |  | 3 |
+| 055 | Dusklet | Creature | C | Dusklet |  | 3 |
+| 056 | Nocturnowl | Creature | U | Nocturnowl |  | 3 |
+| 057 | Umbraith | Creature | R | Umbraith |  | 3 |
+| 058 | Frostling | Creature | C | Frostling | Snowcap of the caldera | 3 |
+| 059 | Glacierra | Creature | U | Glacierra |  | 3 |
+| 060 | Pengwing | Creature | C | Pengwing |  | 3 |
+| 061 | Crystalynx | Creature | R | Crystalynx |  | 3 |
+| 062 | Chirpip | Creature | C | Chirpip |  | **2** |
+| 063 | Chirpip | Creature | U | Chirpip |  | 3 |
+| 064 | Galewing | Creature | U | Galewing |  | **2** |
+| 065 | Stormcrest | Creature | R | Stormcrest |  | **2** |
+| 066 | Nibblit | Creature | C | Nibblit |  | 3 |
+| 067 | Nibblit | Creature | C | Nibblit |  | 3 |
+| 068 | Mimicat | Creature | C | Mimicat |  | **2** |
+| 069 | Mimicat | Creature | U | Mimicat |  | 3 |
+| 070 | Snoozle | Creature | C | Snoozle |  | **2** |
+| 071 | Snoozle | Creature | U | Snoozle |  | 3 |
+| 072 | Snoozle Nova | Creature | UR | Snoozle |  | 3 |
+| 073 | Glimmer Potion | Item | C | — |  | **2** |
+| 074 | Spark Charm | Item | C | — |  | **2** |
+| 075 | Trail Snack | Item | C | — |  | 3 |
+| 076 | Cinder Stone | Item | C | — |  | 3 |
+| 077 | Amber Fossil | Item | C | — | Rexolith evolves from it | 3 |
+| 078 | Dash Net | Item | C | — |  | 3 |
+| 079 | Rescue Rope | Item | C | — |  | 3 |
+| 080 | Ember Lantern | Item | U | — |  | **2** |
+| 081 | Explorer’s Map | Item | U | — |  | 3 |
+| 082 | Volcano Goggles | Item | U | — |  | 3 |
+| 083 | Island Compass | Item | U | — |  | 3 |
+| 084 | Shell Horn | Item | C | — |  | 3 |
+| 085 | Ranger Tala | Ally | U | — |  | **2** |
+| 086 | Volcanologist Vera | Ally | U | — |  | 3 |
+| 087 | Captain Maru | Ally | U | — |  | 3 |
+| 088 | Theo’s Advice | Ally | R | — | Theo Hartley | **2** |
+| 089 | Milo’s Cheer | Ally | U | — | Milo Okafor | 3 |
+| 090 | Dex’s Deckcraft | Ally | R | — | Dex Park | 3 |
+| 091 | Grandma Rosa’s Tea | Ally | U | — | Rosa Bellini | 3 |
+| 092 | Vivian’s Appraisal | Ally | R | — | Vivian Chen | 3 |
+| 093 | Professor Lumen | Ally | R | — |  | 3 |
+| 094 | Emberdawn Caldera | Arena | U | — |  | **2** |
+| 095 | Sunrise Summit | Arena | U | — |  | 3 |
+| 096 | Glowmoss Lagoon | Arena | U | — |  | 3 |
+| 097 | Thunderhead Plateau | Arena | R | — |  | **2** |
+| 098 | Brightbay Harbor | Arena | C | — |  | 3 |
+| 099 | Crystal Cavern | Arena | C | — |  | 3 |
+| 100 | Solaryx’s Aerie | Arena | R | — |  | 3 |
+| 101 | Budbun | Creature | IR | Budbun | 1. First Light (dawn) | 3 |
+| 102 | Magmadillo | Creature | IR | Magmadillo | 2. Warm Rocks (sunrise) | **2** |
+| 103 | Chirpip | Creature | IR | Chirpip | 3. Morning Chorus | 3 |
+| 104 | Pebblit | Creature | IR | Pebblit | 4. Rolling Start (morning) | 3 |
+| 105 | Boltbuck | Creature | IR | Boltbuck | 5. Noon Thunder | **2** |
+| 106 | Zapcoon | Creature | IR | Zapcoon | 6. Picnic Heist (afternoon) | 3 |
+| 107 | Voltail | Creature | IR | Voltail | 7. Afternoon Gust | 3 |
+| 108 | Sploot | Creature | IR | Sploot | 8. Dusk Hum (dusk) | **2** |
+| 109 | Tidepup | Creature | IR | Tidepup | 9. Sunset Swim | 3 |
+| 110 | Mothlume | Creature | IR | Mothlume | 10. Evening Glow | 3 |
+| 111 | Glowtoad | Creature | IR | Glowtoad | 11. Twilight Choir | 3 |
+| 112 | Wisplet | Creature | IR | Wisplet | 12. Lantern Wisps | 3 |
+| 113 | Dusklet | Creature | IR | Dusklet | 13. Moonrise | 3 |
+| 114 | Sparkit | Creature | IR | Sparkit | 14. Starlight Tail (night) | **2** |
+| 115 | Snoozle | Creature | IR | Snoozle | 15. Midnight Nap | 3 |
+| 116 | Blazehound | Creature | IR | Blazehound | 16. Caldera Watch (deep night) | 3 |
+| 117 | Infernox | Creature | SR | Infernox | Gold | **2** |
+| 118 | Thundervixen | Creature | SR | Thundervixen | Gold | 3 |
+| 119 | Boltbuck | Creature | SR | Boltbuck | Gold | 3 |
+| 120 | Magmadillo | Creature | SR | Magmadillo | Gold | 3 |
+| 121 | Emberpup | Creature | SR | Emberpup | Gold | **2** |
+| 122 | Sparkit | Creature | SR | Sparkit | Gold | 3 |
+| 123 | Ranger Tala | Ally | SR | — | Full-art Ally | 3 |
+| 124 | Theo’s Advice | Ally | SR | — | Full-art Ally | 3 |
+| 125 | Ember Essence | Essence | SR | — | Textured Essence | 3 |
+| 126 | Volt Essence | Essence | SR | — | Textured Essence | 3 |
+| 127 | Sparkit | Creature | MR | Sparkit | “Dawn Chase” (illustration) | 3 |
+| 128 | Infernox Nova | Creature | MR | Infernox | “Nova Gold” | 3 |
+| 129 | Solaryx & Emberpup | Creature | MR | Solaryx | “Bond” (both creatures) | 3 |
+| 130 | Solaryx | Creature | MR | Solaryx | “Gold Crown” | **2** |
+
+**Phase 2 subset (42 cards).** C 12 · U 9 · R 5 · HR 6 · UR 3 · IR 4 · SR 2 · MR 1, so every row of the booster pull tables exists. It holds both starter lines (Emberpup → Blazehound → Infernox, Sparkit → Voltail → Thundervixen), the new species (Magmadillo, Boltbuck and the Legend Solaryx, whose *Gold Crown* is the Mythic), the Chirpip bird line, and tactics of every type (Glimmer Potion, Spark Charm, Ember Lantern · Ranger Tala, Theo's Advice · Emberdawn Caldera, Thunderhead Plateau).
+
+**Values.** `baseValue` follows docs/02 §7.1: typical × relative popularity (species pop ÷ the mean pop of the set's species, clamped 0.4–2.5; tactics count as 1) × playability bump (Rare and above: +0–150% from playability 0.4 → 1.0) × art appeal (IR/SR/MR, 0.8–1.5), clamped to the band. Because a set's chase rarities feature its fan favorites, the factors are **normalized within each rarity** so every rarity averages its typical value; that keeps pack EV on the §11.3 target (Phase 2 subset: market EV 1.02 × MSRP, realizable 0.69 × MSRP, unit-tested). Phase 3 recomputes the values when the full list lands.
+
+**Starter decks** (60 = 59 fixed + 1 guaranteed holo from 3). *Ember Blaze*: Emberpup ×4, Blazehound ×3, Infernox ×2, Magmadillo ×3, Chirpip ×2, Snoozle ×2, Mimicat ×2, Glimmer Potion ×4, Ember Lantern ×3, Spark Charm ×2, Ranger Tala ×2, Theo's Advice ×2, Emberdawn Caldera ×2, Ember Essence ×26; holo pool Magmadillo / Emberpup / Solaryx (HR). *Volt Surge*: Sparkit ×4, Voltail ×3, Thundervixen ×2, Boltbuck ×2 + 1 (*Static Stomp*), Zapcoon ×2, Chirpip ×2, Galewing ×2, Spark Charm ×4, Glimmer Potion ×4, Ranger Tala ×2, Theo's Advice ×2, Thunderhead Plateau ×3, Volt Essence ×26; holo pool Voltbandit / Boltbuck / Sparkit (HR).
+
+**Evergreen sets.** Basic Essences and black-star promos aren't part of any main set's numbering, so each lives in a small evergreen set with its own code: `gk.essence` (**ESS**, 001–008, one per element; Neutral has none because any Essence pays a Neutral cost) and `gk.promo` (**GKP**, open-ended, printed `GK-P001`). Pack pools are built per set and skip basic Essences and promos, so neither can appear in boosters, while starter decks and product promo pools reference them by ID. The *Emberdawn* 3-Pack Blister promo pool is GK-P001 Magmadillo and GK-P002 Boltbuck (one per blister). Textured Secret Rare Essences (125–126) stay in the main set.

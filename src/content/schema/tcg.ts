@@ -1,5 +1,6 @@
 import { z } from '@/core/zod';
 import { contentId, elementIdSchema, finishSchema, hexColor, raritySchema } from './common';
+import { artPropSchema } from './genome';
 
 /** TCG content schemas (docs/07 §2.1). Types are inferred from the schemas. */
 
@@ -33,6 +34,11 @@ export const attackSchema = z.object({
 export const cardArtSpecSchema = z.object({
   composition: z.enum(['window', 'fullArt']),
   speciesId: contentId.optional(),
+  /**
+   * Tactic art subject (docs/04 §6.2): a clay prop (Items) or a Peg-folk figure (Allies). Cards
+   * with neither a species nor a prop show their biome alone (Arenas).
+   */
+  prop: artPropSchema.optional(),
   pose: z.enum(['idle', 'happy', 'action']).default('idle'),
   biome: z.string().optional(),
   timeOfDay: z.enum(['day', 'dusk', 'night']).default('day'),

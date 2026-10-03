@@ -224,6 +224,17 @@ float sdTwinkle3(vec3 p, float r, float k, float thick) {
   return dist - thick;
 }
 
+// Ring around the +Y axis: ring radius R, tube radius r (exact).
+float sdTorusY(vec3 p, float R, float r) {
+  return length(vec2(length(p.xz) - R, p.y)) - r;
+}
+
+// Cylinder along +Y (radius ra, half-height h) with edges rounded by rr (exact).
+float sdRoundCylinderY(vec3 p, float ra, float h, float rr) {
+  vec2 d = vec2(length(p.xz) - ra + rr, abs(p.y) - h + rr);
+  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - rr;
+}
+
 // ---- Materials ----------------------------------------------------------------------------
 // kind: 0 fur/vinyl, 1 glossy, 2 eye, 3 emissive, 4 fin/translucent
 struct Mat {

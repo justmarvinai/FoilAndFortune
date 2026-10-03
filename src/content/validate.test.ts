@@ -15,6 +15,28 @@ describe('content validation', () => {
     }
   });
 
+  it('flags product contents that list unknown cards', () => {
+    const [product] = defaultContentSource.products;
+    if (!product) throw new Error('fixture needs at least one product');
+    const issues = validateContent({
+      ...defaultContentSource,
+      products: [
+        ...defaultContentSource.products.filter((p) => p.id !== product.id),
+        {
+          ...product,
+          contents: [
+            { type: 'fixedCards', cards: [{ cardId: 'gk.emberdawn.998' }] },
+            { type: 'promoPool', cardIds: ['gk.promo.999'], count: 1 },
+            { type: 'guaranteedHoloPool', cardIds: ['gk.emberdawn.997'] },
+          ],
+        },
+      ],
+    });
+    const text = issues.map((issue) => issue.message).join('\n');
+    for (const id of ['gk.emberdawn.998', 'gk.promo.999', 'gk.emberdawn.997'])
+      expect(text).toContain(`contents reference unknown card ${id}`);
+  });
+
   it('flags bad references, numbering and blocked names', () => {
     const [card] = defaultContentSource.cards;
     if (!card) throw new Error('fixture needs at least one card');

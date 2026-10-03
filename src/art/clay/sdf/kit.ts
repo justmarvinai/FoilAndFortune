@@ -3,6 +3,7 @@ import {
   add,
   cross,
   frameAlongX,
+  frameAlongY,
   fromAxes,
   glf,
   glMat3,
@@ -58,6 +59,37 @@ export function part(
   op: Part['op'] = 'add',
 ): Part {
   return { name, tag, shape, blend, surface, op };
+}
+
+/**
+ * A tapered "leaf" (ears, flames, feathers, fins) growing from `base` along `axis`; its flat side
+ * faces `faceHint` (local +X), and `bend` curls it toward that side.
+ */
+export function leafPart(
+  name: string,
+  tag: Part['tag'],
+  base: Vec3,
+  axis: Vec3,
+  faceHint: Vec3,
+  h: number,
+  ra: number,
+  rb: number,
+  thin: number,
+  bend: number,
+  blend: number,
+  surface: Part['surface'],
+): Part {
+  const shape: Extract<Shape, { type: 'leaf' }> = {
+    type: 'leaf',
+    c: base,
+    rot: frameAlongY(axis, faceHint),
+    h,
+    ra,
+    rb,
+    thin,
+    bend,
+  };
+  return part(name, tag, shape, blend, surface);
 }
 
 // ---- Orientation helpers --------------------------------------------------------------------
@@ -137,6 +169,28 @@ export function shapeBalls(s: Shape): Ball[] {
     }
     case 'star4':
       return [{ c: s.c, r: s.r + s.thick }];
+    case 'torus': {
+      const balls: Ball[] = [];
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        const local: Vec3 = [Math.cos(a) * s.R, 0, Math.sin(a) * s.R];
+        balls.push({ c: add(s.c, mulMV(s.rot, local)), r: s.r * 1.1 + s.R * 0.4 });
+      }
+      return balls;
+    }
+    case 'cylinder': {
+      // Short fat cylinders fit one ball; tall ones get a ball every radius along the axis, each
+      // big enough to reach the rim halfway to its neighbors.
+      const along = Math.max(0, s.h - s.r);
+      if (along === 0) return [{ c: s.c, r: Math.hypot(s.r, s.h) }];
+      const n = Math.ceil((2 * along) / s.r);
+      const step = (2 * along) / n;
+      const reach = Math.hypot(s.r, Math.max(step / 2, s.h - along));
+      return Array.from({ length: n + 1 }, (_, i) => ({
+        c: add(s.c, mulMV(s.rot, [0, -along + i * step, 0])),
+        r: reach,
+      }));
+    }
   }
 }
 

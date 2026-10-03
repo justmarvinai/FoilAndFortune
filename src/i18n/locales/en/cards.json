@@ -33,5 +33,22 @@
   "resistance": "resist",
   "retreat": "retreat",
   "illustrator": "Illus. {{name}}",
-  "ability": "Ability"
+  "ability": "Ability",
+  "tactic": {
+    "label": "Tactic",
+    "item": "Item",
+    "ally": "Ally",
+    "arena": "Arena"
+  },
+  "tacticRule": {
+    "item": "You may play any number of Item cards during your turn.",
+    "ally": "You may play only 1 Ally card during your turn.",
+    "arena": "Only 1 Arena can be in play. Playing a new one discards the old one."
+  },
+  "essence": {
+    "basic": "Basic Essence",
+    "rule": "Attach 1 Essence to one of your creatures each turn to power its attacks."
+  },
+  "promoNumber": "{{brand}}-P{{number}}",
+  "nova": "Nova"
 }

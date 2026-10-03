@@ -55,6 +55,8 @@ function localCoords(s: Shape, q: string): string | null {
       return s.rot ? `${glMat3(transpose(s.rot))} * (${q} - ${glVec3(s.c)})` : null;
     case 'leaf':
     case 'star4':
+    case 'torus':
+    case 'cylinder':
       return `${glMat3(transpose(s.rot))} * (${q} - ${glVec3(s.c)})`;
     default:
       return null;
@@ -80,6 +82,10 @@ function distExpr(s: Shape, q: string, lq: string): string {
       return `sdFinTube(${q}, ${glVec3(s.a)}, ${glVec3(s.b)}, ${glVec3(s.c)}, ${glVec3(s.r)}, ${glVec3(s.fin)}, ${glf(s.thick)})`;
     case 'star4':
       return `sdTwinkle3(${lq}, ${glf(s.r)}, ${glf(s.pinch)}, ${glf(s.thick)})`;
+    case 'torus':
+      return `sdTorusY(${lq}, ${glf(s.R)}, ${glf(s.r)})`;
+    case 'cylinder':
+      return `sdRoundCylinderY(${lq}, ${glf(s.r)}, ${glf(s.h)}, ${glf(s.round)})`;
   }
 }
 
@@ -167,6 +173,8 @@ function materialGroup(group: Group, margin: number): string {
     } else {
       dd = dist;
       if (s.type === 'leaf') ramp = `clamp(${lqName}.y / ${glf(s.h)}, 0.0, 1.0)`;
+      // Cylinders ramp bottom → top (lantern glass, bottle liquid).
+      if (s.type === 'cylinder') ramp = `clamp(${lqName}.y / ${glf(2 * s.h)} + 0.5, 0.0, 1.0)`;
     }
     if (part.op === 'carve') body.push(`g = smax(g, -(${dd}), ${glf(part.blend)});`);
     else body.push(`opMat(g, mg, ${dd}, ${surfaceExpr(part, ramp)}, ${glf(part.blend)});`);

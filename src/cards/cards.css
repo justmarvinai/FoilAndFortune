@@ -487,3 +487,202 @@
     ),
     radial-gradient(circle at 50% 50%, #2e3480 0%, #1b1f4b 55%, #10132f 100%);
 }
+
+/* ---------- Tactic cards (docs/04 §5.2: Item teal · Ally coral · Arena green) ---------- */
+
+.gk-card[data-kind="tactic"] {
+  --tactic: var(--color-teal);
+}
+
+.gk-card[data-tactic="ally"] {
+  --tactic: var(--color-coral);
+}
+
+.gk-card[data-tactic="arena"] {
+  --tactic: var(--color-mint);
+}
+
+.gk-card__body--tactic {
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgb(255 255 255 / 0.65), transparent 70%),
+    linear-gradient(
+      172deg,
+      color-mix(in oklab, var(--tactic) 26%, white) 0%,
+      var(--color-paper) 55%,
+      color-mix(in oklab, var(--tactic) 20%, white) 100%
+    );
+}
+
+.gk-card__namebar--tactic {
+  margin: 0 -2.2cqw 0.8cqw;
+  padding: 0 2.6cqw;
+  border-radius: 2.2cqw 2.2cqw 1cqw 1cqw;
+  background: linear-gradient(
+    100deg,
+    var(--tactic),
+    color-mix(in oklab, var(--tactic) 72%, white) 70%,
+    var(--tactic)
+  );
+  box-shadow: inset 0 -0.5cqw 0 rgb(0 0 0 / 0.14);
+  color: var(--color-paper);
+  text-shadow: 0 0.35cqw 0 rgb(0 0 0 / 0.25);
+}
+
+.gk-card__tactic-type {
+  flex: none;
+  border-radius: 1.4cqw;
+  padding: 0.6cqw 1.6cqw;
+  background: var(--color-paper);
+  color: color-mix(in oklab, var(--tactic) 70%, var(--color-ink));
+  font: 700 2.6cqw / 1 var(--font-card);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.gk-card__rules {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.4cqw;
+  margin: 1.4cqw 0.6cqw 0;
+  border: 0.45cqw solid color-mix(in oklab, var(--tactic) 55%, white);
+  border-radius: 1.6cqw;
+  padding: 2cqw 2.4cqw;
+  background: rgb(255 255 255 / 0.72);
+  box-shadow: inset 0 0.4cqw 1.2cqw rgb(0 0 0 / 0.06);
+}
+
+.gk-card__rules-text {
+  font: 500 3.5cqw / 1.3 var(--font-card-body);
+  color: var(--color-ink);
+}
+
+.gk-card__rules-note {
+  border-top: 0.3cqw dashed color-mix(in oklab, var(--tactic) 45%, white);
+  padding-top: 1.2cqw;
+  font: italic 500 2.6cqw / 1.25 var(--font-card-body);
+  color: color-mix(in oklab, var(--color-ink) 70%, white);
+}
+
+/* ---------- Basic Essence cards: a big emblem on a patterned field ---------- */
+
+.gk-card__body--essence {
+  align-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 46%, var(--el-tint) 0%, var(--el-color) 78%);
+}
+
+.gk-essence__field {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    repeating-radial-gradient(
+      circle at 50% 46%,
+      rgb(255 255 255 / 0.16) 0 0.45cqw,
+      transparent 0.45cqw 3.2cqw
+    ),
+    repeating-conic-gradient(
+      from 0deg at 50% 46%,
+      rgb(255 255 255 / 0.12) 0deg 6deg,
+      transparent 6deg 15deg
+    );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.gk-essence__title {
+  position: relative;
+  justify-content: center;
+  margin: 0.6cqw 6cqw 0;
+  width: calc(100% - 12cqw);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.82);
+  box-shadow: 0 0.6cqw 0 rgb(0 0 0 / 0.15);
+  text-align: center;
+}
+
+.gk-essence__title .gk-card__name {
+  flex: none;
+  font-size: 6.4cqw;
+}
+
+.gk-essence__emblem {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 1.6cqw 1.4cqw rgb(0 0 0 / 0.3));
+}
+
+.gk-essence__halo {
+  position: absolute;
+  width: 66cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgb(255 255 255 / 0.85) 0%,
+      rgb(255 255 255 / 0.25) 52%,
+      transparent 70%
+    ),
+    repeating-conic-gradient(rgb(255 255 255 / 0.3) 0deg 4deg, transparent 4deg 18deg);
+  mask: radial-gradient(circle, #000 60%, transparent 71%);
+}
+
+.gk-essence__banner {
+  position: relative;
+  border-radius: 1.4cqw;
+  padding: 0.8cqw 3cqw;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font: 700 3cqw / 1 var(--font-card);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gk-essence__rule {
+  position: relative;
+  margin: 1.4cqw 4cqw 0;
+  text-align: center;
+  font: italic 500 2.7cqw / 1.25 var(--font-card-body);
+  color: var(--color-ink);
+}
+
+.gk-card__body--essence .gk-card__footer {
+  position: relative;
+  align-self: stretch;
+  color: var(--color-ink);
+}
+
+/* ---------- Cosmos foil (Mythic Rares and promos): star dust and a slow rainbow sweep ---------- */
+
+.gk-foil--cosmos {
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 0.95) 0 0.22cqw, transparent 0.38cqw),
+    radial-gradient(circle, rgb(190 220 255 / 0.85) 0 0.16cqw, transparent 0.3cqw),
+    radial-gradient(circle, rgb(255 210 250 / 0.8) 0 0.3cqw, transparent 0.5cqw),
+    linear-gradient(
+      calc(125deg + var(--px) * 50deg),
+      hsl(275 90% 62% / 0.4),
+      hsl(205 95% 62% / 0.32) 30%,
+      hsl(330 95% 66% / 0.36) 55%,
+      hsl(48 100% 64% / 0.3) 80%,
+      hsl(275 90% 62% / 0.4)
+    );
+  background-size:
+    7cqw 9cqw,
+    11cqw 7cqw,
+    17cqw 13cqw,
+    240% 240%;
+  background-position:
+    calc(var(--px) * -14cqw) calc(var(--py) * -10cqw),
+    calc(var(--px) * 9cqw + 2cqw) calc(var(--py) * 12cqw),
+    calc(var(--px) * -6cqw + 5cqw) calc(var(--py) * -8cqw + 3cqw),
+    calc(var(--px) * 100%) calc(var(--py) * 100%);
+  mix-blend-mode: color-dodge;
+  opacity: calc(0.22 + var(--hover) * 0.38);
+}
