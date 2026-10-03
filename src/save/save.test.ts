@@ -85,6 +85,27 @@ describe('save manager', () => {
   });
 });
 
+describe('v2 fixture', () => {
+  it('loads the committed v2 Day-2 save (guards future migrations)', () => {
+    const manager = createSaveManager(createMemoryStorage());
+    const raw = JSON.parse(
+      readFileSync(new URL('../../tests/fixtures/saves/v2-day-two.json', import.meta.url), 'utf8'),
+    ) as unknown;
+    const file = manager.parse(raw);
+    const { state } = file;
+    expect(state.meta.saveVersion).toBe(SAVE_VERSION);
+    expect(state.clock).toMatchObject({ day: 2, phase: 'prep' });
+    // A lived-in Day 1: sales, XP, a delivered order, a ripped pack and a binder pocket.
+    expect(state.stats.salesCount).toBeGreaterThan(0);
+    expect(state.progression.level).toBeGreaterThanOrEqual(2);
+    expect(state.suppliers.orders.some((order) => order.status === 'delivered')).toBe(true);
+    expect(state.stats.packsOpened).toBe(1);
+    expect(Object.keys(state.collection.binder)).toHaveLength(1);
+    expect(state.customers.active).toEqual([]);
+    expect(JSON.parse(JSON.stringify(state))).toEqual(state);
+  });
+});
+
 describe('export / import', () => {
   it('round-trips through the .ffsave text format', () => {
     const manager = createSaveManager(createMemoryStorage());

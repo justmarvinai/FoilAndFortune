@@ -37,6 +37,7 @@
 
 **Starting inventory (all modes):** 24 × *Emberdawn* Booster Pack, 4 × *Emberdawn* 3-Pack Blister, 2 × *Emberdawn* Starter Deck, **1 × *Emberdawn* Booster Box** (Theo's last display, for the first "open or sell?" decision), **Theo's Binder** (30 mixed singles including 2 Holo Rares and 1 vintage *Origins* uncommon as story bait), and a **Bulk Shoebox** (200 commons and uncommons).
 **Starting fixtures:** 2 × Small Wall Shelf, 1 × Small Display Case, 1 × Register Counter (1 lane), Closet storage (200 SU), 1 plant, 1 "Origins" poster.
+**Theo's shelf** (ADR-034): the first wall shelf starts stocked from that inventory (12 boosters, 4 blisters, 2 starter decks); the rest waits in the closet.
 **Starting reputation:** 20 (1★). **Level** 1.
 
 ---

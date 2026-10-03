@@ -28,6 +28,11 @@ test('play a day, save, reload and continue', async ({ page, errors }) => {
   await expect(autosave).toContainText('E2E Emporium');
   await expect(autosave).toContainText('Day 2');
 
+  // Theo's stocked shelf sells during the day, so a level-up toast may still cover the slot list
+  // on short screens: let it auto-dismiss first.
+  await expect(page.getByRole('button', { name: /Level \d+!/ })).toHaveCount(0, {
+    timeout: 15_000,
+  });
   const slot1 = page.getByRole('listitem').filter({ hasText: 'Slot 1' });
   await slot1.getByRole('button', { name: 'Save' }).click();
   await expect(slot1).toContainText('Day 2');

@@ -6,6 +6,7 @@ import type { Command } from './commands';
 import { runCommand, runTicks } from './engine';
 import type { DomainEvent } from './events';
 import { reputationScore, reputationStars, sealedQuantity } from './selectors';
+import { createNewGame } from './state/createNewGame';
 import type { GameState } from './state/types';
 import { newTestGame, testContext } from './testing';
 
@@ -79,6 +80,34 @@ describe('new game', () => {
     // 20 + 200 commons/uncommons at least; rares and holos when the set has them.
     expect(copies).toBeGreaterThanOrEqual(220);
     expect(newTestGame().inventory.cardStacks).toEqual(game.inventory.cardStacks);
+  });
+
+  it("stocks Theo's first wall shelf by default, out of the closet", () => {
+    const game = createNewGame(
+      {
+        seed: 1,
+        shopName: 'Shelf Test',
+        difficulty: 'standard',
+        createdAt: '2026-10-03T00:00:00.000Z',
+        gameVersion: 'test',
+      },
+      ctx,
+    );
+    const shelf = game.shop.fixtures.find((f) => f.uid === 'shelf-a');
+    expect(shelf?.slots.map((slot) => [slot.productId, slot.qty])).toEqual([
+      ['gk.emberdawn.booster', 12],
+      ['gk.emberdawn.blister', 4],
+      ['gk.emberdawn.starter-ember', 2],
+      [undefined, 0],
+    ]);
+    expect(shelf?.slots[0]?.costCents).toBe(12 * 325);
+    // The totals of docs/02 §2 are unchanged: the rest waits in the closet.
+    expect(sealedQuantity(game, 'gk.emberdawn.booster')).toBe(12);
+    expect(sealedQuantity(game, 'gk.emberdawn.blister')).toBe(0);
+    expect(sealedQuantity(game, 'gk.emberdawn.box')).toBe(1);
+    expect(
+      game.shop.fixtures.find((f) => f.uid === 'shelf-b')?.slots.every((s) => s.qty === 0),
+    ).toBe(true);
   });
 
   it('grants the level-1 unlocks up front', () => {

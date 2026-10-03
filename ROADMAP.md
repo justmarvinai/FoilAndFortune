@@ -1,15 +1,15 @@
 # 🗺️ Roadmap: Foil & Fortune
 
-> **Current status: Phase 0 (Planning) is complete ✅. Waiting for your answers in `USER_QUESTIONS.md` and your go-ahead ("Start Phase 1").**
+> **Current status: Phase 2 (Vertical Slice) is built and released as 0.2.0 ✅. Waiting for your playtest of Days 1–3, then Phase 3 · The Merchant.**
 > Each phase ends with a **playable deploy** (Vercel preview), a `CHANGELOG.md` entry, ticked boxes here, and a short playtest by you.
 > Versions follow SemVer. Each phase bumps the minor version, and v1.0.0 is the release.
 
 | Phase | Name | Version | Headline | Status |
 |-------|------|---------|----------|--------|
 | 0 | Planning | 0.0.1 | Full design, tech and content plan | ✅ Done |
-| 1 | Foundation & Art Spike | 0.1.0 | Project skeleton, core engine, **visual prototypes to choose the art direction** | ⏳ Next |
-| 2 | Vertical Slice: "One Day at the Nook" | 0.2.0 | The core loop in miniature: stock, sell, rip packs, reorder | |
-| 3 | The Merchant | 0.3.0 | Suppliers, haggling, buying from customers, reputation, market v1, Build Mode v1, tutorial | |
+| 1 | Foundation & Art Spike | 0.1.0 | Project skeleton, core engine, **visual prototypes to choose the art direction** | ✅ Done |
+| 2 | Vertical Slice: "One Day at the Nook" | 0.2.0 | The core loop in miniature: stock, sell, rip packs, reorder | ✅ Built (awaiting your playtest) |
+| 3 | The Merchant | 0.3.0 | Suppliers, haggling, buying from customers, reputation, market v1, Build Mode v1, tutorial | ⏳ Next |
 | 4 | Collector & Grader | 0.4.0 | Card conditions, grading, binder, fakes, achievements | |
 | 5 | Living Market & Events | 0.5.0 | Full market sim, release calendar, 1st Editions, events, tournaments, FoilMarket, Set Forge v1 | |
 | 6 | Build, Grow & First Staff | 0.6.0 | Build Mode v2, expansions, upgrades, Cashier and Stocker → **MVP / Early Access** | |
@@ -52,19 +52,19 @@
 
 ## Phase 2 · Vertical Slice: "One Day at the Nook" (v0.2.0)
 **Goal:** 15 minutes of genuine fun: stock the shelf, serve kids, rip packs, reorder, watch money grow.
-- [ ] Content: *Emberdawn* subset (~40 cards, genomes, rendered art), Booster Pack, 3-Pack Blister, Starter Deck, Booster Box
-- [ ] Starting inventory per `docs/02 §2`, including Theo's Booster Box (the first "open or sell?" choice)
-- [ ] Tier-1 shop scene (fixed starter layout): wall shelves, display case, register, door and bell
-- [ ] Day cycle: prep → open → night · clock · pause and speed · **Day Summary receipt**
-- [ ] Customers: Kid and Casual archetypes. Arrive, browse, pick (shelves visibly empty), queue, **manual checkout**, bubbles and reactions, satisfaction
-- [ ] Stocking via Fixture Popover, Restock All, Closet storage · per-SKU pricing with market reference and price reaction bubbles
-- [ ] **Basic ordering:** a simple Crate app with Budget Box Co. only (next-morning delivery), so stock never runs dry
-- [ ] **Pack Opening** with full juice (tear, reveal, rarity hints, summary) and **Quick Rip** for boxes
-- [ ] Inventory sheet (sealed, singles) · basic Binder
-- [ ] Cash, XP, levels 1–5 · toasts · level-up celebration
-- [ ] Audio v1: title and day music, core SFX (bell, register, tear, flip, stingers), blip voices
-- [ ] Title screen · New Game (shop name, simple avatar, difficulty) · Continue/Load
-- **Done when:** a new player enjoys Days 1–3, it runs at 60 fps on desktop and is playable on phone landscape, and the "day one" E2E test passes.
+- [x] Content: *Emberdawn* subset (42 cards plus Essences and promos, 20 species genomes, pre-rendered Clay art), Booster Pack, 3-Pack Blister, two Starter Decks, Booster Box
+- [x] Starting inventory per `docs/02 §2`, including Theo's Booster Box (open it, keep it sealed, or **break it into 36 loose packs**). Theo leaves the first wall shelf stocked
+- [x] Tier-1 shop scene (fixed starter layout): wall shelves, display case, register, door and bell, driven live by the game state
+- [x] Day cycle: prep → open → night · clock · pause and speed · **Day Summary receipt**
+- [x] Customers: Kid and Casual archetypes. Arrive, browse, pick (shelves visibly empty), queue, **manual checkout**, bubbles and reactions, satisfaction
+- [x] Stocking via Fixture Popover, Restock All, Closet storage · per-SKU pricing with market reference and price reaction bubbles
+- [x] **Basic ordering:** a simple Crate app with Budget Box Co. only (next-morning delivery), so stock never runs dry
+- [x] **Pack Opening** with full juice (tear, reveal, rarity hints, summary) and **Quick Rip** for boxes
+- [x] Inventory sheet (sealed, singles) · basic Binder
+- [x] Cash, XP, levels 1–5 · toasts · level-up celebration
+- [x] Audio v1: title and day music, core SFX (bell, register, tear, flip, stingers), blip voices (all procedural)
+- [x] Title screen · New Game (shop name, simple avatar, difficulty) · Continue/Load
+- **Done when:** a new player enjoys Days 1–3, it runs at 60 fps on desktop and is playable on phone landscape, and the "day one" E2E test passes. *Status: the day-one E2E passes on desktop and phone landscape, and the balance sim meets every Phase 2 KPI. Pending: your playtest of Days 1–3, and a 60 fps check on real hardware (this environment only has software WebGL).*
 
 ## Phase 3 · The Merchant (v0.3.0)
 **Goal:** the complete core loop, Buy → Stock/Open → Sell → Profit → Upgrade, for the first ~2 hours.

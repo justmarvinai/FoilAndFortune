@@ -1,0 +1,451 @@
+{
+  "format": "ff-save",
+  "saveVersion": 2,
+  "gameVersion": "0.2.0",
+  "savedAt": "2026-10-03T09:30:00.000Z",
+  "slot": "auto-1",
+  "summary": {
+    "shopName": "Fixture Cards",
+    "day": 2,
+    "level": 2,
+    "cashCents": 69135,
+    "playTimeMs": 0
+  },
+  "state": {
+    "meta": {
+      "saveVersion": 2,
+      "gameVersion": "0.2.0",
+      "seed": 20261003,
+      "createdAt": "2026-10-03T09:00:00.000Z",
+      "playTimeMs": 0,
+      "difficulty": "standard",
+      "shopName": "Fixture Cards",
+      "owner": {
+        "skin": 2,
+        "hairStyle": 1,
+        "hairColor": 0,
+        "top": 3,
+        "topColor": 2
+      }
+    },
+    "rng": {
+      "customers": [876110463, 4025173339, 3207931583, 3423030700],
+      "market": [3479814802, 741476280, 3727435436, 608331418],
+      "packs": [211194961, 2217041815, 1595378163, 4236703478],
+      "grading": [579077127, 3180632319, 1265373014, 1489068932],
+      "events": [209854815, 720248488, 1316489970, 72010912],
+      "staff": [587778996, 423167571, 3078052930, 649963945],
+      "misc": [747327017, 2764306939, 3423834010, 3601951185]
+    },
+    "clock": {
+      "day": 2,
+      "minute": 480,
+      "phase": "prep",
+      "speed": 1
+    },
+    "finance": {
+      "cashCents": 69135,
+      "loan": {
+        "principalCents": 0
+      },
+      "ledger": [
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:2"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:3"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 2998,
+          "ref": "customer:4"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:5"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 1499,
+          "ref": "customer:6"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:8"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:7"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 4497,
+          "ref": "customer:9"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:15"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 898,
+          "ref": "customer:16"
+        },
+        {
+          "day": 1,
+          "kind": "sale",
+          "cents": 449,
+          "ref": "customer:18"
+        },
+        {
+          "day": 1,
+          "kind": "purchase",
+          "cents": -3900,
+          "ref": "ord-1"
+        }
+      ],
+      "today": {
+        "revenue": 0,
+        "cogs": 0,
+        "wages": 0,
+        "rent": 0,
+        "other": 0,
+        "purchases": 0,
+        "opened": 0,
+        "customers": 0
+      }
+    },
+    "progression": {
+      "level": 2,
+      "xp": 54,
+      "unlocked": {
+        "unlock.supplier.budget-box": 1,
+        "unlock.fixture.wall-shelf-small": 1,
+        "unlock.feature.pricing": 1,
+        "unlock.feature.pack-opening": 1,
+        "unlock.feature.binder": 1,
+        "unlock.feature.singles-case": 1
+      },
+      "perks": [],
+      "flags": {
+        "onboarding.firstPackOpened": true
+      }
+    },
+    "reputation": {
+      "sub": {
+        "prices": 23.240000000000002,
+        "service": 25.867292429889535,
+        "selection": 22.541176470588233,
+        "trust": 20,
+        "community": 20
+      },
+      "signals": {
+        "prices": {
+          "sum": 0,
+          "weight": 0,
+          "count": 0
+        },
+        "service": {
+          "sum": 0,
+          "weight": 0,
+          "count": 0
+        },
+        "selection": {
+          "sum": 0,
+          "weight": 0,
+          "count": 0
+        },
+        "trust": {
+          "sum": 0,
+          "weight": 0,
+          "count": 0
+        },
+        "community": {
+          "sum": 0,
+          "weight": 0,
+          "count": 0
+        }
+      },
+      "history": [22.5]
+    },
+    "shop": {
+      "tier": 1,
+      "layoutId": "layout.nook.starter",
+      "fixtures": [
+        {
+          "uid": "shelf-a",
+          "fixtureId": "fx.shelf.wall-small",
+          "x": 0,
+          "z": 0,
+          "rot": 0,
+          "slots": [
+            {
+              "qty": 3,
+              "costCents": 975,
+              "productId": "gk.emberdawn.booster"
+            },
+            {
+              "qty": 0,
+              "costCents": 0,
+              "productId": "gk.emberdawn.blister"
+            },
+            {
+              "qty": 0,
+              "costCents": 0,
+              "productId": "gk.emberdawn.starter-ember"
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            }
+          ]
+        },
+        {
+          "uid": "shelf-b",
+          "fixtureId": "fx.shelf.wall-small",
+          "x": 2,
+          "z": 0,
+          "rot": 0,
+          "slots": [
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            }
+          ]
+        },
+        {
+          "uid": "register",
+          "fixtureId": "fx.register.counter",
+          "x": 4,
+          "z": 1,
+          "rot": 0,
+          "slots": []
+        },
+        {
+          "uid": "case-1",
+          "fixtureId": "fx.case.small",
+          "x": 1,
+          "z": 3,
+          "rot": 2,
+          "slots": [
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            },
+            {
+              "qty": 0,
+              "costCents": 0
+            }
+          ]
+        },
+        {
+          "uid": "plant-1",
+          "fixtureId": "fx.decor.plant",
+          "x": 0,
+          "z": 4,
+          "rot": 0,
+          "slots": []
+        },
+        {
+          "uid": "poster-1",
+          "fixtureId": "fx.decor.poster-origins",
+          "x": 5,
+          "z": 3,
+          "rot": 1,
+          "slots": []
+        }
+      ]
+    },
+    "inventory": {
+      "sealed": {
+        "gk.emberdawn.booster": [
+          {
+            "qty": 11,
+            "unitCostCents": 325,
+            "acquiredDay": 0
+          },
+          {
+            "qty": 12,
+            "unitCostCents": 325,
+            "acquiredDay": 2
+          }
+        ],
+        "gk.emberdawn.box": [
+          {
+            "qty": 1,
+            "unitCostCents": 10400,
+            "acquiredDay": 0
+          }
+        ]
+      },
+      "cardStacks": {
+        "gk.emberdawn.068|normal||nearMint": 7,
+        "gk.emberdawn.080|normal||nearMint": 9,
+        "gk.emberdawn.036|normal||nearMint": 9,
+        "gk.emberdawn.001|normal||nearMint": 15,
+        "gk.emberdawn.094|normal||nearMint": 12,
+        "gk.emberdawn.039|normal||nearMint": 7,
+        "gk.emberdawn.002|normal||nearMint": 7,
+        "gk.emberdawn.064|normal||nearMint": 9,
+        "gk.emberdawn.009|normal||nearMint": 14,
+        "gk.emberdawn.062|normal||nearMint": 17,
+        "gk.emberdawn.074|normal||nearMint": 12,
+        "gk.emberdawn.014|normal||nearMint": 8,
+        "gk.emberdawn.030|normal||nearMint": 12,
+        "gk.emberdawn.085|normal||nearMint": 14,
+        "gk.emberdawn.034|normal||nearMint": 10,
+        "gk.emberdawn.012|normal||nearMint": 11,
+        "gk.emberdawn.073|normal||nearMint": 11,
+        "gk.emberdawn.028|normal||nearMint": 14,
+        "gk.emberdawn.070|normal||nearMint": 10,
+        "gk.emberdawn.024|normal||nearMint": 5,
+        "gk.emberdawn.031|normal||nearMint": 15,
+        "gk.emberdawn.037|normal||nearMint": 3,
+        "gk.emberdawn.088|normal||nearMint": 1,
+        "gk.emberdawn.097|normal||nearMint": 2,
+        "gk.emberdawn.035|holo||nearMint": 2,
+        "gk.emberdawn.036|reverseHolo||nearMint": 1,
+        "gk.emberdawn.034|reverseHolo||nearMint": 1,
+        "gk.emberdawn.028|reverseHolo||nearMint": 1
+      }
+    },
+    "pricing": {
+      "prices": {
+        "gk.emberdawn.booster": 449,
+        "gk.emberdawn.blister": 1499,
+        "gk.emberdawn.starter-ember": 1499,
+        "gk.emberdawn.starter-volt": 1499,
+        "gk.emberdawn.box": 16164
+      }
+    },
+    "customers": {
+      "active": [],
+      "lane": [],
+      "nextUid": 19,
+      "nextArrivalMinute": null
+    },
+    "suppliers": {
+      "orders": [
+        {
+          "uid": "ord-1",
+          "supplierId": "sup.budget-box",
+          "lines": [
+            {
+              "productId": "gk.emberdawn.booster",
+              "qty": 12,
+              "unitCostCents": 325
+            }
+          ],
+          "totalCents": 3900,
+          "placedDay": 1,
+          "etaDay": 2,
+          "status": "delivered"
+        }
+      ],
+      "nextOrderUid": 2
+    },
+    "collection": {
+      "owned": {
+        "gk.emberdawn.068": 0,
+        "gk.emberdawn.080": 0,
+        "gk.emberdawn.036": 0,
+        "gk.emberdawn.001": 0,
+        "gk.emberdawn.094": 0,
+        "gk.emberdawn.039": 0,
+        "gk.emberdawn.002": 0,
+        "gk.emberdawn.064": 0,
+        "gk.emberdawn.009": 0,
+        "gk.emberdawn.062": 0,
+        "gk.emberdawn.074": 0,
+        "gk.emberdawn.014": 0,
+        "gk.emberdawn.030": 0,
+        "gk.emberdawn.085": 0,
+        "gk.emberdawn.034": 0,
+        "gk.emberdawn.012": 0,
+        "gk.emberdawn.073": 0,
+        "gk.emberdawn.028": 0,
+        "gk.emberdawn.070": 0,
+        "gk.emberdawn.024": 0,
+        "gk.emberdawn.031": 0,
+        "gk.emberdawn.037": 0,
+        "gk.emberdawn.088": 0,
+        "gk.emberdawn.097": 0,
+        "gk.emberdawn.035": 0
+      },
+      "binder": {
+        "gk.emberdawn.035": {
+          "cardKey": "gk.emberdawn.035|holo||nearMint",
+          "addedDay": 1
+        }
+      }
+    },
+    "dayLog": {
+      "served": 0,
+      "lost": 0,
+      "itemsSold": 0,
+      "packsOpened": 0,
+      "newCards": 0,
+      "xpGained": 0,
+      "repStart": 22.491693780095552,
+      "bestPull": null
+    },
+    "stats": {
+      "daysOpened": 1,
+      "customersVisited": 18,
+      "salesCount": 11,
+      "unitsSold": 15,
+      "revenueCents": 13035,
+      "productsOpened": 1,
+      "pulls.holoRare": 1,
+      "packsOpened": 1,
+      "cardsPulled": 10,
+      "daysPlayed": 1
+    }
+  }
+}

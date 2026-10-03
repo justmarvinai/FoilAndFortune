@@ -38,6 +38,10 @@
 | 029 | **React Compiler 1.0** (Babel preset via `@rolldown/plugin-babel`): automatic memoization, no hand-written `useMemo`/`useCallback` for performance | ✅ | `06 §2` |
 | 030 | Debug tooling: **leva** dev panel and drei **`<StatsGl>`** perf overlay (not `r3f-perf`) | ✅ | `06 §19` |
 | 031 | **Debug pages are exempt from i18n** (`src/debug`, `/debug/*` playgrounds). Everything a player sees uses i18n keys | ✅ | CLAUDE.md rule 8 |
+| 032 | **Opening at scale:** a booster box opens all 36 packs in one command (box mapping applies); "rip one by one" vs **Quick Rip** is presentation only. `open/unboxProduct` **breaks a box** into loose packs to sell | ✅ | `01 §14` |
+| 033 | **2D illustrated title screen** in Phase 2, so the entry route never downloads three.js; the 3D shop loads on `/play` | ✅ | `05 §5.1` |
+| 034 | **Theo's stocked shelf:** new games start with the first wall shelf stocked from the starting inventory | ✅ | `02 §2` |
+| 035 | **Early pacing tuned by the balance sim:** sales XP 1.0 per revenue dollar; level-ups on days 1, 2, 4 and 7 | ✅ | `02 §9` |
 
 ---
 
@@ -79,3 +83,23 @@
 ## ADR-031 · Debug pages are exempt from i18n (✅ Accepted 2026-09-29)
 **Context:** golden rule 8 forbids user-facing string literals. Debug galleries, playgrounds and the engine sandbox are developer tools that change constantly.
 **Decision:** code under `src/debug/` and the `*Playground.tsx` spike pages may use plain English strings, marked with a `// Debug page: exempt from i18n` comment. Anything that ships to players (HUD, screens, toasts, errors, the app shell) must use i18n keys. Components promoted from a debug page into the game get translated at that point.
+
+## ADR-032 · Opening at scale and breaking boxes (✅ Accepted 2026-10-03)
+**Context:** docs/01 §14.2 offers "rip one by one" or Quick Rip for a booster box, and docs/02 §11.1 maps whole boxes (≥ 6 Holo, ≥ 2 Ultra+). The Nook has no Box Wall Rack before Lv 4, so Theo's box couldn't be sold sealed.
+**Decision:** `open/openProduct` on a box generates all its packs at once with box mapping, and the stage decides how to show them (one by one with "skip to hits", or the ~10 s Quick Rip reel). A second command, `open/unboxProduct`, breaks a box into loose sealed packs at an exactly split cost, so they can be sold singly.
+**Consequences:** the sim stays a single atomic step; the "open, keep sealed or break?" choice is real from Day 1; boxes broken into packs lose their mapping.
+
+## ADR-033 · 2D title screen in Phase 2 (✅ Accepted 2026-10-03)
+**Context:** docs/05 §5.1 imagines the 3D shop exterior at dusk on the title. The three.js chunk is ~430 KB gzip, and the smoke test guards that non-3D routes never download it.
+**Decision:** the Phase 2 title is an illustrated 2D shopfront (SVG/CSS: flickering neon, weather, parallax). The 3D shop loads lazily on `/play`.
+**Consequences:** a fast first paint and a light entry chunk. A 3D title remains possible later as a lazy enhancement after first paint.
+
+## ADR-034 · Theo's stocked starter shelf (✅ Accepted 2026-10-03)
+**Context:** without a tutorial (Phase 3), a new player met empty shelves and had to discover stocking before the first customer arrived.
+**Decision:** `createNewGame` moves part of the starting inventory onto the first wall shelf (12 boosters, 4 blisters, 2 starter decks); the totals of docs/02 §2 are unchanged. Unit tests opt out (`starterShelves: false`) to keep a predictable empty layout.
+**Consequences:** Day 1 opens on a lively shop and the first sale comes quickly; restocking (Restock All, the Fixture Popover, ordering) becomes the natural first lesson.
+
+## ADR-035 · Early pacing tuned by the balance simulator (✅ Accepted 2026-10-03)
+**Context:** docs/02 §9.2 targeted Lv 5 by day 4, which needs ~1,440 XP; at 0.5 XP per revenue dollar the Nook's $140–310 a day can't get there (the balance sim found Lv 4 on days 6–7).
+**Decision:** sales XP is 1.0 per revenue dollar (× the level falloff), and the early targets follow the simulator: Lv 2 on day 1, Lv 4 by day 4, Lv 5 by day 7. Later targets are re-tuned when their XP sources (haggling, buy offers, grading, objectives) land.
+**Consequences:** a level-up on days 1, 2, 4 and 7 of a balanced run. `npm run balance:sim` flags the Phase 2 KPIs, and CI runs its smoke test.

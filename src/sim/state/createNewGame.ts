@@ -1,4 +1,5 @@
 import type { Difficulty } from '@/content/balance/difficulty';
+import type { ContentRegistry } from '@/content/registry';
 import type { Rarity } from '@/content/schema/common';
 import type { CardDef } from '@/content/schema/tcg';
 import { createRng, type Rng, seedStream } from '@/core/rng';
@@ -7,6 +8,7 @@ import type { SimContext } from '../context';
 import { reputationScore } from '../selectors';
 import { emptyDayLog } from '../systems/dayLog';
 import { emptyDailyTotals } from '../systems/finance';
+import { takeSealed } from '../systems/inventory';
 import { grantUnlocks } from '../systems/progression';
 import { emptySignals } from '../systems/reputation';
 import {
@@ -27,6 +29,11 @@ export interface NewGameOptions {
   /** ISO timestamp from the caller; the sim never reads the wall clock. */
   createdAt: string;
   gameVersion: string;
+  /**
+   * Theo leaves the first wall shelf stocked (default on), so Day 1 opens on a lively shop and
+   * restocking is the first lesson. Unit tests turn it off for an empty, predictable layout.
+   */
+  starterShelves?: boolean;
 }
 
 export const DEFAULT_OWNER: AvatarSpec = {
@@ -48,6 +55,18 @@ const STARTING_SEALED: readonly { productId: string; qty: number; unitCostCents:
   { productId: 'gk.emberdawn.blister', qty: 4, unitCostCents: 1050 },
   { productId: 'gk.emberdawn.starter-ember', qty: 2, unitCostCents: 1000 },
   { productId: 'gk.emberdawn.box', qty: 1, unitCostCents: 10400 },
+];
+
+/** What Theo left on the shelves (docs/02 §2); the rest of the starting stock is in the closet. */
+const STARTER_SHELVES: readonly {
+  fixtureUid: string;
+  slot: number;
+  productId: string;
+  qty: number;
+}[] = [
+  { fixtureUid: 'shelf-a', slot: 0, productId: 'gk.emberdawn.booster', qty: 12 },
+  { fixtureUid: 'shelf-a', slot: 1, productId: 'gk.emberdawn.blister', qty: 4 },
+  { fixtureUid: 'shelf-a', slot: 2, productId: 'gk.emberdawn.starter-ember', qty: 2 },
 ];
 
 /** Theo's Binder (30 mixed singles) and the Bulk Shoebox (200 commons/uncommons), docs/02 §2. */
@@ -158,5 +177,21 @@ export function createNewGame(
   };
   state.dayLog.repStart = reputationScore(state);
   grantUnlocks(state, { content, emit: () => undefined });
+  if (options.starterShelves ?? true) stockStarterShelves(state, content);
   return state;
+}
+
+/** Moves Theo's shelf stock out of the closet onto the first wall shelf (FIFO cost basis). */
+function stockStarterShelves(state: GameState, content: ContentRegistry): void {
+  for (const plan of STARTER_SHELVES) {
+    const fixture = state.shop.fixtures.find((f) => f.uid === plan.fixtureUid);
+    const slot = fixture?.slots[plan.slot];
+    const product = content.products.get(plan.productId);
+    if (!slot || !product || slot.qty > 0) continue; // test content may differ
+    const taken = takeSealed(state, plan.productId, Math.min(plan.qty, product.perShelfSlot));
+    if (taken.qty === 0) continue;
+    slot.productId = plan.productId;
+    slot.qty = taken.qty;
+    slot.costCents = taken.costCents;
+  }
 }

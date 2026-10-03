@@ -3,7 +3,11 @@
 All notable changes to **Foil & Fortune** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/) (`0.x` until the v1.0 release; each roadmap phase bumps the minor version).
 
-## [Unreleased] · Phase 2: Vertical Slice "One Day at the Nook"
+## [Unreleased] · Phase 3: The Merchant
+
+## [0.2.0] – 2026-10-03 · Phase 2: Vertical Slice "One Day at the Nook"
+**Play it:** start at `/`, pick New Game, flip the door sign to OPEN, and ring up your first customer.
+
 ### Added
 - **GameState v2** (save migration `001-phase2-shop` with a fixture test): owner avatar, the shop layout with fixture slots, singles as card stacks, customer agents and the register lane, supplier orders, the binder, unlocks and placeholder perks, reputation signals and the day log.
 - **Shop content:** fixtures, the Nook starter layout on a 1 m tile grid (validated for bounds, overlaps, wall contact and free access), Budget Box Co., the Kid and Casual customer archetypes, level 1–5 unlocks with placeholder perks, and balance tables for customers, card values and packs.
@@ -47,13 +51,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - **Product art** (`src/art/packs`): a pure SVG composer for booster wrappers (4 Emberdawn variants), blisters, starter decks and booster boxes, shared by the UI and later the 3D shelves.
 - **Balance simulator** (`npm run balance:sim -- --days 7 --seeds 20 --bot balanced|cautious|ripper`): headless bots play the pure sim through commands and report daily revenue, profit, satisfaction, reputation, level and cash, with the Phase 2 KPIs flagged (docs/02 §18).
 
+- **Theo's stocked shelf** (ADR-034): new games open with the first wall shelf stocked, so Day 1 starts lively and restocking is the first lesson.
+- **Tests:** a **day-one E2E** (new game → open → ring up a real customer → receipt → Tuesday) on desktop and phone landscape, the play-screen E2E, a frozen **v2 save fixture** from a played Day 1 (`scripts/dev/make-save-fixture.ts`), and about 570 unit tests including statistical pull-rate, traffic and willingness-to-pay checks.
+
 ### Changed
 - The owner chose **Clay Critters for all card art** (ADR-006). `/debug/art` is now a Clay card gallery.
+- `/` is now the title screen and the debug hub moved to `/debug`. A `?quality=` override is remembered for the browser session, and the 3D shop stops rendering under the Day Summary and the pack stage.
 - **Balance:** sales XP is 1.0 per revenue dollar (was 0.5), and the early pacing targets follow the simulator: a level-up on days 1, 2, 4 and 7 (docs/02 §9).
 - Failed commands are atomic: no partial state change and no events.
 
 ### Removed
 - Style B "Sticker Pop" renderer and its workshop page (not chosen; recoverable from git at `9efe6c0`).
+- The `howler` and `zzfx` dependencies: audio is our own Web Audio engine with a credited ZzFX port (ADR-013).
+
+### Decisions
+- ADR-013 amended (procedural Web Audio, no sample files) · ADR-032 opening at scale and breaking boxes · ADR-033 2D title screen · ADR-034 Theo's stocked shelf · ADR-035 early pacing tuned by the balance sim.
 
 ## [0.1.0] – 2026-09-30 · Phase 1: Foundation & Art Spike
 ### Added

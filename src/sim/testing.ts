@@ -18,6 +18,7 @@ export function newTestGame(difficulty: Difficulty = 'standard', seed = 1234): G
       difficulty,
       createdAt: '2026-09-29T12:00:00.000Z',
       gameVersion: 'test',
+      starterShelves: false,
     },
     testContext(),
   );

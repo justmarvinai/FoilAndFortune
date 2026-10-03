@@ -20,7 +20,12 @@ describe('sandbox cheats', () => {
     const game = store().game;
     expect(game?.clock).toMatchObject({ day: 8, phase: 'prep' });
     expect(rents).toEqual([dollars(245)]);
-    expect(game?.finance.cashCents).toBe(dollars(600 - 245));
+    // Theo's stocked shelf sells on its own (the owner rings up the line at closing).
+    const sales = (game?.finance.ledger ?? [])
+      .filter((entry) => entry.kind === 'sale')
+      .reduce((sum, entry) => sum + entry.cents, 0);
+    expect(sales).toBeGreaterThan(0);
+    expect(game?.finance.cashCents).toBe(dollars(600 - 245) + sales);
     expect(game?.stats.daysOpened).toBe(7);
   });
 

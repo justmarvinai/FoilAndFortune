@@ -214,6 +214,7 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 - **Instancing and atlases:** packs, boxes, slabs and manga spines are drawn as instances with per-instance UV offsets into a generated **product atlas** (canvas-rendered from pack art at load time).
 - **Quality presets:** *Low* (no shadows, no post, DPR 1) · *Medium* (1024 shadow map, SMAA, bloom) · *High* (soft shadows, AO, tilt-shift, physical glass, DPR ≤ 2). Auto-detect runs on first launch, and the player can override it.
 - **Overlay performance:** bubbles are positioned by projecting 3D anchors once per frame and writing `transform` directly (no React re-render per frame).
+- **Live scene contract** (`src/scene/live/types.ts`): the play screen renders `LiveShopScene` with `quality`, `insets`, `shopName`, `paused` (true under the Day Summary and the pack stage, which stops the render loop) and `anchored` (the Fixture Popover, placed above or below its fixture by the pure `placeAnchored` and clamped to the viewport minus the insets). The scene reads the game through narrow selectors, animates customers every frame from their sim `activity` and `simNow()`, and reports clicks through callbacks; it never dispatches commands.
 
 ---
 
