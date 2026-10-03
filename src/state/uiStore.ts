@@ -72,9 +72,10 @@ export const useUiStore = create<UiStore>()((set, get) => ({
 
   back() {
     const ui = get();
-    // Top layer first: celebration → stage → summary → popover → sheet (docs/05 §2).
-    if (ui.celebrations.length > 0) ui.shiftCelebration();
-    else if (ui.stage) ui.closeStage();
+    // Top layer first: stage → celebration → summary → popover → sheet (docs/05 §2). Celebrations
+    // wait behind the pack-opening stage (CelebrationHost), so the stage is on top while it's up.
+    if (ui.stage) ui.closeStage();
+    else if (ui.celebrations.length > 0) ui.shiftCelebration();
     else if (ui.summaryOpen) ui.setSummaryOpen(false);
     else if (ui.fixtureUid) ui.closeFixture();
     else if (ui.sheet) ui.closeSheet();

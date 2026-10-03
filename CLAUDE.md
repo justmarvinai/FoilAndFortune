@@ -7,7 +7,7 @@ Guidance for Claude Code (and humans) working in this repository. Keep this file
 
 ## ⚠️ Current status
 - **Phase 2 (Vertical Slice: "One Day at the Nook") is in progress.** Phase 1 shipped as 0.1.0. Every ⭐ default in `USER_QUESTIONS.md` applies, the shop is the 3D diorama (Q1) and **all card art is Clay Critters** (Q2, ADR-006).
-- Debug routes: `/debug/engine` (sim sandbox + leva dev panel), `/debug/ui` (UI kit), `/debug/art` (card gallery), `/debug/scene` (diorama), `/debug/clay` (art renderer workshop).
+- Play at `/` (title) → `/play`. Debug hub at `/debug`: `/debug/engine` (sim sandbox + leva dev panel), `/debug/ui` (UI kit), `/debug/art` (card gallery), `/debug/sheets`, `/debug/opening`, `/debug/audio`, `/debug/live` (state-driven shop), `/debug/scene` (diorama spike), `/debug/clay` (art renderer workshop).
 
 ## Read before working
 | Task | Read |
@@ -21,7 +21,7 @@ Guidance for Claude Code (and humans) working in this repository. Keep this file
 | Why things are the way they are | `docs/DECISIONS.md` |
 
 ## Stack (versions checked 2026-09-26; pin exact versions at scaffold)
-TypeScript 7 (strict) · Vite 8 · React 19.3 + React Compiler 1.0 · three r186 + @react-three/fiber 9 + drei 10 + postprocessing 3 · Zustand 5 + Immer 11 · Tailwind CSS 4 · Motion 13 · Howler 2 + ZzFX · Zod 4 · idb-keyval + fflate · i18next · @tanstack/react-virtual · Biome 2 · Vitest 5 · fast-check · Playwright · tsx · vite-plugin-pwa · npm, Node ≥ 22.
+TypeScript 7 (strict) · Vite 8 · React 19.3 + React Compiler 1.0 · three r186 + @react-three/fiber 9 + drei 10 + postprocessing 3 · Zustand 5 + Immer 11 · Tailwind CSS 4 · Motion 13 · Web Audio (procedural music, ZzFX-port SFX; ADR-013) · Zod 4 · idb-keyval + fflate · i18next · @tanstack/react-virtual · Biome 2 · Vitest 5 · fast-check · Playwright · tsx · vite-plugin-pwa · npm, Node ≥ 22.
 
 ## Commands
 ```bash
@@ -32,7 +32,8 @@ npm run test              # vitest run        · npm run test:e2e   # playwright
 npm run content:validate  # schemas, IDs, references, card numbering, name blocklist
 npm run format            # biome check --write
 npx tsx --tsconfig tsconfig.node.json scripts/dev/screenshot.ts <url> <out.png> [WxH] [waitMs] [full]
-# Planned: npm run balance:sim (docs/02 §18) · npm run art:render -- --set <slug> (after the art pick)
+npm run balance:sim -- --days 7 --seeds 20 --bot balanced   # headless economy KPIs (docs/02 §18)
+npm run art:render -- --set emberdawn,promo [--only 035] [--force]   # pre-render Clay card art (docs/06 §9)
 ```
 
 ## Golden rules (architecture)

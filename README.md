@@ -35,7 +35,7 @@
 | [`CREDITS.md`](CREDITS.md) | Third-party asset credits |
 
 ## Tech
-TypeScript 7 · Vite 8 · React 19 (+ React Compiler) · three.js / React Three Fiber · Zustand · Tailwind CSS · Motion · Howler · Vitest · Playwright. It's a static site on **Vercel** with no backend, and saves stay in your browser (with export/import). Details: [`docs/06_TECH_ARCHITECTURE.md`](docs/06_TECH_ARCHITECTURE.md).
+TypeScript 7 · Vite 8 · React 19 (+ React Compiler) · three.js / React Three Fiber · Zustand · Tailwind CSS · Motion · Web Audio (procedural music and SFX) · Vitest · Playwright. It's a static site on **Vercel** with no backend, and saves stay in your browser (with export/import). Details: [`docs/06_TECH_ARCHITECTURE.md`](docs/06_TECH_ARCHITECTURE.md).
 
 ## Running locally
 Requires Node ≥ 22.

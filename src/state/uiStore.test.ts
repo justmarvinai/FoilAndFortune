@@ -38,7 +38,7 @@ describe('uiStore', () => {
       layers.push({ celebrations: celebrations.length, stage: !!stage, summaryOpen, sheet });
     }
     expect(layers).toEqual([
-      { celebrations: 0, stage: true, summaryOpen: true, sheet: 'binder' },
+      { celebrations: 1, stage: false, summaryOpen: true, sheet: 'binder' },
       { celebrations: 0, stage: false, summaryOpen: true, sheet: 'binder' },
       { celebrations: 0, stage: false, summaryOpen: false, sheet: 'binder' },
       { celebrations: 0, stage: false, summaryOpen: false, sheet: null },

@@ -29,8 +29,7 @@
 | State | **Zustand** + **Immer** | 5.x · 11.x | A minimal, fast, React-agnostic store. Immer gives immutable updates with simple mutation syntax |
 | Styling | **Tailwind CSS** + CSS custom properties (design tokens) + dedicated effect CSS | 4.3 | Fast iteration and consistent tokens. Foil effects live in hand-written CSS layers |
 | UI animation | **Motion** (`motion/react`) | 13.x | Springs, layout animations, gestures, exit animations |
-| Audio | **Howler.js** (music, sampled SFX) + Web Audio (ZzFX SFX, blip voices) | 2.2 · ZzFX 1.3 | Robust cross-browser audio with tiny generated SFX |
-| Procedural music *(optional)* | **Tone.js** | 15.x | Fallback generative lo-fi if CC0 tracks aren't available (Q15, Q30) |
+| Audio | **Web Audio** only: our own engine with a TypeScript port of the ZzFX generator, procedural music and blip voices (ADR-013) | ZzFX 1.3 (ported) | Zero audio files, deterministic and testable; Howler and Tone.js aren't needed |
 | Validation | **Zod** | 4.x | Content schemas, save validation, settings |
 | Persistence | **idb-keyval** + **fflate** | 6.x · 0.8 | Tiny IndexedDB wrapper plus compression for export files |
 | i18n | **i18next** + **react-i18next** | 26.x · 17.x | Standard and typed, with plurals and interpolation |
@@ -79,8 +78,8 @@
        │                  │                  │              │
  ┌─────▼─────┐     ┌──────▼──────┐     ┌─────▼────┐   ┌─────▼─────┐
  │ scene/    │     │ ui/ +       │     │ audio/   │   │ save/     │
- │ R3F shop  │     │ features/   │     │ Howler + │   │ IndexedDB │
- │ diorama   │     │ React HUD & │     │ WebAudio │   │ migrations│
+ │ R3F shop  │     │ features/   │     │ Web Audio│   │ IndexedDB │
+ │ diorama   │     │ React HUD & │     │ synth    │   │ migrations│
  │ agents,   │     │ panels,     │     │          │   │ export/   │
  │ build mode│     │ cards/, art/│     │          │   │ import    │
  └───────────┘     └─────────────┘     └──────────┘   └───────────┘
@@ -237,8 +236,8 @@ The sim owns each customer's **logical plan** (intent, target fixture, timings, 
 
 ## 10. Audio (`src/audio`)
 - **AudioManager:** channels (Master, Music, SFX, Voices, Ambience) with persisted volumes. Audio unlocks on the first user gesture, with a friendly "click to start" on the title screen.
-- **Music director:** chooses tracks by context (title, day, evening, event, card show, auction). It crossfades, supports optional stems for crowd intensity, and ducks under reveals.
-- **SFX:** ZzFX presets (generated at startup into cached `AudioBuffer`s, zero files) plus sampled CC0 sounds (Howler sprites) where synthesis isn't good enough (pack tear, coins).
+- **Music director:** a procedural lo-fi generator (seeded 8-bar phrases: swing drums, bass, extended-chord keys, melody, tape warmth) with contexts for title, day, evening, night and pack opening (later: event, card show, auction). Notes are scheduled ahead on the audio clock; contexts crossfade, and music ducks under reveals.
+- **SFX:** ZzFX patches (a TypeScript port of the generator) plus layered synthesis for what ZzFX can't do well (foil pack tear, bells, coins), rendered after unlock into cached `AudioBuffer`s. Zero audio files. The engine loads lazily on the first gesture; `src/audio/index.ts` is a tiny facade.
 - **Blip voices:** Web Audio oscillators with formant-ish filters. Pitch and timbre come from the character's voice profile, and rhythm from the text's syllables.
 
 ---

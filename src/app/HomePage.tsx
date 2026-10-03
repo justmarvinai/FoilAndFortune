@@ -9,7 +9,7 @@ interface HubCard {
   badge?: string;
 }
 
-// Debug hub for the Phase 1 preview. Debug pages are exempt from i18n (see CLAUDE.md).
+// Debug hub (developer previews). Debug pages are exempt from i18n (see CLAUDE.md).
 const cards: readonly HubCard[] = [
   {
     to: '/debug/art',
@@ -41,6 +41,28 @@ const cards: readonly HubCard[] = [
     accent: 'var(--color-coral)',
   },
   {
+    to: '/debug/sheets',
+    title: 'Sheets',
+    blurb:
+      'Backroom inventory, Price Board, the Crate supplier app, the Binder and the Fixture Popover.',
+    emoji: '📦',
+    accent: 'var(--color-mint)',
+  },
+  {
+    to: '/debug/opening',
+    title: 'Pack Opening',
+    blurb: 'Tear, reveal and Quick Rip every product, plus god pack and Mythic examples.',
+    emoji: '✨',
+    accent: 'var(--color-sun)',
+  },
+  {
+    to: '/debug/audio',
+    title: 'Audio Lab',
+    blurb: 'Procedural lo-fi music contexts, every sound effect, blip voices and the mixer.',
+    emoji: '🎧',
+    accent: 'var(--color-grape)',
+  },
+  {
     to: '/debug/clay',
     title: 'Clay Workshop',
     blurb: 'The card-art renderer up close: soft 3D "vinyl toy" creatures, every pose and biome.',
@@ -58,7 +80,7 @@ export default function HomePage() {
       />
       <div className="relative mx-auto flex max-w-5xl flex-col items-center px-4 pt-14 pb-16 sm:pt-20">
         <span className="mb-4 -rotate-2 rounded-full border-[3px] border-ink bg-sun px-4 py-1 font-display text-sm tracking-wider text-ink shadow-[0_3px_0_var(--color-ink)]">
-          Phase 1 · Tech Demo & Art Spike
+          Debug Hub · Phase 2 Vertical Slice
         </span>
         <h1 className="foil-text text-center font-display text-6xl leading-none tracking-wide drop-shadow-[0_6px_0_rgb(0_0_0/0.35)] sm:text-8xl">
           Foil &amp; Fortune
@@ -67,10 +89,16 @@ export default function HomePage() {
           Rip packs, read customers, ride the market, and grow a dusty corner shop into a
           collectibles empire.
         </p>
+        <Link
+          to="/"
+          className="mt-6 rounded-xl border-[3px] border-ink bg-sun px-6 py-2 font-display text-xl tracking-wide text-ink shadow-[0_4px_0_var(--color-ink)] transition active:translate-y-[3px] active:shadow-none"
+        >
+          ▶ Play the game
+        </Link>
 
         <nav
           className="mt-12 grid w-full gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          aria-label="Phase 1 demos"
+          aria-label="Developer previews"
         >
           {cards.map((card) => (
             <Link

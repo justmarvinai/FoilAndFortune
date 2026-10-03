@@ -232,10 +232,11 @@ function LevelUp({ celebration }: { celebration: Celebration }) {
 
 /**
  * Layer 4 (docs/05 §2, §6): celebrations play one at a time from `ui.celebrations`; they pause
- * the clock (isInteractionPaused), are skippable and dismiss themselves.
+ * the clock (isInteractionPaused), are skippable and dismiss themselves. They wait while the
+ * pack-opening stage is up, so a level-up earned by a pull never interrupts the reveal.
  */
 export function CelebrationHost() {
-  const current = useUiStore((ui) => ui.celebrations[0] ?? null);
+  const current = useUiStore((ui) => (ui.stage ? null : (ui.celebrations[0] ?? null)));
   return (
     <AnimatePresence>
       {current ? <LevelUp key={`level-${current.level}`} celebration={current} /> : null}

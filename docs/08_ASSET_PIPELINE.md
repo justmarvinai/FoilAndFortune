@@ -60,7 +60,7 @@ As of 2026-09-26, the Claude Code cloud environment used for this project **bloc
 | **VFX sprites** (sparkles, stars, coins, confetti) | ~20 | Generated (canvas/SVG) | Kenney Particle Pack (CC0) |
 | **SFX** | ~60 | ZzFX-synthesized + Web Audio | Kenney *Casino Audio* (card flips and shuffles, CC0), *Interface Sounds*, *UI Audio*, *Impact Sounds* (CC0) |
 | **Voices** | per character | Procedural blip-speech | — |
-| **Music** | 10–15 tracks | **CC0** tracks (candidates: *Open-Lofi* collection on GitHub, CC0 · *HoliznaCC0* · FreePD) | Procedural lo-fi generator (Tone.js) as fallback |
+| **Music** | 10–15 tracks | **Procedural lo-fi generator** (`src/audio/music`, ADR-013): 5 contexts in Phase 2 | Curated CC0 tracks later (candidates: *Open-Lofi* collection on GitHub, CC0 · *HoliznaCC0* · FreePD) |
 | **Fonts** | 6 families | `@fontsource` (OFL) | — |
 | **Logo** (Foil & Fortune, Glimmerkin, sets, companies, rivals) | ~30 | Hand-authored SVG | — |
 

@@ -223,7 +223,7 @@ Procedural cover templates per series: palette, title typography (display font p
 ### 11.1 Music
 - **Style:** cozy **lo-fi / jazzy chillhop** by day, mellower in the evening, and a warm nostalgic title theme. Special cues cover release-day hype (upbeat), card shows (busy funk), auctions (tension), rainy days and night summaries.
 - **Adaptive:** the intensity layer rises with crowd size. New "stems" are added as the shop tier grows, so bigger shops sound busier and richer.
-- **Sources:** curated **CC0** tracks (candidates in `08 §3`) or procedurally generated loops (Tone.js) as a fallback. **Q15** covers taste.
+- **Sources:** a **procedural lo-fi generator** of our own (`src/audio/music`, ADR-013). Asset hosts are blocked in development, so no CC0 tracks are used yet; a curated CC0 pack (candidates in `08 §3`) can be added later. **Q15** covers taste.
 
 ### 11.2 Sound effects (≈ 60 at v1.0)
 Door bell · footsteps (soft) · register beep and *cha-ching* · coin clinks (S/M/L) · bill counting · paper rustle · **pack tear (crinkly foil)** · card slide, flip and snap · holo shimmer · **rarity stingers** (6 ascending tiers) · Mythic fanfare · slab crack · bubble-wrap pops · stamp thud · box open and tape rip · delivery truck · phone buzz · UI pops, ticks and toggles · gentle error · level-up jingle · achievement chime · crowd murmur · rain ambience · construction montage · gavel · applause.
