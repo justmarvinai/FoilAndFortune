@@ -1,0 +1,297 @@
+/*
+ * Title screen (docs/05 §5.1): the Nook on Lantern Lane at dusk, drawn in SVG and CSS (no
+ * three.js on this route). Dusk colors live here as local tokens; components only reference them.
+ */
+.title-scene {
+  --dusk-top: #1b1f4b;
+  --dusk-mid: #4b3a7a;
+  --dusk-low: #c8607a;
+  --dusk-glow: #ffb37a;
+  --city-far: #2a2f6a;
+  --city-near: #262a58;
+  --brick: #8e4a3c;
+  --brick-dark: #6c352d;
+  --teal-dark: #167f75;
+  --window-warm: #ffd98a;
+  --window-deep: #f39b4c;
+  --street: #3a3466;
+  --street-light: #4a4278;
+  --cobble: #534b86;
+  --neon-pink: #ff5fa8;
+  --neon-cyan: #7ff6ff;
+  --petal: #ffb3d1;
+  --leaf: #f39b4c;
+  --px: 0;
+  --py: 0;
+  background: linear-gradient(
+    180deg,
+    var(--dusk-top) 0%,
+    var(--dusk-mid) 42%,
+    var(--dusk-low) 72%,
+    var(--dusk-glow) 100%
+  );
+}
+
+.title-layer {
+  position: absolute;
+  inset: 0;
+  translate: calc(var(--px) * var(--depth, 0) * 1.5px) 0;
+  transition: translate 600ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  will-change: translate;
+}
+
+.title-drift {
+  animation: title-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes title-drift {
+  from {
+    scale: 1.02;
+    translate: -0.6% 0;
+  }
+  to {
+    scale: 1.05;
+    translate: 0.6% -0.8%;
+  }
+}
+
+.title-stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 12%, rgb(255 255 255 / 0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 18% 30%, rgb(255 255 255 / 0.6) 50%, transparent 51%),
+    radial-gradient(2px 2px at 27% 8%, rgb(255 229 138 / 0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 39% 22%, rgb(255 255 255 / 0.7) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 52% 6%, rgb(255 255 255 / 0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 61% 26%, rgb(183 139 255 / 0.8) 50%, transparent 51%),
+    radial-gradient(2px 2px at 73% 14%, rgb(255 255 255 / 0.75) 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 32%, rgb(255 255 255 / 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 93% 9%, rgb(127 246 255 / 0.8) 50%, transparent 51%);
+  animation: title-twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes title-twinkle {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* String-light bulbs breathe out of phase. */
+.title-bulb {
+  animation: title-bulb 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes title-bulb {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.title-lamp-glow {
+  animation: title-lamp 5s ease-in-out infinite alternate;
+}
+
+@keyframes title-lamp {
+  from {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- The neon sign: flickers on, then hums ---------------------------------------------------- */
+.neon-board {
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgb(255 95 168 / 0.16), transparent 60%),
+    var(--color-night);
+}
+
+.neon-text {
+  color: #fff4fb;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--neon-pink),
+    0 0 18px var(--neon-pink),
+    0 0 36px rgb(255 95 168 / 0.8),
+    0 3px 0 rgb(30 35 64 / 0.6);
+  animation: neon-on 2.4s linear both;
+}
+
+.neon-amp {
+  color: #fffbe8;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--color-sun),
+    0 0 20px var(--color-sun),
+    0 0 40px rgb(255 201 60 / 0.75);
+}
+
+.neon-sub {
+  color: #effeff;
+  text-shadow:
+    0 0 6px var(--neon-cyan),
+    0 0 16px rgb(127 246 255 / 0.7);
+  animation: neon-on 2.4s linear 0.5s both;
+}
+
+@keyframes neon-on {
+  0%,
+  18% {
+    opacity: 0.12;
+    filter: saturate(0);
+  }
+  20% {
+    opacity: 1;
+    filter: none;
+  }
+  23% {
+    opacity: 0.2;
+  }
+  31% {
+    opacity: 1;
+  }
+  34% {
+    opacity: 0.35;
+  }
+  40%,
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+.neon-hum {
+  animation: neon-hum 7s ease-in-out 3s infinite;
+}
+
+@keyframes neon-hum {
+  0%,
+  94%,
+  100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.6;
+  }
+  96% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.75;
+  }
+}
+
+/* ---- Weather: petals, sun motes, leaves or snow, by the latest save's season ------------------- */
+.title-particle {
+  position: absolute;
+  top: -6%;
+  animation: title-fall linear infinite;
+  will-change: transform;
+}
+
+@keyframes title-fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(var(--sway, 40px), 55vh) rotate(180deg);
+  }
+  100% {
+    transform: translate(calc(var(--sway, 40px) * -0.4), 112vh) rotate(360deg);
+  }
+}
+
+.title-firefly {
+  position: absolute;
+  animation: title-firefly ease-in-out infinite alternate;
+}
+
+@keyframes title-firefly {
+  from {
+    transform: translate(0, 0);
+    opacity: 0.2;
+  }
+  to {
+    transform: translate(var(--sway, 30px), -40px);
+    opacity: 1;
+  }
+}
+
+/* ---- Menu: a hand of chunky cards -------------------------------------------------------------- */
+.title-card {
+  transform: translateY(var(--drop, 0px)) rotate(var(--tilt, 0deg));
+  transition:
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 200ms;
+}
+
+.title-card:hover,
+.title-card:focus-visible {
+  transform: translateY(calc(var(--drop, 0px) - 22px)) rotate(0deg);
+  z-index: 2;
+}
+
+.title-card:active {
+  transform: translateY(calc(var(--drop, 0px) - 8px)) rotate(0deg) scale(0.96);
+}
+
+.title-card--hero {
+  background:
+    linear-gradient(var(--color-paper), var(--color-paper)) padding-box,
+    linear-gradient(115deg, #7ff6ff, #b78bff, #ff8bd1, #ffe58a, #8bffb0, #7ff6ff) border-box;
+  background-size:
+    100% 100%,
+    300% 100%;
+  border-color: transparent;
+  animation: hero-foil 5s linear infinite;
+}
+
+@keyframes hero-foil {
+  to {
+    background-position:
+      0 0,
+      -300% 0;
+  }
+}
+
+.title-card__shine {
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.55) 48%,
+    transparent 60%
+  );
+  background-size: 250% 100%;
+  animation: title-shine 4.5s ease-in-out infinite;
+}
+
+@keyframes title-shine {
+  0%,
+  55% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.title-fade-in {
+  animation: title-fade-in 900ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@keyframes title-fade-in {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}

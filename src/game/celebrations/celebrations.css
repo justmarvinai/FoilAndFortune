@@ -1,0 +1,58 @@
+/* Level-up celebration (docs/05 §6, docs/04 §9 "banner, confetti, radial rays"). */
+
+.celebration-rays {
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgb(255 201 60 / 0.28) 0deg 9deg,
+    transparent 9deg 22.5deg
+  );
+  mask-image: radial-gradient(circle, black 15%, transparent 62%);
+  animation: celebration-rays 16s linear infinite;
+}
+
+@keyframes celebration-rays {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.celebration-ribbon::before,
+.celebration-ribbon::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  z-index: -1;
+  width: 46px;
+  height: 100%;
+  border: 3px solid var(--color-ink);
+  background: var(--color-coral);
+}
+
+.celebration-ribbon::before {
+  left: -34px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 26% 50%);
+}
+
+.celebration-ribbon::after {
+  right: -34px;
+  clip-path: polygon(0 0, 100% 0, 74% 50%, 100% 100%, 0 100%);
+}
+
+.celebration-medal {
+  background:
+    radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.55), transparent 40%), var(--color-sun);
+}
+
+.celebration-hint {
+  animation: celebration-hint 1.6s ease-in-out infinite;
+}
+
+@keyframes celebration-hint {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}

@@ -1,1 +1,478 @@
-{}
+{
+  "title": {
+    "address": "12 Lantern Lane · Old Town, Brightbay",
+    "menuLabel": "Main menu",
+    "sceneLabel": "The Nook at dusk, a little card shop on Lantern Lane",
+    "version": "v{{version}}",
+    "continue": {
+      "title": "Continue",
+      "hint": "Back behind the counter",
+      "stats": "Day {{day}} · Lv {{level}}"
+    },
+    "newGame": {
+      "title": "New Game",
+      "hint": "Open a shop of your own",
+      "heroHint": "Your very own card shop is waiting"
+    },
+    "load": {
+      "title": "Load",
+      "hint": "Saves & backups"
+    },
+    "settings": {
+      "title": "Settings",
+      "hint": "Sound, looks & comfort"
+    },
+    "credits": {
+      "title": "Credits",
+      "hint": "Fonts, friends & licenses"
+    }
+  },
+  "load": {
+    "title": "Your saves",
+    "subtitle": "Pick a day to return to",
+    "loading": "Opening the filing cabinet…",
+    "readFailed": "Couldn't read your saves.",
+    "none": "No saves yet. Every legend starts with a single day.",
+    "empty": "Empty slot",
+    "manual": "Save slots",
+    "auto": "Autosaves",
+    "slot": {
+      "slot-1": "Slot 1",
+      "slot-2": "Slot 2",
+      "slot-3": "Slot 3",
+      "auto-1": "This morning",
+      "auto-2": "The morning before",
+      "auto-3": "Oldest autosave",
+      "auto-weekly": "Monday backup"
+    },
+    "stats": "Day {{day}} · Lv {{level}}",
+    "date": "{{weekday}} · {{season}} {{day}} · Y{{year}}",
+    "playTime": "{{time}} played",
+    "savedAgo": "Saved {{ago}}",
+    "loadButton": "Load",
+    "loadAria": "Load {{slot}}: {{shop}}, day {{day}}",
+    "delete": "Delete",
+    "deleteAria": "Delete {{slot}}",
+    "deleteConfirm": "Delete this save for good?",
+    "deleteYes": "Delete",
+    "deleteNo": "Keep it",
+    "deleted": "Save deleted",
+    "import": "Import a backup",
+    "importHint": "A .ffsave file from “Export backup”",
+    "importFailed": "That file isn't a Foil & Fortune save, or it's damaged.",
+    "imported": "Backup imported: {{shop}}, Day {{day}}",
+    "close": "Close"
+  },
+  "credits": {
+    "title": "Credits",
+    "thanks": "Thanks for stopping by the Nook!",
+    "madeWith": "Foil & Fortune is made from scratch: every shop, card, critter and sound is drawn or generated in code.",
+    "fictional": "All brands, cards, companies and characters are fictional.",
+    "fonts": "Fonts",
+    "code": "Code & icons",
+    "licensesHint": "Every license travels with the game. Tap one to read it.",
+    "font": {
+      "lilita": "Lilita One",
+      "nunito": "Nunito",
+      "barlow": "Barlow",
+      "barlowCondensed": "Barlow Condensed",
+      "caveat": "Caveat",
+      "atkinson": "Atkinson Hyperlegible"
+    },
+    "lib": {
+      "lucide": "Lucide icons",
+      "thirdParty": "Open-source libraries",
+      "apache": "Apache License 2.0"
+    },
+    "licenseOfl": "SIL Open Font License",
+    "licenseIsc": "ISC License",
+    "licenseList": "Library notices",
+    "licenseApache": "Apache 2.0",
+    "signoff": "— with love, from Lantern Lane",
+    "close": "Close"
+  },
+  "newGame": {
+    "formTitle": "Shop Registration",
+    "office": "City of Brightbay · Small Business Office",
+    "formNo": "Form SR-12",
+    "premises": "Premises",
+    "premisesValue": "12 Lantern Lane, Old Town",
+    "stepOf": "Step {{step}} of {{total}}",
+    "steps": {
+      "owner": "You & your shop",
+      "permit": "Business permit",
+      "sign": "Sign & open"
+    },
+    "shopName": "Shop name",
+    "shopNameHint": "Dream big. It fits on the sign.",
+    "shopNameRequired": "Your shop needs a name.",
+    "defaultShopName": "Foil & Fortune",
+    "proprietor": "Proprietor",
+    "photo": "Photo",
+    "portraitAlt": "Your shopkeeper",
+    "avatar": {
+      "skin": "Skin",
+      "hairStyle": "Hair",
+      "hairColor": "Hair color",
+      "top": "Outfit",
+      "topColor": "Outfit color",
+      "shuffle": "Surprise me",
+      "swatch": "{{part}} {{n}}",
+      "hair": {
+        "bob": "Bob",
+        "spiky": "Spiky",
+        "bun": "Bun",
+        "ponytail": "Ponytail",
+        "curls": "Curls",
+        "buzz": "Buzz cut"
+      },
+      "outfit": {
+        "tee": "T-shirt",
+        "hoodie": "Hoodie",
+        "vest": "Vest",
+        "apron": "Apron"
+      }
+    },
+    "permit": {
+      "title": "Pick your permit",
+      "hint": "You can't change it later, so pick the pace you enjoy.",
+      "startingCash": "Starting cash",
+      "rent": "Rent",
+      "rentNone": "None",
+      "rentWeekly": "{{amount}} / week",
+      "bankruptcy": "Bankruptcy",
+      "bankruptcyNo": "Never",
+      "bankruptcyYes": "Possible",
+      "recommended": "Recommended",
+      "approved": "Approved"
+    },
+    "sign": {
+      "title": "Sign on the line",
+      "pledge": "I, proprietor of “{{shop}}”, promise to keep the shelves stocked, the prices fair and the coffee warm.",
+      "signature": "Signature",
+      "date": "Date",
+      "dateValue": "Spring 8, Year 1",
+      "button": "Sign & stamp",
+      "stamp": "APPROVED",
+      "opening": "Handing over the keys…"
+    },
+    "theoNote": "The shop's yours now, kid. Keep the shelves full and the prices fair! — Theo",
+    "back": "Back",
+    "next": "Next",
+    "cancel": "Back to title"
+  },
+  "hud": {
+    "shopTip": "Your shop",
+    "level": "Level {{level}}",
+    "levelShort": "Lv",
+    "levelTip": "{{xp}} / {{needed}} XP · {{left}} XP to level {{next}}",
+    "levelMax": "Top level reached!",
+    "xpWhy": "Earn XP from sales, happy customers and opening packs.",
+    "clockPrep": "Prep time: the clock starts when you flip the sign.",
+    "clockOpen": "Open 09:00–19:00. Customers come and go while the clock runs.",
+    "clockNight": "Closed for the night. Take your time.",
+    "pausedInteraction": "Paused while you browse",
+    "pausedManual": "Paused",
+    "sign": {
+      "flipHint": "Flip to open!",
+      "welcome": "Come on in!",
+      "night": "See you tomorrow",
+      "openAria": "Flip the sign to OPEN and start the day",
+      "closeAria": "Close the shop early",
+      "nightAria": "Show today's receipt"
+    },
+    "closeEarly": {
+      "title": "Close early?",
+      "body": "Anyone still inside heads home and the day ends now.",
+      "confirm": "Close shop",
+      "cancel": "Keep open"
+    },
+    "nextDay": "Next Day",
+    "nextDayAria": "Start the next day",
+    "receipt": "Receipt",
+    "cashTip": "Cash on hand",
+    "cashToday": "Today: {{revenue}} in sales",
+    "cashSpent": "Orders today: {{amount}}",
+    "loan": "Bank loan: {{amount}}",
+    "repTip": "Reputation {{score}} / 100",
+    "repWhy": "Happy customers and fair prices raise it each night.",
+    "saved": "Saved",
+    "float": {
+      "sale": "sale",
+      "purchase": "order",
+      "rent": "rent",
+      "loan": "loan",
+      "debug": "gift"
+    }
+  },
+  "dock": {
+    "label": "Shop tools",
+    "inventory": "Stock",
+    "prices": "Prices",
+    "crate": "Orders",
+    "binder": "Binder",
+    "settings": "Settings",
+    "keyHint": "Shortcut: {{key}}",
+    "new": "NEW!",
+    "badge": {
+      "delivery_one": "{{count}} delivery arrived",
+      "delivery_other": "{{count}} deliveries arrived",
+      "pending_one": "{{count}} order on the way",
+      "pending_other": "{{count}} orders on the way",
+      "cards_one": "{{count}} new card",
+      "cards_other": "{{count}} new cards"
+    }
+  },
+  "sheet": {
+    "loading": "Fetching the clipboard…",
+    "close": "Close",
+    "name": {
+      "inventory": "Stock",
+      "prices": "Price Board",
+      "crate": "Crate",
+      "binder": "Binder",
+      "settings": "Settings"
+    }
+  },
+  "stage": {
+    "loading": "Shuffling…"
+  },
+  "session": {
+    "loading": "Unlocking the Nook…",
+    "welcomeBack": "Welcome back to {{shop}}!",
+    "welcomeBackBody": "Day {{day}} · {{weekday}}",
+    "sceneLabel": "{{shop}}: the shop floor"
+  },
+  "summary": {
+    "title": "Day Summary",
+    "receiptNo": "Receipt #{{day}}",
+    "closedAt": "Closed at {{time}}",
+    "served": "Customers served",
+    "lost": "Left empty-handed",
+    "revenue": "Revenue",
+    "cogs": "Cost of goods",
+    "opened": "Opened stock",
+    "rent": "Rent",
+    "wages": "Wages",
+    "other": "Other costs",
+    "profit": "PROFIT",
+    "purchasesNote": "Orders placed today: {{amount}}",
+    "reputation": "Reputation",
+    "xp": "XP",
+    "level": "Lv {{level}}",
+    "bestPull": "Best pull",
+    "tomorrow": "Tomorrow ({{weekday}})",
+    "teaser": {
+      "delivery_one": "A delivery arrives: {{units}} items",
+      "delivery_other": "{{count}} deliveries arrive: {{units}} items",
+      "busy": "Busy {{weekday}}: about {{pct}}% more shoppers",
+      "rent": "Rent is due tomorrow night: {{amount}}",
+      "emptySlots_one": "{{count}} empty shelf slot to fill",
+      "emptySlots_other": "{{count}} empty shelf slots to fill",
+      "fresh": "A fresh day at the Nook. Doors open at 09:00."
+    },
+    "stampGood": "GOOD DAY!",
+    "stampSlow": "CHIN UP!",
+    "thanks": "Thank you, come again!",
+    "nextDay": "Next Day",
+    "nightTasks": "Night tasks first",
+    "nightTasksHint": "Order stock and sort your binder. The Next Day key waits up top.",
+    "skip": "Show all",
+    "finish": {
+      "normal": "",
+      "reverseHolo": "Reverse Holo",
+      "holo": "Holo",
+      "fullArtTextured": "Full Art",
+      "gold": "Gold",
+      "rainbow": "Rainbow",
+      "cosmos": "Cosmos",
+      "etched": "Etched",
+      "crystal": "Crystal"
+    }
+  },
+  "levelUp": {
+    "title": "Level up!",
+    "level": "Level {{level}}",
+    "reached": "You reached level {{level}}",
+    "unlocked": "Unlocked",
+    "perk": "Perk",
+    "keepGoing": "Bigger things are on the way. Keep it up!",
+    "continue": "Continue",
+    "tapHint": "Tap anywhere to continue"
+  },
+  "unlock": {
+    "supplier": {
+      "budget-box": {
+        "name": "Budget Box Co.",
+        "blurb": "Order packs, blisters and decks. They arrive the next morning."
+      },
+      "harbor-hobby": {
+        "name": "Harbor Hobby Distribution",
+        "blurb": "Booster boxes and bundles at better prices."
+      }
+    },
+    "fixture": {
+      "wall-shelf-small": {
+        "name": "Small Wall Shelf",
+        "blurb": "Four slots of sealed product on the wall."
+      },
+      "gondola": {
+        "name": "Gondola Shelf",
+        "blurb": "A double-sided shelf for the middle of the shop."
+      },
+      "bargain-bin": {
+        "name": "Bargain Bin",
+        "blurb": "A tub of cheap cards that kids can't resist."
+      }
+    },
+    "feature": {
+      "pricing": {
+        "name": "Price tags",
+        "blurb": "Set your own price on every product."
+      },
+      "pack-opening": {
+        "name": "Pack opening",
+        "blurb": "Rip packs from your stock and hunt for hits."
+      },
+      "binder": {
+        "name": "Your binder",
+        "blurb": "Keep your favorite pulls safe, one pocket per card."
+      },
+      "singles-case": {
+        "name": "Singles in the case",
+        "blurb": "Show off single cards in the display case and name your price."
+      }
+    },
+    "app": {
+      "foiltrack": {
+        "name": "FoilTrack",
+        "blurb": "The market app for card prices."
+      }
+    },
+    "category": {
+      "manga": {
+        "name": "Manga",
+        "blurb": "Stock manga for a whole new crowd."
+      }
+    }
+  },
+  "unlockFallback": {
+    "name": "Something new",
+    "blurb": "A new thing to try in your shop."
+  },
+  "perk": {
+    "storage-10": {
+      "name": "Extra closet shelving",
+      "blurb": "+10 storage space in the backroom."
+    },
+    "supplier-2": {
+      "name": "Friendly supplier",
+      "blurb": "2% off every supplier order."
+    }
+  },
+  "perkFallback": {
+    "name": "Shop perk",
+    "blurb": "A small boost for your shop."
+  },
+  "toast": {
+    "delivery": "Delivery arrived!",
+    "deliveryBody": "{{supplier}} dropped off {{units}} items in the backroom.",
+    "rent": "Rent paid: {{amount}}",
+    "rentBody": "The Nook's weekly rent.",
+    "loan": "The bank covered the shortfall",
+    "loanBody": "Loan balance: {{amount}}",
+    "firstSale": "First sale of the day!",
+    "firstSaleBody": "{{amount}} in the till. Many more to come.",
+    "orderPlaced": "Order placed",
+    "orderPlacedBody": "{{supplier}} delivers {{weekday}} morning.",
+    "lastHour": "One hour to closing",
+    "lastHourBody": "Last chance to ring up sales today.",
+    "unboxed": "Box unpacked",
+    "unboxedBody": "{{count}} packs are waiting in your stock.",
+    "saveFailed": "Couldn't save the game",
+    "saveFailedBody": "Your browser refused the save. Try exporting a backup."
+  },
+  "feed": {
+    "title": "Today's log",
+    "show": "Show today's log",
+    "hide": "Hide today's log",
+    "empty": "Quiet so far…",
+    "sale": "Sale: {{amount}}",
+    "leftHappy": "A customer left happy",
+    "leftEmpty": "A customer left empty-handed",
+    "delivery": "Delivery from {{supplier}}",
+    "order": "Ordered from {{supplier}}: {{amount}}",
+    "levelUp": "Reached level {{level}}!",
+    "opened": "Opened {{product}}",
+    "rent": "Rent paid: {{amount}}",
+    "shopOpened": "Doors open",
+    "shopClosed": "Doors closed"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Tune the Nook to your liking",
+    "section": {
+      "sound": "Sound",
+      "graphics": "Graphics",
+      "comfort": "Comfort & access",
+      "gameplay": "Gameplay",
+      "saves": "Saves",
+      "controls": "Controls"
+    },
+    "volume": {
+      "master": "Master",
+      "music": "Music",
+      "sfx": "Effects",
+      "voices": "Voices",
+      "ambience": "Ambience",
+      "value": "{{pct}}%"
+    },
+    "quality": {
+      "label": "Quality",
+      "auto": "Auto",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "hint": "Low is kinder to phones and older laptops."
+    },
+    "screenShake": "Screen shake",
+    "screenShakeHint": "A little rumble on big pulls.",
+    "reducedMotion": "Reduced motion",
+    "reducedMotionHint": "Fewer bounces, no shakes or flashes.",
+    "textSize": "Text size",
+    "textSizeValue": "{{pct}}%",
+    "dyslexiaFont": "Dyslexia-friendly font",
+    "dyslexiaFontHint": "Switches the interface to Atkinson Hyperlegible.",
+    "pauseOnInteraction": "Pause while panels are open",
+    "pauseOnInteractionHint": "The clock waits while you browse sheets and shelves.",
+    "on": "On",
+    "off": "Off",
+    "saves": {
+      "slot": "Slot {{n}}",
+      "empty": "Empty",
+      "saveHere": "Save",
+      "saveAria": "Save to slot {{n}}",
+      "saved": "Saved to slot {{n}}",
+      "stats": "Day {{day}} · Lv {{level}}",
+      "export": "Export backup",
+      "exported": "Backup file ready",
+      "autosaveNote": "The game also saves itself every morning.",
+      "failed": "Saving failed"
+    },
+    "quit": "Save & quit to title",
+    "controls": {
+      "pause": "Pause / resume",
+      "speed": "Game speed",
+      "sheets": "Stock · Prices · Orders · Binder",
+      "back": "Close / back · settings"
+    }
+  },
+  "rotate": {
+    "title": "Turn your phone sideways",
+    "body": "The Nook needs a little more room. Landscape, please!"
+  },
+  "time": {
+    "hoursMinutes": "{{hours}}h {{minutes}}m",
+    "minutes": "{{minutes}}m"
+  }
+}

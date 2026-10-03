@@ -1,0 +1,83 @@
+/* The settings board (docs/05 §5.19): a physical control panel, faders and rocker switches. */
+
+.settings-board {
+  background-color: var(--color-paper2);
+  background-image:
+    radial-gradient(circle at 14px 14px, rgb(30 35 64 / 0.25) 2px, transparent 3px),
+    radial-gradient(circle at calc(100% - 14px) 14px, rgb(30 35 64 / 0.25) 2px, transparent 3px);
+}
+
+.settings-fader {
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.settings-fader::-webkit-slider-runnable-track {
+  height: 12px;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-teal) 0 var(--fill, 50%),
+    var(--color-paper) var(--fill, 50%) 100%
+  );
+}
+
+.settings-fader::-moz-range-track {
+  height: 6px;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: var(--color-paper);
+}
+
+.settings-fader::-moz-range-progress {
+  height: 6px;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: var(--color-teal);
+}
+
+.settings-fader::-webkit-slider-thumb {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border: 3px solid var(--color-ink);
+  border-radius: 9px;
+  background: var(--color-sun);
+  box-shadow: 0 3px 0 var(--color-ink);
+  transition: scale 80ms;
+}
+
+.settings-fader::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--color-ink);
+  border-radius: 9px;
+  background: var(--color-sun);
+  box-shadow: 0 3px 0 var(--color-ink);
+}
+
+.settings-fader:active::-webkit-slider-thumb {
+  scale: 1.15;
+}
+
+.settings-fader:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.rocker {
+  transition: background-color 150ms;
+}
+
+.rocker__knob {
+  transition: translate 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rocker[aria-checked="true"] .rocker__knob {
+  translate: 30px 0;
+}
