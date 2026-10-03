@@ -169,16 +169,21 @@ export function Door({
   const anim = useRef({ bell: { value: 0, velocity: 0 } as SpringState, lastOpen: 0 });
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1);
-    const c = runtime.customer;
-    const dx = c.position.x - triggerWorld[0];
-    const dz = c.position.z - triggerWorld[1];
-    const near = c.visible && dx * dx + dz * dz < triggerRadius * triggerRadius;
     const door = runtime.door;
+    let near: boolean;
+    if (door.sensor) near = door.sensor();
+    else {
+      const c = runtime.customer;
+      const dx = c.position.x - triggerWorld[0];
+      const dz = c.position.z - triggerWorld[1];
+      near = c.visible && dx * dx + dz * dz < triggerRadius * triggerRadius;
+    }
     door.open = damp(door.open, near ? 1 : 0, near ? 7 : 3.5, dt);
     if (leafRef.current) leafRef.current.rotation.y = -dir * door.open * 1.35;
     // The bell gets a kick from the door's movement and rings out on a spring.
     const a = anim.current;
-    a.bell.velocity += (door.open - a.lastOpen) * 6;
+    a.bell.velocity += (door.open - a.lastOpen) * 6 + door.kick;
+    door.kick = 0;
     a.lastOpen = door.open;
     springStep(a.bell, 0, 90, 2.2, dt);
     if (bellRef.current) bellRef.current.rotation.x = a.bell.value;

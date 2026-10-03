@@ -22,6 +22,22 @@ function Svg({ children }: { children: ReactNode }) {
   );
 }
 
+/** A price tag (point left, string hole) for the price-reaction bubbles (docs/02 §5.3). */
+function PriceTag({ fill, children }: { fill: string; children: ReactNode }) {
+  return (
+    <Svg>
+      <path
+        d="M3 16 11 6h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H11z"
+        fill={fill}
+        stroke={INK}
+        strokeWidth="2.6"
+      />
+      <circle cx="9.5" cy="16" r="2.2" fill="var(--color-paper)" stroke={INK} strokeWidth="1.8" />
+      {children}
+    </Svg>
+  );
+}
+
 export const INTENT_ICONS: Record<BubbleIcon, ReactNode> = {
   cart: (
     <Svg>
@@ -106,6 +122,48 @@ export const INTENT_ICONS: Record<BubbleIcon, ReactNode> = {
       />
       <path d="M12 26c1-3 7-3 8 0z" fill="var(--color-sun)" />
     </Svg>
+  ),
+  empty: (
+    <Svg>
+      <path d="M5 13h22l-2 14H7z" fill="var(--color-wood)" stroke={INK} strokeWidth="2.6" />
+      <path
+        d="M5 13 2 8h10l2 5M27 13l3-5H20l-2 5"
+        fill="var(--color-paper2)"
+        stroke={INK}
+        strokeWidth="2.2"
+      />
+      <path d="M12.5 16.5l7 7m0-7-7 7" stroke="var(--color-coral)" strokeWidth="3.2" />
+    </Svg>
+  ),
+  steal: (
+    <PriceTag fill="var(--color-mint)">
+      <path
+        d="M20 9.5v11M15.5 16 20 20.5l4.5-4.5"
+        fill="none"
+        stroke="var(--color-paper)"
+        strokeWidth="3"
+      />
+    </PriceTag>
+  ),
+  fair: (
+    <PriceTag fill="var(--color-sky)">
+      <path d="M14.5 16.5 18 20l7-7" fill="none" stroke="var(--color-paper)" strokeWidth="3.2" />
+    </PriceTag>
+  ),
+  pricey: (
+    <PriceTag fill="var(--color-sun)">
+      <path d="M20 22V11m-4.5 4.5L20 11l4.5 4.5" fill="none" stroke={INK} strokeWidth="2.8" />
+    </PriceTag>
+  ),
+  ripoff: (
+    <PriceTag fill="var(--color-coral)">
+      <path
+        d="M15 16.5l5-5 5 5M15 22.5l5-5 5 5"
+        fill="none"
+        stroke="var(--color-paper)"
+        strokeWidth="2.8"
+      />
+    </PriceTag>
   ),
   angry: (
     <Svg>

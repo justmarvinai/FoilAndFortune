@@ -1,0 +1,37 @@
+/* Live shop overlay (src/scene/live/LiveOverlay.tsx). */
+
+/* The ring-up chip's bell gives a little shake every second or so ("ring me up"). */
+@keyframes live-bell-wiggle {
+  0%,
+  55%,
+  100% {
+    transform: rotate(0deg);
+  }
+  62% {
+    transform: rotate(-16deg);
+  }
+  70% {
+    transform: rotate(14deg);
+  }
+  78% {
+    transform: rotate(-10deg);
+  }
+  86% {
+    transform: rotate(6deg);
+  }
+}
+
+.ring-up .ring-up-bell {
+  transform-origin: 50% 15%;
+  animation: live-bell-wiggle 1.3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-up .ring-up-bell {
+    animation: none;
+  }
+}
+
+:root[data-reduced-motion] .ring-up .ring-up-bell {
+  animation: none;
+}

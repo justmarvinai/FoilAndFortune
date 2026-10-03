@@ -34,11 +34,27 @@ export function resolveQuality(setting: Settings['quality'], hints: DeviceHints)
   return 'medium';
 }
 
+const OVERRIDE_KEY = 'ff.qualityOverride';
+
+/**
+ * `?quality=` from the URL, remembered for the browser session so it survives in-app navigation
+ * (the title's New Game moves to `/play` without the parameter).
+ */
+function qualityOverride(): string | null {
+  const fromUrl = new URLSearchParams(window.location.search).get('quality');
+  try {
+    if (fromUrl) sessionStorage.setItem(OVERRIDE_KEY, fromUrl);
+    return fromUrl ?? sessionStorage.getItem(OVERRIDE_KEY);
+  } catch {
+    return fromUrl; // storage blocked: the URL alone decides
+  }
+}
+
 /** Reads the hints from the browser. */
 export function browserHints(): DeviceHints {
   const nav = navigator as Navigator & { deviceMemory?: number };
   return {
-    override: new URLSearchParams(window.location.search).get('quality'),
+    override: qualityOverride(),
     coarsePointer: window.matchMedia('(pointer: coarse)').matches,
     cores: nav.hardwareConcurrency ?? 0,
     memoryGb: nav.deviceMemory,

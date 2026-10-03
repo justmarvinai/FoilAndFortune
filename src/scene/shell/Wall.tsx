@@ -163,9 +163,21 @@ function stubParts(def: WallDef): Part[] {
 
 const wallpaperCache = new Map<string, BufferGeometry>();
 
+/**
+ * Cache key for a wall's baked meshes: its side, length and openings, so walls with the door in
+ * a different place (the live shop's layout vs. the spike's) never share geometry.
+ */
+function wallKey(def: WallDef): string {
+  const openings = def.openings
+    .map((o) => `${o.kind}@${o.center.toFixed(3)}/${o.width}/${o.bottom}/${o.top}`)
+    .join(',');
+  return `${def.side}:${def.length}:${openings}`;
+}
+
 /** Wallpaper panels between chair rail and crown, with UVs in metres for a seamless pattern. */
 function wallpaperGeometry(def: WallDef): BufferGeometry {
-  const hit = wallpaperCache.get(def.side);
+  const key = wallKey(def);
+  const hit = wallpaperCache.get(key);
   if (hit) return hit;
   const y0 = WAINSCOT_TOP + RAIL_H;
   const y1 = H - CROWN_H;
@@ -207,7 +219,7 @@ function wallpaperGeometry(def: WallDef): BufferGeometry {
   const merged = mergeGeometries(pieces, false);
   for (const p of pieces) p.dispose();
   if (!merged) throw new Error('wallpaper: merge failed');
-  wallpaperCache.set(def.side, merged);
+  wallpaperCache.set(key, merged);
   return merged;
 }
 
@@ -275,8 +287,9 @@ export function Wall({ def, children }: WallProps) {
   const stubRef = useRef<Group>(null);
   const initialized = useRef(false);
 
-  const fullGeometry = cachedMerge(`wall-full:${def.side}`, () => fullWallParts(def));
-  const stubGeometry = cachedMerge(`wall-stub:${def.side}`, () => stubParts(def));
+  const key = wallKey(def);
+  const fullGeometry = cachedMerge(`wall-full:${key}`, () => fullWallParts(def));
+  const stubGeometry = cachedMerge(`wall-stub:${key}`, () => stubParts(def));
   const paper = wallpaperGeometry(def);
   const [paperMaterial] = useState(
     () => new MeshStandardMaterial({ map: wallpaperTexture(), roughness: 0.85 }),

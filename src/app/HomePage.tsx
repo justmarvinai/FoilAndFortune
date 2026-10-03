@@ -41,6 +41,14 @@ const cards: readonly HubCard[] = [
     accent: 'var(--color-coral)',
   },
   {
+    to: '/debug/live',
+    title: 'Live Shop',
+    blurb:
+      'The state-driven Nook: real customers, shelves that empty, checkout, speed and time controls.',
+    emoji: '🛍️',
+    accent: 'var(--color-coral)',
+  },
+  {
     to: '/debug/sheets',
     title: 'Sheets',
     blurb:

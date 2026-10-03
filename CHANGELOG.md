@@ -20,6 +20,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   - **Day Summary receipt**: prints line by line with rolling numbers; served and lost customers, revenue, cost of goods, opened stock, rent, profit, reputation change, XP, best pull, and a "Tomorrow" teaser with arriving orders. Next Day starts the dawn.
   - **Level-up celebration** with confetti and unlock cards; a Settings board (audio volumes, quality, motion, text size, pause on interaction).
   - Keyboard: Space pause, 1/2/3 speed, I/P/O/C sheets, Esc back (or Settings as the pause menu). Autosaves at New Game and every dawn.
+- **Live 3D shop** (`src/scene/live`, preview at `/debug/live`): the toy-diorama Nook, built from game state:
+  - Fixtures come from the layout, and shelves show their real stock, emptying as customers pick and sparkling on restock. The display case shows singles with Clay art and foil.
+  - Customers animate from the sim clock: walking, browsing, queueing, paying and cheering. They carry what they picked and leave with a bag, with bubbles in one shared overlay. Angry customers get steam and a door slam, and happy ones hearts.
+  - The shopkeeper looks like your New Game avatar and scans and waves on every sale. Lighting follows the clock into the evening, the neon sign follows the phase, and a "Ring up" chip appears at the register when someone waits.
+  - The Fixture Popover is anchored to its fixture and clamped to the screen around the HUD.
+  - The original diorama now shares one Canvas stage with the live scene.
 - **Pack-opening stage** (`src/game/opening`, preview at `/debug/opening`):
   - A spotlit stage where you tear the pack across its crimp; the tear follows your finger and sheds foil shards.
   - Tap or swipe to reveal each card. The rare slot glows in its rarity color before it flips, and hits get bursts, beams, shake and an ascending stinger; Illustration Rares and up flip in slow motion, and a Mythic gets star rain and a crown stamp.

@@ -163,7 +163,11 @@ function CashRegister() {
           ? 1
           : 1 - clamp((a.since - 1.6) / 0.4, 0, 1);
     if (drawerRef.current) drawerRef.current.position.z = -out * 0.17;
-    screen.emissiveIntensity = lerp(0.5, 2.2, runtime.evening) + (a.since < 1.6 ? 0.8 : 0);
+    // A customer waiting at the pay spot makes the screen blink gently: "ring me up".
+    const waiting =
+      runtime.register.waiting && a.since >= 1.6 ? 0.5 + 0.5 * Math.sin(runtime.time * 7) : 0;
+    screen.emissiveIntensity =
+      lerp(0.5, 2.2, runtime.evening) + (a.since < 1.6 ? 0.8 : 0) + waiting * 1.4;
     const coins = coinsRef.current;
     if (coins) {
       const t = a.since;

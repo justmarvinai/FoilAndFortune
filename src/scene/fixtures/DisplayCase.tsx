@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { type Material, MeshPhysicalMaterial, MeshStandardMaterial } from 'three';
 import { BlobShadow } from '../lib/blobShadow';
 import { lerp } from '../lib/easing';
@@ -22,7 +22,17 @@ export interface DisplayCaseProps {
   depth?: number;
   height?: number;
   baseColor?: string;
+  /**
+   * `demo` dresses the case with the spike's sample cards and slabs; `none` leaves the velvet
+   * empty for `children` (the live shop's slots).
+   */
+  contents?: 'demo' | 'none';
+  /** Drawn inside the case, before the glass (local frame as above). */
+  children?: ReactNode;
 }
+
+/** Height of the case's base cabinet: the velvet bed sits just above it. */
+export const CASE_BASE_HEIGHT = 0.42;
 
 const CARD_W = 0.13;
 const CARD_H = 0.182;
@@ -58,91 +68,97 @@ export function DisplayCase({
   depth = 0.6,
   height = 0.95,
   baseColor = tones.woodDark,
+  contents = 'demo',
+  children,
 }: DisplayCaseProps) {
   const runtime = useDioramaRuntime();
-  const baseH = 0.42;
+  const demo = contents === 'demo';
+  const baseH = CASE_BASE_HEIGHT;
   const glassH = height - baseH - 0.02;
-  const frame = cachedMerge(`display-case:${length}:${depth}:${height}:${baseColor}`, () => {
-    const parts: Part[] = [
-      {
-        geometry: roundedBox(length - 0.06, 0.08, depth - 0.08, 0.02, 2),
-        color: tones.walnut,
-        position: [0, 0.04, 0],
-      },
-      {
-        geometry: roundedBox(length, baseH - 0.06, depth, 0.03, 3),
-        color: baseColor,
-        position: [0, 0.08 + (baseH - 0.08) / 2, 0],
-      },
-      {
-        geometry: roundedBox(length + 0.03, 0.03, depth + 0.03, 0.012, 2),
-        color: tones.brass,
-        position: [0, baseH, 0],
-      },
-      // Velvet bed and a back riser for the slabs.
-      {
-        geometry: roundedBox(length - 0.06, 0.03, depth - 0.06, 0.01, 1),
-        color: tones.velvet,
-        position: [0, baseH + 0.02, 0],
-      },
-      {
-        geometry: roundedBox(length - 0.12, 0.1, 0.2, 0.02, 2),
-        color: tones.velvet,
-        position: [0, baseH + 0.08, -depth / 2 + 0.15],
-      },
-      // Frame posts and top rim.
-      {
-        geometry: roundedBox(length + 0.02, 0.035, 0.035, 0.012, 1),
-        color: tones.brass,
-        position: [0, height, depth / 2],
-      },
-      {
-        geometry: roundedBox(length + 0.02, 0.035, 0.035, 0.012, 1),
-        color: tones.brass,
-        position: [0, height, -depth / 2],
-      },
-      {
-        geometry: roundedBox(0.035, 0.035, depth, 0.012, 1),
-        color: tones.brass,
-        position: [length / 2, height, 0],
-      },
-      {
-        geometry: roundedBox(0.035, 0.035, depth, 0.012, 1),
-        color: tones.brass,
-        position: [-length / 2, height, 0],
-      },
-      // Owner-side sliding-door handles.
-      {
-        geometry: roundedBox(0.08, 0.02, 0.02, 0.008, 1),
-        color: tones.brass,
-        position: [-0.2, baseH + 0.2, -depth / 2 - 0.01],
-      },
-      {
-        geometry: roundedBox(0.08, 0.02, 0.02, 0.008, 1),
-        color: tones.brass,
-        position: [0.2, baseH + 0.2, -depth / 2 - 0.01],
-      },
-    ];
-    for (const x of [-length / 2, length / 2]) {
-      for (const z of [-depth / 2, depth / 2]) {
-        parts.push({
-          geometry: roundedBox(0.035, glassH, 0.035, 0.012, 1),
+  const frame = cachedMerge(
+    `display-case:${length}:${depth}:${height}:${baseColor}:${contents}`,
+    () => {
+      const parts: Part[] = [
+        {
+          geometry: roundedBox(length - 0.06, 0.08, depth - 0.08, 0.02, 2),
+          color: tones.walnut,
+          position: [0, 0.04, 0],
+        },
+        {
+          geometry: roundedBox(length, baseH - 0.06, depth, 0.03, 3),
+          color: baseColor,
+          position: [0, 0.08 + (baseH - 0.08) / 2, 0],
+        },
+        {
+          geometry: roundedBox(length + 0.03, 0.03, depth + 0.03, 0.012, 2),
           color: tones.brass,
-          position: [x, baseH + glassH / 2, z],
+          position: [0, baseH, 0],
+        },
+        // Velvet bed and a back riser for the slabs.
+        {
+          geometry: roundedBox(length - 0.06, 0.03, depth - 0.06, 0.01, 1),
+          color: tones.velvet,
+          position: [0, baseH + 0.02, 0],
+        },
+        {
+          geometry: roundedBox(length - 0.12, 0.1, 0.2, 0.02, 2),
+          color: tones.velvet,
+          position: [0, baseH + 0.08, -depth / 2 + 0.15],
+        },
+        // Frame posts and top rim.
+        {
+          geometry: roundedBox(length + 0.02, 0.035, 0.035, 0.012, 1),
+          color: tones.brass,
+          position: [0, height, depth / 2],
+        },
+        {
+          geometry: roundedBox(length + 0.02, 0.035, 0.035, 0.012, 1),
+          color: tones.brass,
+          position: [0, height, -depth / 2],
+        },
+        {
+          geometry: roundedBox(0.035, 0.035, depth, 0.012, 1),
+          color: tones.brass,
+          position: [length / 2, height, 0],
+        },
+        {
+          geometry: roundedBox(0.035, 0.035, depth, 0.012, 1),
+          color: tones.brass,
+          position: [-length / 2, height, 0],
+        },
+        // Owner-side sliding-door handles.
+        {
+          geometry: roundedBox(0.08, 0.02, 0.02, 0.008, 1),
+          color: tones.brass,
+          position: [-0.2, baseH + 0.2, -depth / 2 - 0.01],
+        },
+        {
+          geometry: roundedBox(0.08, 0.02, 0.02, 0.008, 1),
+          color: tones.brass,
+          position: [0.2, baseH + 0.2, -depth / 2 - 0.01],
+        },
+      ];
+      for (const x of [-length / 2, length / 2]) {
+        for (const z of [-depth / 2, depth / 2]) {
+          parts.push({
+            geometry: roundedBox(0.035, glassH, 0.035, 0.012, 1),
+            color: tones.brass,
+            position: [x, baseH + glassH / 2, z],
+          });
+        }
+      }
+      // Card stands on the front tier.
+      for (let i = 0; i < (demo ? 4 : 0); i++) {
+        parts.push({
+          geometry: roundedBox(0.1, 0.05, 0.05, 0.01, 1),
+          color: '#E9E3F5',
+          position: [(-1.5 + i) * (length / 4.2), baseH + 0.05, 0.04],
+          rotation: [0.5, 0, 0],
         });
       }
-    }
-    // Card stands on the front tier.
-    for (let i = 0; i < 4; i++) {
-      parts.push({
-        geometry: roundedBox(0.1, 0.05, 0.05, 0.01, 1),
-        color: '#E9E3F5',
-        position: [(-1.5 + i) * (length / 4.2), baseH + 0.05, 0.04],
-        rotation: [0.5, 0, 0],
-      });
-    }
-    return parts;
-  });
+      return parts;
+    },
+  );
   const glassGeometry = cachedMerge(`display-glass:${length}:${depth}:${height}`, () => [
     {
       geometry: roundedBox(length, glassH, 0.008, 0.003, 1),
@@ -207,7 +223,8 @@ export function DisplayCase({
         castShadow
         receiveShadow
       />
-      {cards.map((material, i) => (
+      {children}
+      {(demo ? cards : []).map((material, i) => (
         <mesh
           key={material.uuid}
           geometry={plane(CARD_W, CARD_H)}
@@ -216,7 +233,7 @@ export function DisplayCase({
           rotation={[-0.95, 0, (i - 1.5) * 0.04]}
         />
       ))}
-      {slabCards.map((material, i) => {
+      {(demo ? slabCards : []).map((material, i) => {
         const x = (i === 0 ? -1 : 1) * length * 0.22;
         const y = baseH + 0.13 + 0.14;
         return (

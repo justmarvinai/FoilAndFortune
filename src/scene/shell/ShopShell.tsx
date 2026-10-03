@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { type ReactNode, useRef, useState } from 'react';
 import { type Group, MeshStandardMaterial } from 'three';
-import { ROOM, WALLS, type WallSide } from '../layout';
+import { ROOM, WALLS, type WallDef, type WallSide } from '../layout';
 import { plane, roundedBox } from '../lib/geometry';
 import { toyMaterial, vertexColorMaterial } from '../lib/materials';
 import { cachedMerge } from '../lib/merge';
@@ -53,10 +53,12 @@ function CornerPost({ x, z, walls }: (typeof CORNERS)[number]) {
 interface ShopShellProps {
   /** Wall-mounted content per wall, in that wall's local frame (see shell/Wall.tsx). */
   mounts?: Partial<Record<WallSide, ReactNode>>;
+  /** The walls and their openings (default: the spike's Nook, `layout.ts`). */
+  walls?: readonly WallDef[];
 }
 
 /** Floor, cut-away walls and corner posts of the Tier-1 room. */
-export function ShopShell({ mounts = {} }: ShopShellProps) {
+export function ShopShell({ mounts = {}, walls = WALLS }: ShopShellProps) {
   const [floorMaterial] = useState(() => {
     const map = woodFloorTexture();
     map.repeat.set(halfX, halfZ); // 2 m texture tile over a 6 × 5 m floor
@@ -77,7 +79,7 @@ export function ShopShell({ mounts = {} }: ShopShellProps) {
         position-y={0.001}
         receiveShadow
       />
-      {WALLS.map((def) => (
+      {walls.map((def) => (
         <Wall key={def.side} def={def}>
           {mounts[def.side]}
         </Wall>

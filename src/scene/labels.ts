@@ -9,6 +9,7 @@ export interface SceneLabels {
   shopName: string;
   address: string;
   open: string;
+  closed: string;
   shelfHeader: string;
   bargainBin: string;
   bargainPrice: string;
@@ -23,6 +24,7 @@ export const DEFAULT_SCENE_LABELS: SceneLabels = {
   shopName: 'THE NOOK',
   address: '12 Lantern Lane · Old Town',
   open: 'OPEN',
+  closed: 'CLOSED',
   shelfHeader: 'BOOSTERS',
   bargainBin: 'BARGAIN BIN',
   bargainPrice: '3 for $1',

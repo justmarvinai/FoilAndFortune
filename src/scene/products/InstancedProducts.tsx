@@ -91,7 +91,8 @@ function createPackGeometry(
 }
 
 let packGeometry: BufferGeometry | null = null;
-function basePackGeometry(): BufferGeometry {
+/** The shared pillow-pack geometry (clone it to add per-instance attributes). */
+export function basePackGeometry(): BufferGeometry {
   packGeometry ??= createPackGeometry();
   return packGeometry;
 }

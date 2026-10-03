@@ -15,6 +15,7 @@ export const routes: readonly RouteDef[] = [
   { path: '/debug', component: lazy(() => import('./HomePage')) },
   { path: '/debug/art', component: lazy(() => import('@/debug/CardArtPage')) },
   { path: '/debug/scene', component: lazy(() => import('@/scene/ScenePlayground')) },
+  { path: '/debug/live', component: lazy(() => import('@/debug/LiveScenePlayground')) },
   { path: '/debug/clay', component: lazy(() => import('@/art/clay/ClayPlayground')) },
   { path: '/debug/ui', component: lazy(() => import('@/debug/UiGalleryPage')) },
   { path: '/debug/engine', component: lazy(() => import('@/debug/EngineSandboxPage')) },

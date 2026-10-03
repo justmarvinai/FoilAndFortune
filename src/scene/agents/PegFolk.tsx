@@ -25,12 +25,13 @@ import {
   torus,
 } from '../lib/geometry';
 import { vertexColorMaterial } from '../lib/materials';
-import { cachedMerge, type Part } from '../lib/merge';
+import type { Part } from '../lib/merge';
 import { createRng, randRange } from '../lib/rng';
 import { useDioramaRuntime } from '../runtime';
 import { canBlink, type Expression, FACE_SECTION, faceAtlasTexture, setFaceCell } from './faces';
 import type { PegLook } from './looks';
 import { computePose, POSE_KEYS, type Pose, type PoseMode, restPose } from './motion';
+import { pegGeometry, releasePegGeometry, retainPegGeometry } from './pegGeometry';
 
 /**
  * Peg-folk: procedural chibi toy people (docs/04 §4.4). Capsule body, big squashed sphere head
@@ -353,17 +354,27 @@ function headwearParts(look: PegLook): Part[] {
   return parts;
 }
 
-function lookKey(look: PegLook): string {
-  return JSON.stringify(look);
+/**
+ * Cache keys per baked part. Each key holds only what shapes or colours that part, so looks that
+ * differ elsewhere (say, hair) still share their bodies, arms and legs.
+ */
+function lookKeys(look: PegLook) {
+  const { accessories: a } = look;
+  return {
+    body: `peg-body:${JSON.stringify([look.top, look.bottom, a.backpack ?? null, a.tote ?? null])}`,
+    head: `peg-head:${look.skin}`,
+    headwear: `peg-headwear:${JSON.stringify([look.hair, a.cap ?? null, a.glasses ?? null, a.headphones ?? null])}`,
+    arm: `peg-arm:${look.top.color}:${look.skin}`,
+    leg: `peg-leg:${look.bottom}:${look.shoes}`,
+  };
 }
 
-/** Baked, cached geometries for a look (a map lookup after the first build). */
-function lookGeometries(look: PegLook) {
-  const key = lookKey(look);
+/** Baked geometries for a look (shared and reference-counted, see pegGeometry.ts). */
+function lookGeometries(look: PegLook, keys: ReturnType<typeof lookKeys>) {
   const skin = look.skin;
   return {
-    body: cachedMerge(`peg-body:${key}`, () => torsoParts(look)),
-    head: cachedMerge(`peg-head:${skin}`, () => [
+    body: pegGeometry(keys.body, () => torsoParts(look)),
+    head: pegGeometry(keys.head, () => [
       { geometry: sphere(HEAD_R, 32, 24), color: skin },
       {
         geometry: sphere(0.055, 12, 10),
@@ -378,12 +389,12 @@ function lookGeometries(look: PegLook) {
         scale: [0.6, 1, 1],
       },
     ]),
-    headwear: cachedMerge(`peg-headwear:${key}`, () => headwearParts(look)),
-    arm: cachedMerge(`peg-arm:${look.top.color}:${skin}`, () => [
+    headwear: pegGeometry(keys.headwear, () => headwearParts(look)),
+    arm: pegGeometry(keys.arm, () => [
       { geometry: capsule(0.058, 0.22, 5, 12), color: look.top.color, position: [0, -0.09, 0] },
       { geometry: sphere(0.07, 14, 10), color: skin, position: [0, -0.2, 0.005] },
     ]),
-    leg: cachedMerge(`peg-leg:${look.bottom}:${look.shoes}`, () => [
+    leg: pegGeometry(keys.leg, () => [
       { geometry: capsule(0.066, 0.24, 5, 12), color: look.bottom, position: [0, -0.1, 0] },
       {
         geometry: sphere(0.08, 16, 10),
@@ -399,6 +410,11 @@ interface PegFolkProps {
   look: PegLook;
   motion: AgentMotion;
   castShadow?: boolean;
+  /**
+   * Whether arms and legs cast shadows too. A crowd can drop them: the torso and head carry the
+   * silhouette, and each limb costs a shadow-pass draw call per character.
+   */
+  limbShadows?: boolean;
   /** Written every frame with a world position just above the head (for intent bubbles). */
   headAnchor?: Vector3;
   /** Rendered in the right mitten while `motion.holding` is true. */
@@ -417,9 +433,24 @@ const CAMERA_GLANCE: Partial<Record<PoseMode, number>> = {
 const HEAD_PULSE_STIFFNESS = 520;
 const HEAD_PULSE_DAMPING = 16;
 
-export function PegFolk({ look, motion, castShadow = true, headAnchor, heldItem }: PegFolkProps) {
+export function PegFolk({
+  look,
+  motion,
+  castShadow = true,
+  limbShadows = true,
+  headAnchor,
+  heldItem,
+}: PegFolkProps) {
   const runtime = useDioramaRuntime();
-  const geometries = lookGeometries(look);
+  const keys = lookKeys(look);
+  const geometries = lookGeometries(look, keys);
+  const keyList = `${keys.body}|${keys.head}|${keys.headwear}|${keys.arm}|${keys.leg}`;
+  useEffect(() => {
+    const held = keyList.split('|');
+    retainPegGeometry(held);
+    return () => releasePegGeometry(held);
+  }, [keyList]);
+  const limbShadow = castShadow && limbShadows;
 
   const bodyMaterial = vertexColorMaterial({ roughness: 0.66 });
   const [hairMaterial] = useState(() => {
@@ -498,6 +529,7 @@ export function PegFolk({ look, motion, castShadow = true, headAnchor, heldItem 
         time: t,
         walkPhase: motion.walkPhase,
         seed: motion.seed,
+        carrying: motion.holding,
       },
       a.target,
     );
@@ -590,18 +622,18 @@ export function PegFolk({ look, motion, castShadow = true, headAnchor, heldItem 
       />
       <group ref={hopRef}>
         <group ref={legLRef} position={[LEG_X, HIP_Y, 0]}>
-          <mesh geometry={geometries.leg} material={bodyMaterial} castShadow={castShadow} />
+          <mesh geometry={geometries.leg} material={bodyMaterial} castShadow={limbShadow} />
         </group>
         <group ref={legRRef} position={[-LEG_X, HIP_Y, 0]}>
-          <mesh geometry={geometries.leg} material={bodyMaterial} castShadow={castShadow} />
+          <mesh geometry={geometries.leg} material={bodyMaterial} castShadow={limbShadow} />
         </group>
         <group ref={bodyRef} position={[0, HIP_Y, 0]}>
           <mesh geometry={geometries.body} material={bodyMaterial} castShadow={castShadow} />
           <group ref={armLRef} position={[SHOULDER_X, SHOULDER_Y, 0]}>
-            <mesh geometry={geometries.arm} material={bodyMaterial} castShadow={castShadow} />
+            <mesh geometry={geometries.arm} material={bodyMaterial} castShadow={limbShadow} />
           </group>
           <group ref={armRRef} position={[-SHOULDER_X, SHOULDER_Y, 0]}>
-            <mesh geometry={geometries.arm} material={bodyMaterial} castShadow={castShadow} />
+            <mesh geometry={geometries.arm} material={bodyMaterial} castShadow={limbShadow} />
             <group ref={heldRef} position={[0, -0.25, 0.07]} visible={false}>
               {heldItem}
             </group>

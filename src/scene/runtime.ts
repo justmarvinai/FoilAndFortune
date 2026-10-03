@@ -31,15 +31,24 @@ export interface DioramaRuntime {
     visible: boolean;
   };
   owner: { position: Vector3 };
-  /** Door swing 0 (closed) … 1 (open). */
-  door: { open: number };
+  /**
+   * Door swing 0 (closed) … 1 (open). `kick` is an impulse the door spends on its bell (a slam);
+   * `sensor`, when set, says whether anyone is in the doorway (the live scene's agents),
+   * replacing the demo customer's proximity check.
+   */
+  door: { open: number; kick: number; sensor: (() => boolean) | null };
+  /** Shop clock in minutes of the day for the wall clock, or null for the demo's running time. */
+  clockMinutes: number | null;
   /**
    * Cut-away state per wall: `hide` eases 0 (standing) → 1 (cut down to a stub) when the wall
    * faces the camera; `height` is the resulting height factor, read by corner posts.
    */
   walls: Record<WallSide, WallState>;
-  /** Increments each time the register rings up a sale (register drawer + coin burst). */
-  register: { sales: number; lastSaleAt: number };
+  /**
+   * Increments each time the register rings up a sale (register drawer + coin burst). `waiting`
+   * is true while a customer stands at the pay spot (the register screen blinks).
+   */
+  register: { sales: number; lastSaleAt: number; waiting: boolean };
   /** Expression forced on the customer from outside (playground), or null for scripted. */
   customerExpressionOverride: Expression | null;
   overlay: OverlayRegistry;
@@ -59,14 +68,15 @@ export function createDioramaRuntime(): DioramaRuntime {
     camera: { azimuth: Math.PI / 4, direction: new Vector3(1, 1, 1).normalize() },
     customer: { position: new Vector3(), phase: 'spawn', visible: false },
     owner: { position: new Vector3() },
-    door: { open: 0 },
+    door: { open: 0, kick: 0, sensor: null },
+    clockMinutes: null,
     walls: {
       north: { hide: 0, height: 1 },
       east: { hide: 1, height: 0 },
       south: { hide: 1, height: 0 },
       west: { hide: 0, height: 1 },
     },
-    register: { sales: 0, lastSaleAt: -100 },
+    register: { sales: 0, lastSaleAt: -100, waiting: false },
     customerExpressionOverride: null,
     overlay: createOverlayRegistry(),
   };

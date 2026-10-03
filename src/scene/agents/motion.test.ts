@@ -12,6 +12,7 @@ const MODES: readonly PoseMode[] = [
   'cheer',
   'wave',
   'register',
+  'impatient',
 ];
 
 function pose(mode: PoseMode, time: number, walkPhase = 0, modeTime = time): Pose {
@@ -61,5 +62,22 @@ describe('procedural Peg-folk poses', () => {
       out,
     );
     expect(result).toBe(out);
+  });
+});
+
+describe('carrying', () => {
+  it('holds the right arm forward while walking with an item', () => {
+    const swinging = computePose(
+      { mode: 'walk', modeTime: 1, time: 1, walkPhase: Math.PI / 2, seed: 0.3 },
+      restPose(),
+    );
+    const carrying = computePose(
+      { mode: 'walk', modeTime: 1, time: 1, walkPhase: Math.PI / 2, seed: 0.3, carrying: true },
+      restPose(),
+    );
+    expect(swinging.armRSwing).toBeGreaterThan(0);
+    expect(carrying.armRSwing).toBeLessThan(-0.8);
+    // The other arm keeps swinging.
+    expect(carrying.armLSwing).toBeCloseTo(swinging.armLSwing);
   });
 });

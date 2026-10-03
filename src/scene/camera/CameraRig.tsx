@@ -20,6 +20,14 @@ const tmpFollow = new Vector3();
 export const ZOOM_MIN = 0.85;
 export const ZOOM_MAX = 3.2;
 
+/** Imperative hooks into the rig for on-screen buttons (zoom steps keep the wheel's level). */
+export interface CameraApi {
+  /** Multiplies the current zoom, within the rig's limits. */
+  zoomBy(factor: number): void;
+  /** Current zoom over the fit framing. */
+  zoom(): number;
+}
+
 interface CameraRigProps {
   /** Rotation step; each step is a 90° turn. Any integer (not wrapped) so turns animate. */
   step: number;
@@ -33,6 +41,10 @@ interface CameraRigProps {
   interactive?: boolean;
   /** Keep an agent centred (debug close-ups; later "follow customer" in the game). */
   follow?: 'customer' | 'owner' | null;
+  /** Turns and zooms snap instead of easing (reduced motion, docs/05 §10). */
+  reducedMotion?: boolean;
+  /** Filled in by the rig with imperative controls (see `CameraApi`). */
+  api?: { current: CameraApi | null };
 }
 
 /**
@@ -47,6 +59,8 @@ export function CameraRig({
   framing,
   interactive = true,
   follow = null,
+  reducedMotion = false,
+  api,
 }: CameraRigProps) {
   const runtime = useDioramaRuntime();
   const camera = useThree((s) => s.camera);
@@ -74,6 +88,25 @@ export function CameraRig({
   useEffect(() => {
     state.current.zoom = clamp(zoom, ZOOM_MIN, ZOOM_MAX);
   }, [zoom]);
+
+  useEffect(() => {
+    if (!api) return;
+    api.current = {
+      zoomBy(factor) {
+        const s = state.current;
+        s.zoom = clamp(s.zoom * factor, ZOOM_MIN, ZOOM_MAX);
+        // Back at the fit framing there is nothing to pan to: re-centre.
+        if (s.zoom <= 1.0001) {
+          s.pan.x = 0;
+          s.pan.y = 0;
+        }
+      },
+      zoom: () => state.current.zoom,
+    };
+    return () => {
+      api.current = null;
+    };
+  }, [api]);
 
   useEffect(() => {
     if (!interactive) return;
@@ -144,7 +177,7 @@ export function CameraRig({
       s.pan.y = 0;
     }
     const targetAzimuth = azimuthForStep(step);
-    if (!s.initialized) s.azimuth = targetAzimuth;
+    if (!s.initialized || reducedMotion) s.azimuth = targetAzimuth;
     else s.azimuth = damp(s.azimuth, targetAzimuth, 5.5, dt);
     if (Math.abs(s.azimuth - targetAzimuth) < 1e-4) s.azimuth = targetAzimuth;
 
@@ -154,7 +187,8 @@ export function CameraRig({
     const { width, height } = three.size;
     const fit = fitZoom(s.extents, width, height, insets, 0.04);
     const targetZoom = fit * s.zoom;
-    s.currentZoom = s.initialized ? damp(s.currentZoom, targetZoom, 8, dt) : targetZoom;
+    s.currentZoom =
+      s.initialized && !reducedMotion ? damp(s.currentZoom, targetZoom, 8, dt) : targetZoom;
     s.initialized = true;
 
     // Centre the projected bounds in the free viewport, then apply the user's pan.

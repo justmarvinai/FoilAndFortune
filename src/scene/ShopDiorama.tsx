@@ -1,33 +1,17 @@
-import { StatsGl } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
-import { NeutralToneMapping, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import type { Expression } from './agents/faces';
-import { CameraRig } from './camera/CameraRig';
 import { type Insets, NO_INSETS } from './camera/cameraMath';
-import { Effects } from './effects/Effects';
-import { DEFAULT_SCENE_LABELS, type SceneLabels, SceneLabelsContext } from './labels';
+import { DioramaStage, type RenderInfo } from './DioramaStage';
+import { DEFAULT_SCENE_LABELS, type SceneLabels } from './labels';
 import { PLINTH, ROOM, SPOTS } from './layout';
-import { Background } from './lighting/Background';
-import { Lighting } from './lighting/Lighting';
-import { ProceduralEnvironment } from './lighting/ProceduralEnvironment';
 import type { TimeOfDay } from './lighting/presets';
 import { NookScene } from './NookScene';
 import { OverlayProjector, WorldOverlay } from './overlay/WorldOverlay';
-import { type QualityLevel, qualityPresets } from './quality';
-import {
-  createDioramaRuntime,
-  type DioramaRuntime,
-  DioramaRuntimeContext,
-  QualityContext,
-} from './runtime';
+import type { QualityLevel } from './quality';
+import { createDioramaRuntime } from './runtime';
 
-export interface RenderInfo {
-  drawCalls: number;
-  triangles: number;
-  geometries: number;
-  textures: number;
-}
+export type { RenderInfo } from './DioramaStage';
 
 export interface ShopDioramaProps {
   timeOfDay?: TimeOfDay;
@@ -82,34 +66,6 @@ const FRAMING_POINTS: readonly Vector3[] = (() => {
   return points;
 })();
 
-/** Keeps the runtime clock ticking first thing every frame (negative priority = before others). */
-function RuntimeClock({ runtime }: { runtime: DioramaRuntime }) {
-  useFrame((_, delta) => {
-    runtime.time += Math.min(delta, 0.1);
-  }, -10);
-  return null;
-}
-
-function RenderInfoProbe({ onSample }: { onSample: (info: RenderInfo) => void }) {
-  const [state] = useState(() => ({ last: 0 }));
-  useFrame(({ gl, clock }) => {
-    // Read last frame's totals before resetting (autoReset is off so post passes accumulate).
-    gl.info.autoReset = false;
-    const now = clock.elapsedTime;
-    if (now - state.last > 0.5) {
-      state.last = now;
-      onSample({
-        drawCalls: gl.info.render.calls,
-        triangles: gl.info.render.triangles,
-        geometries: gl.info.memory.geometries,
-        textures: gl.info.memory.textures,
-      });
-    }
-    gl.info.reset();
-  }, -100);
-  return null;
-}
-
 /**
  * The 3D toy-diorama shop (docs/04 §4, docs/06 §7): the Tier-1 shop "The Nook" on a street
  * plinth, with procedural fixtures, Peg-folk and time-of-day lighting.
@@ -131,7 +87,6 @@ export function ShopDiorama({
   className,
   children,
 }: ShopDioramaProps) {
-  const preset = qualityPresets[quality];
   const [runtime] = useState(() => {
     const r = createDioramaRuntime();
     // Start already in the requested lighting instead of fading in from day.
@@ -152,51 +107,27 @@ export function ShopDiorama({
   const mergedInsets = useMemo(() => ({ ...NO_INSETS, ...insets }), [insets]);
 
   return (
-    <div className={`relative h-full w-full overflow-hidden ${className ?? ''}`}>
-      <Canvas
-        key={quality}
-        orthographic
-        shadows={preset.shadows ? 'percentage' : false}
-        dpr={preset.dpr}
-        gl={{ antialias: preset.antialias, powerPreference: 'high-performance', stencil: false }}
-        camera={{ position: [30, 30, 30], zoom: 60, near: 0.1, far: 200 }}
-        onCreated={({ gl }) => {
-          gl.toneMapping = NeutralToneMapping;
-        }}
-      >
-        <DioramaRuntimeContext value={runtime}>
-          <QualityContext value={preset}>
-            <SceneLabelsContext value={mergedLabels}>
-              <RuntimeClock runtime={runtime} />
-              <CameraRig
-                step={cameraAngle}
-                zoom={zoom}
-                insets={mergedInsets}
-                framing={FRAMING_POINTS}
-                follow={follow}
-              />
-              <Background />
-              <ProceduralEnvironment resolution={preset.envResolution} />
-              <Lighting
-                shadows={preset.shadows}
-                shadowMapSize={preset.shadowMapSize}
-                shadowRadius={preset.shadowRadius}
-              />
-              <NookScene
-                customerStartTime={customerStartTime}
-                customerStartPhase={customerStartPhase}
-                freezeCustomer={freezeCustomer}
-              />
-              {children}
-              <OverlayProjector registry={runtime.overlay} />
-              <Effects quality={preset} />
-              {onRenderInfo ? <RenderInfoProbe onSample={onRenderInfo} /> : null}
-              {showStats ? <StatsGl className="!left-auto !right-2 !top-2" /> : null}
-            </SceneLabelsContext>
-          </QualityContext>
-        </DioramaRuntimeContext>
-      </Canvas>
-      <WorldOverlay registry={runtime.overlay} ids={OVERLAY_IDS} />
-    </div>
+    <DioramaStage
+      runtime={runtime}
+      quality={quality}
+      cameraStep={cameraAngle}
+      zoom={zoom}
+      insets={mergedInsets}
+      framing={FRAMING_POINTS}
+      labels={mergedLabels}
+      follow={follow}
+      showStats={showStats}
+      onRenderInfo={onRenderInfo}
+      className={className}
+      overlay={<WorldOverlay registry={runtime.overlay} ids={OVERLAY_IDS} />}
+    >
+      <NookScene
+        customerStartTime={customerStartTime}
+        customerStartPhase={customerStartPhase}
+        freezeCustomer={freezeCustomer}
+      />
+      {children}
+      <OverlayProjector registry={runtime.overlay} />
+    </DioramaStage>
   );
 }

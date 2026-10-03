@@ -1,1 +1,47 @@
-{}
+{
+  "status": "{{count}} customers in the shop",
+  "statusQueue": "{{count}} customers in the shop, {{queue}} waiting to pay",
+  "bubble": {
+    "search": "Looking around",
+    "cart": "Ready to pay",
+    "waiting": "Getting impatient",
+    "angry": "Angry",
+    "delight": "Delighted",
+    "outOfStock": "Couldn't find what they wanted",
+    "steal": "What a bargain!",
+    "fair": "Fair price",
+    "pricey": "A bit pricey",
+    "ripoff": "Rip-off!"
+  },
+  "ringUp": "Ring up",
+  "ringUpAria": "Ring up the customer at the register",
+  "saleFloat": "+{{amount}}",
+  "camera": {
+    "group": "Camera",
+    "rotateLeft": "Rotate the view left (Q)",
+    "rotateRight": "Rotate the view right (E)",
+    "zoomIn": "Zoom in (+)",
+    "zoomOut": "Zoom out (−)"
+  },
+  "fixtures": {
+    "group": "Fixtures",
+    "shelf": "Shelf {{n}}",
+    "case": "Display case",
+    "register": "Register",
+    "decor": "Decoration {{n}}"
+  },
+  "labels": {
+    "defaultShop": "THE NOOK",
+    "address": "12 Lantern Lane · Old Town",
+    "open": "OPEN",
+    "closed": "CLOSED",
+    "shelfHeader": "PACKS & DECKS",
+    "bargainBin": "BARGAIN BIN",
+    "bargainPrice": "3 for $1",
+    "chalkboardTitle": "NEW!",
+    "chalkboardLine1": "Emberdawn",
+    "chalkboardLine2": "packs are in!",
+    "posterSubtitle": "ORIGINS · THE FIRST SET",
+    "packCount": "10 CARDS"
+  }
+}

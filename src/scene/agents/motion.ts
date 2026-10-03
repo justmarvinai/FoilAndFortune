@@ -16,7 +16,9 @@ export type PoseMode =
   | 'wait'
   | 'cheer'
   | 'wave'
-  | 'register';
+  | 'register'
+  /** Waiting too long: arms folded, foot tapping, a sigh of the shoulders. */
+  | 'impatient';
 
 export interface Pose {
   hop: number;
@@ -82,6 +84,11 @@ export interface PoseInput {
   walkPhase: number;
   /** Per-character offset so a crowd doesn't breathe in sync. */
   seed: number;
+  /**
+   * Holding something in the right mitten (docs/04 §4.4 "carry"): while walking that arm stays
+   * forward with a little bob instead of swinging, so the item doesn't fly around.
+   */
+  carrying?: boolean;
 }
 
 /** Walk step length: one full cycle (two steps) per this many metres. */
@@ -189,6 +196,21 @@ export function computePose(input: PoseInput, out: Pose): Pose {
       out.headRoll = 0.1;
       out.headPitch = -0.05;
       break;
+    case 'impatient': {
+      // Arms folded over the tummy, a foot tapping twice a second, the odd huff.
+      const tap = Math.max(0, Math.sin(t * 12.5));
+      // Negative raise turns the arms inwards: folded across the tummy.
+      out.armLSwing = -1.2;
+      out.armRSwing = -1.25;
+      out.armLRaise = -0.4;
+      out.armRRaise = -0.4;
+      out.legR = -tap * 0.22;
+      out.hop = tap * 0.006;
+      out.headRoll = Math.sin(t * 0.9) * 0.08;
+      out.headPitch = -0.06 + Math.max(0, Math.sin(t * 0.7)) * 0.08;
+      out.squash = 1 - Math.max(0, Math.sin(t * 0.7)) * 0.025;
+      break;
+    }
     case 'register': {
       const tap = Math.sin(t * 11);
       out.lean = 0.1;
@@ -200,6 +222,11 @@ export function computePose(input: PoseInput, out: Pose): Pose {
       out.armRRaise = 0.3;
       break;
     }
+  }
+  if (input.carrying && mode === 'walk') {
+    // Carry: the right arm holds the item out front, bobbing with the steps.
+    out.armRSwing = -0.95 + Math.abs(Math.cos(walkPhase)) * 0.08;
+    out.armRRaise = 0.16;
   }
   return out;
 }

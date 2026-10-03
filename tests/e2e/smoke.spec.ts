@@ -10,6 +10,7 @@ const ROUTES = [
   { path: '/debug/clay', heading: 'Clay Critters' },
   // Low quality: the smoke test checks the page works; software WebGL in CI is slow.
   { path: '/debug/scene?quality=low', heading: 'Shop Diorama Spike' },
+  { path: '/debug/live?quality=low', heading: 'Live Shop Scene' },
 ] as const;
 
 for (const route of ROUTES) {

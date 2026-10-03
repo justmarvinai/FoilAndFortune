@@ -20,6 +20,11 @@ export interface LiveShopSceneProps {
   anchored?: { fixtureUid: string; content: ReactNode } | null;
   /** Shop name on the storefront sign. */
   shopName?: string;
+  /**
+   * Stop rendering while a full-screen overlay covers the shop (the Day Summary, the pack-opening
+   * stage): the last frame stays on screen and the GPU rests.
+   */
+  paused?: boolean;
   onFixtureClick?(fixtureUid: string): void;
   /** The register counter (manual checkout, docs/01 §11.1). */
   onRegisterClick?(): void;

@@ -51,7 +51,12 @@ function worldPlanes(
  * The museum-style base the shop sits on (docs/04 §4.1): a walnut plinth with a brass name
  * plate, pavements on the two street sides, a strip of cobbled road, and street furniture.
  */
-export function StreetPlinth() {
+export function StreetPlinth({
+  hydrant = SPOTS.hydrant.position,
+}: {
+  /** Where the hydrant stands (the live shop keeps it off the customers' street corner). */
+  hydrant?: readonly [number, number, number];
+} = {}) {
   const labels = useSceneLabels();
   const quality = useQuality();
   const width = maxX - minX;
@@ -153,7 +158,7 @@ export function StreetPlinth() {
         withLight={quality.accentLights}
       />
       <Bench position={[SPOTS.bench.position[0], sidewalkTop, SPOTS.bench.position[2]]} />
-      <Hydrant position={[SPOTS.hydrant.position[0], sidewalkTop, SPOTS.hydrant.position[2]]} />
+      <Hydrant position={[hydrant[0], sidewalkTop, hydrant[2]]} />
       <group
         scale={0.82}
         position={[SPOTS.streetTree.position[0], sidewalkTop, SPOTS.streetTree.position[2]]}

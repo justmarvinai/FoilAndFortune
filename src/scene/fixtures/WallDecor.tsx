@@ -121,8 +121,8 @@ function neonTexture(text: string) {
 }
 
 /** Flicker when switching on: a few quick blinks, then steady with a faint buzz. */
-function neonFlicker(runtime: DioramaRuntime): number {
-  const t = runtime.time - runtime.eveningSwitchedAt;
+function neonFlicker(runtime: DioramaRuntime, switchedAt = runtime.eveningSwitchedAt): number {
+  const t = runtime.time - switchedAt;
   if (t < 0 || t > 1.2) return 0.97 + Math.sin(runtime.time * 43) * 0.03;
   if (t < 0.1) return 1;
   if (t < 0.22) return 0.08;
@@ -133,12 +133,27 @@ function neonFlicker(runtime: DioramaRuntime): number {
   return 1;
 }
 
-/** Neon "OPEN" sign on a dark acrylic board, hung on two little chains. */
-export function NeonSign({ width = 0.72, height = 0.32 }: { width?: number; height?: number }) {
+/**
+ * Neon sign on a dark acrylic board, hung on two little chains: "OPEN" by default. The live shop
+ * passes its phase: lit OPEN while trading (flickering on when the sign flips), a dark CLOSED
+ * sign before opening and at night.
+ */
+export function NeonSign({
+  width = 0.72,
+  height = 0.32,
+  text,
+  on = true,
+}: {
+  width?: number;
+  height?: number;
+  text?: string;
+  on?: boolean;
+}) {
   const runtime = useDioramaRuntime();
   const labels = useSceneLabels();
+  const shown = text ?? labels.open;
   const material = useMemo(() => {
-    const map = neonTexture(labels.open);
+    const map = neonTexture(shown);
     return new MeshStandardMaterial({
       map,
       emissiveMap: map,
@@ -147,10 +162,26 @@ export function NeonSign({ width = 0.72, height = 0.32 }: { width?: number; heig
       roughness: 0.4,
       transparent: false,
     });
-  }, [labels.open]);
+  }, [shown]);
+  const switched = useRef({ on, at: -100 });
   useFrame(() => {
-    const on = runtime.evening;
-    material.emissiveIntensity = lerp(0.55, 6, on) * (on > 0.5 ? neonFlicker(runtime) : 1);
+    const s = switched.current;
+    if (s.on !== on) {
+      s.on = on;
+      s.at = runtime.time;
+    }
+    if (!on) {
+      material.emissiveIntensity = 0.08;
+      return;
+    }
+    const evening = runtime.evening;
+    const flicker =
+      runtime.time - s.at < 1.2
+        ? neonFlicker(runtime, s.at)
+        : evening > 0.5
+          ? neonFlicker(runtime)
+          : 1;
+    material.emissiveIntensity = lerp(0.9, 6, evening) * flicker;
   });
   const frame = cachedMerge(`neon-frame:${width}:${height}`, () => [
     {
@@ -200,7 +231,10 @@ function clockFaceTexture() {
   );
 }
 
-/** Round wall clock whose hands sweep with scene time (a minute per real minute). */
+/**
+ * Round wall clock. Its hands follow `runtime.clockMinutes` (the shop's sim clock) when set, else
+ * they sweep with scene time (a minute per real minute).
+ */
 export function WallClock({ radius = 0.2 }: { radius?: number }) {
   const minuteRef = useRef<Group>(null);
   const hourRef = useRef<Group>(null);
@@ -209,7 +243,7 @@ export function WallClock({ radius = 0.2 }: { radius?: number }) {
     () => new MeshStandardMaterial({ map: clockFaceTexture(), roughness: 0.5 }),
   );
   useFrame(() => {
-    const minutes = 9 * 60 + 41 + runtime.time / 60;
+    const minutes = runtime.clockMinutes ?? 9 * 60 + 41 + runtime.time / 60;
     if (minuteRef.current) minuteRef.current.rotation.z = -((minutes % 60) / 60) * Math.PI * 2;
     if (hourRef.current) hourRef.current.rotation.z = -(((minutes / 60) % 12) / 12) * Math.PI * 2;
   });
@@ -253,7 +287,7 @@ export function WallClock({ radius = 0.2 }: { radius?: number }) {
 const SHELF_LOW = 1.24;
 const SHELF_HIGH = 1.66;
 
-export function BoxShelf({ width = 1.7 }: { width?: number }) {
+export function BoxShelf({ width = 1.7, boxes = true }: { width?: number; boxes?: boolean }) {
   const frame = cachedMerge(`box-shelf:${width}`, () => {
     const parts: Part[] = [];
     for (const y of [SHELF_LOW, SHELF_HIGH]) {
@@ -327,7 +361,7 @@ export function BoxShelf({ width = 1.7 }: { width?: number }) {
     }
     return parts;
   });
-  const boxes = useMemo<ProductItem[]>(() => {
+  const boxItems = useMemo<ProductItem[]>(() => {
     const items: ProductItem[] = [];
     const low = SHELF_LOW;
     const high = SHELF_HIGH;
@@ -361,7 +395,7 @@ export function BoxShelf({ width = 1.7 }: { width?: number }) {
         castShadow
         receiveShadow
       />
-      <BoosterBoxes items={boxes} />
+      {boxes ? <BoosterBoxes items={boxItems} /> : null}
     </group>
   );
 }

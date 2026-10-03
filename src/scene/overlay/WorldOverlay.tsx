@@ -12,18 +12,26 @@ import type { OverlayRegistry } from './overlayRegistry';
 export function WorldOverlay({
   registry,
   ids,
+  labelled = false,
 }: {
   registry: OverlayRegistry;
   ids: readonly string[];
+  /**
+   * Bubbles carry accessible names from `registry.labels` (set by the projector as icons
+   * change). Off, the whole layer is decorative.
+   */
+  labelled?: boolean;
 }) {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden={labelled ? undefined : 'true'}
+    >
       {ids.map((id) => (
         <div
           key={id}
-          ref={(el) => {
-            registry.bindElement(id, el);
-          }}
+          ref={registry.refFor(id)}
+          aria-hidden={labelled ? 'true' : undefined}
           className="absolute top-0 left-0 opacity-0 transition-opacity duration-200 will-change-transform"
         >
           <div className="-translate-x-1/2 -translate-y-full pb-3">
@@ -69,13 +77,31 @@ export function OverlayProjector({ registry }: { registry: OverlayRegistry }) {
         const previous = anchor.shownIcon;
         anchor.shownIcon = anchor.icon;
         el.style.opacity = anchor.icon ? '1' : '0';
+        const label = anchor.icon ? registry.labels?.[anchor.icon] : undefined;
+        if (registry.labels) {
+          // Only a visible bubble is announced; a hidden one leaves the accessibility tree.
+          if (label) {
+            el.setAttribute('role', 'img');
+            el.setAttribute('aria-label', label);
+            el.removeAttribute('aria-hidden');
+          } else {
+            el.removeAttribute('role');
+            el.removeAttribute('aria-label');
+            el.setAttribute('aria-hidden', 'true');
+          }
+        }
         if (anchor.icon) {
           for (const span of el.querySelectorAll<HTMLElement>('[data-icon-name]')) {
             span.style.display = span.dataset.iconName === anchor.icon ? 'block' : 'none';
           }
           const bubble = el.querySelector<HTMLElement>('[data-bubble]');
           // Pop-in "boing" on every new intent (skipped for reduced motion).
-          if (bubble && !reducedMotion() && typeof bubble.animate === 'function') {
+          if (
+            bubble &&
+            !registry.reducedMotion &&
+            !reducedMotion() &&
+            typeof bubble.animate === 'function'
+          ) {
             bubble.animate(
               [
                 { transform: 'scale(0.3)', offset: 0 },

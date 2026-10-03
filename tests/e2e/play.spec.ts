@@ -91,10 +91,14 @@ test.describe('play screen', () => {
 
     const receipt = page.getByRole('dialog', { name: 'Day Summary' });
     await expect(receipt).toBeVisible();
-    const showAll = receipt.getByRole('button', { name: 'Show all' });
-    if (await showAll.isVisible()) await showAll.click();
-    await expect(receipt.getByText('Customers served')).toBeVisible();
-    await expect(receipt.getByText('Tomorrow (Tue)')).toBeVisible();
+    // "Show all" skips the printing animation; it unmounts once the receipt has printed, so the
+    // click is best-effort and the assertions below wait for the printed lines either way.
+    await receipt
+      .getByRole('button', { name: 'Show all' })
+      .click({ timeout: 2_000 })
+      .catch(() => undefined);
+    await expect(receipt.getByText('Customers served')).toBeVisible({ timeout: 20_000 });
+    await expect(receipt.getByText('Tomorrow (Tue)')).toBeVisible({ timeout: 20_000 });
 
     // Tuck the receipt away for night tasks; the HUD keeps a Next Day key.
     await receipt.getByRole('button', { name: 'Night tasks first' }).click();

@@ -100,6 +100,8 @@ function PlayScreen() {
   const shopName = useGame((game) => game.meta.shopName, '');
   const sheet = useUiStore((ui) => ui.sheet);
   const fixtureUid = useUiStore((ui) => ui.fixtureUid);
+  // Full-screen overlays hide the shop: let the GPU rest under them.
+  const covered = useUiStore((ui) => ui.summaryOpen || ui.stage !== null);
   const qualitySetting = useSettingsStore((store) => store.settings.quality);
   const quality = resolveQuality(qualitySetting, browserHints());
   const rootRef = useRef<HTMLDivElement>(null);
@@ -125,6 +127,7 @@ function PlayScreen() {
             quality={quality}
             insets={insets}
             shopName={shopName}
+            paused={covered}
             anchored={
               fixtureUid
                 ? {
