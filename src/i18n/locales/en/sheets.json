@@ -1,1 +1,311 @@
-{}
+{
+  "common": {
+    "close": "Close",
+    "back": "Back",
+    "done": "Done"
+  },
+  "storage": {
+    "label": "Closet",
+    "meter": "{{used}} / {{capacity}} SU",
+    "aria": "Closet storage: {{used}} of {{capacity}} units used, {{incoming}} more on the way"
+  },
+  "price": {
+    "lower": "Lower the price of {{name}}",
+    "raise": "Raise the price of {{name}}",
+    "edit": "{{name}}: {{price}}. Click to type a price",
+    "type": "Type a price for {{name}}",
+    "meterAria": "Your price is {{pct}}% of market"
+  },
+  "reaction": {
+    "steal": "What a steal!",
+    "fair": "Fair price.",
+    "pricey": "Hmm, pricey…",
+    "ripoff": "Rip-off!"
+  },
+  "zone": {
+    "steal": "Steal",
+    "fair": "Fair",
+    "pricey": "Pricey",
+    "ripoff": "Rip-off"
+  },
+  "finish": {
+    "normal": "Standard",
+    "reverseHolo": "Reverse Holo",
+    "holo": "Holo",
+    "fullArtTextured": "Full Art",
+    "gold": "Gold",
+    "rainbow": "Rainbow",
+    "cosmos": "Cosmos",
+    "etched": "Etched",
+    "crystal": "Crystal"
+  },
+  "fixture": {
+    "shelf_one": "Wall shelf",
+    "shelf_other": "Shelf {{n}}",
+    "case_one": "Display case",
+    "case_other": "Display case {{n}}",
+    "register_one": "Register",
+    "register_other": "Register {{n}}",
+    "other_one": "Fixture",
+    "other_other": "Fixture {{n}}"
+  },
+  "inventory": {
+    "title": "Backroom",
+    "tabsLabel": "Backroom sections",
+    "tabs": {
+      "sealed": "Sealed",
+      "singles": "Singles"
+    },
+    "sealed": {
+      "emptyTitle": "The backroom is bare",
+      "emptyBody": "Order stock in the Crate app. Budget Box Co. delivers tomorrow at dawn.",
+      "restockReady_one": "{{count}} unit is ready to go out front",
+      "restockReady_other": "{{count}} units are ready to go out front",
+      "restockDone": "Every stocked slot is topped up",
+      "restockAll": "Restock All",
+      "inBack": "in back",
+      "onShelf": "on shelf",
+      "incoming": "arriving",
+      "avgCost": "Avg cost {{price}}",
+      "noCost": "Nothing in hand yet",
+      "msrp": "MSRP {{price}}",
+      "rip": "Rip one",
+      "ripAll": "Rip all {{count}}",
+      "break": "Break box",
+      "stock": "Stock a shelf"
+    },
+    "picker": {
+      "title": "Put it on…",
+      "none": "No free shelf slot fits this. Clear a slot in the shop first.",
+      "slot": "{{fixture}} · slot {{slot}}",
+      "replaces": "replaces {{name}} (sold out)",
+      "topUp": "{{qty}}/{{capacity}} · top up",
+      "empty": "empty",
+      "show": "Show me the shelf"
+    },
+    "break": {
+      "title": "Break open {{name}}?",
+      "lead": "Every box gives you three choices:",
+      "rip": "Rip it: open all {{count}} packs for cards and XP.",
+      "keepSealed": "Keep it sealed: a sealed box holds its value, and collectors pay for that.",
+      "loose": "Break it: {{count}} loose packs go to your closet, ready to sell one by one from the shelf.",
+      "perPack": "Your cost per pack: {{cost}} · a pack sells for {{msrp}}",
+      "space": "Needs {{needed}} more SU of closet space · {{free}} SU free",
+      "noSpace": "Not enough closet space: needs {{needed}} more SU, only {{free}} free.",
+      "keep": "Keep it sealed",
+      "confirm": "Break into {{count}} packs",
+      "done": "Box broken: {{count}} loose packs in the closet!",
+      "doneBody": "Put them on a shelf, or rip a few yourself."
+    }
+  },
+  "singles": {
+    "search": "Search by name or number",
+    "sortLabel": "Sort singles",
+    "sort": {
+      "value": "Value",
+      "number": "Number",
+      "rarity": "Rarity"
+    },
+    "filters": "Filters",
+    "binderOut": "Not in binder",
+    "binderIn": "In binder",
+    "totals_one": "{{count}} card · {{stacks}} stacks · worth {{value}}",
+    "totals_other": "{{count}} cards · {{stacks}} stacks · worth {{value}}",
+    "showing_one": "showing {{count}}",
+    "showing_other": "showing {{count}}",
+    "empty": "Every legend starts with a single card. Rip a pack!",
+    "noMatch": "No cards match those filters.",
+    "gridLabel": "Your singles",
+    "cellLabel_one": "{{name}}, {{rarity}}, {{count}} copy, {{price}} each",
+    "cellLabel_other": "{{name}}, {{rarity}}, {{count}} copies, {{price}} each",
+    "new": "NEW!",
+    "misprint": "MISPRINT",
+    "detailCount_one": "You have {{count}} copy.",
+    "detailCount_other": "You have {{count}} copies.",
+    "detailTotal": "Worth {{value}} together",
+    "addBinder": "Add to binder",
+    "swapBinder": "Swap into binder",
+    "swapHint": "The copy in your binder goes back to your singles.",
+    "toBinder": "{{name}} is in your binder!",
+    "toCaseAction": "Put in display case",
+    "caseFull": "Display case is full",
+    "caseLocked": "Display case opens at Lv {{level}}",
+    "toCase": "{{name}} is in the display case!",
+    "toCaseBody": "It's tagged at market value. Fine-tune it on the Price Board."
+  },
+  "prices": {
+    "title": "Price Board",
+    "subtitle": "Prices are per item. Customers compare them with market value.",
+    "columns": {
+      "item": "Item",
+      "price": "Your price",
+      "market": "Market",
+      "cost": "Avg cost",
+      "margin": "Margin",
+      "stock": "Stock"
+    },
+    "market": "Market {{price}}",
+    "cost": "Cost {{price}}",
+    "noCost": "No cost yet",
+    "margin": "{{pct}}%",
+    "marginAria": "Margin {{pct}} percent",
+    "stock": {
+      "ok": "{{count}} in stock",
+      "low": "Running low: {{count}} left",
+      "shelfEmpty": "Not on a shelf!",
+      "out": "Sold out",
+      "outIncoming": "Sold out · more on the way",
+      "none": "Not stocked"
+    },
+    "helpers": {
+      "title": "Quick prices",
+      "msrp": "MSRP",
+      "market": "Match market",
+      "marketPlus": "Market +{{pct}}%",
+      "round": "Round .99",
+      "undo": "Undo",
+      "pctLess": "Lower the markup",
+      "pctMore": "Raise the markup",
+      "scopeLabel": "Apply quick prices to",
+      "row": "This item",
+      "all": "All items"
+    },
+    "why": "Customers judge {{name}} against its market value of {{market}}:",
+    "pick": "Tap an item to try prices on it.",
+    "undone": "Price change undone",
+    "nothingToUndo": "Nothing to undo",
+    "case": {
+      "title": "Display case tags",
+      "tracks": "follows market",
+      "tagged": "your tag",
+      "empty": "No singles in the case yet. Put some in from the Backroom's Singles tab.",
+      "locked": "The display case opens at Lv {{level}}."
+    }
+  },
+  "crate": {
+    "title": "Crate",
+    "tagline": "Wholesale, delivered",
+    "cart_one": "{{count}} item",
+    "cart_other": "{{count}} items",
+    "cartAria": "Cart: {{count}} items, {{price}}",
+    "suppliersLabel": "Suppliers",
+    "budgetTagline": "Cash & carry · small minimums · higher prices",
+    "deliveryTomorrow": "Arrives tomorrow at dawn ({{day}})",
+    "deliveryDays": "Arrives in {{count}} days ({{day}})",
+    "each": "{{price}} ea",
+    "listPrice": "was {{price}}",
+    "msrp": "MSRP {{price}}",
+    "margin": "+{{pct}}% at MSRP",
+    "min": "min {{count}}",
+    "units": "{{count}} SU",
+    "qty": "Quantity of {{name}}",
+    "less": "Fewer {{name}}",
+    "more": "More {{name}}",
+    "lineTotal": "= {{price}}",
+    "total": "Total",
+    "cashAfter": "Cash after: {{price}}",
+    "spaceAfter": "Closet after: {{count}} SU free",
+    "problem": {
+      "empty": "Your cart is empty. Tap + to add stock.",
+      "belowMinimum": "{{name}}: minimum order is {{min}}.",
+      "cash": "You're {{price}} short. Sell something first!",
+      "storage": "Too big for the closet by {{count}} SU."
+    },
+    "place": "Place order · arrives {{day}}",
+    "placed": "Order sent! It arrives {{day}} at dawn.",
+    "sent": "SENT!",
+    "clear": "Clear cart",
+    "pending": {
+      "title": "On the way",
+      "none": "Nothing on the way. Orders placed today arrive tomorrow at dawn.",
+      "tomorrow": "Tomorrow at dawn",
+      "days": "In {{count}} days ({{day}})",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items"
+    },
+    "locked": "Lv {{level}}",
+    "lockedStars": "{{count}}★",
+    "comingSoon": "Opening soon",
+    "lockedAria": "{{name}}: locked until level {{level}}",
+    "teasers": {
+      "harbor": {
+        "name": "Harbor Hobby",
+        "blurb": "Booster boxes, bundles and volume discounts"
+      },
+      "kaze": {
+        "name": "Kaze Manga",
+        "blurb": "Manga volumes and box sets"
+      },
+      "foilmarket": {
+        "name": "FoilMarket",
+        "blurb": "Buy singles and slabs online"
+      },
+      "starforge": {
+        "name": "Starforge",
+        "blurb": "Pre-orders and 1st Edition allocations"
+      }
+    }
+  },
+  "binder": {
+    "title": "Binder",
+    "completion": "{{filled}}/{{total}}",
+    "completionAria": "{{filled}} of {{total}} cards in your binder",
+    "available_one": "{{count}} pocket you can fill from your singles",
+    "available_other": "{{count}} pockets you can fill from your singles",
+    "pages": "Pages {{from}}–{{to}} of {{count}}",
+    "page": "Page {{from}} of {{count}}",
+    "prev": "Previous page",
+    "next": "Next page",
+    "unknown": "???",
+    "pocketFilled": "{{name}}, number {{number}}, in your binder",
+    "pocketAvailable": "{{name}}, number {{number}}: a copy is waiting in your singles",
+    "pocketMissing": "Number {{number}}: missing",
+    "pocketSeen": "{{name}}, number {{number}}: missing",
+    "empty": "Every legend starts with a single card.",
+    "detail": {
+      "inPocket": "In your binder",
+      "remove": "Take it out",
+      "removeHint": "It goes back to your singles.",
+      "choose": "Choose a copy from your singles:",
+      "put": "Put this copy in",
+      "none": "You don't have this card yet. Rip some packs!",
+      "removed": "{{name}} went back to your singles."
+    }
+  },
+  "popover": {
+    "restock": "Restock",
+    "restockAria": "Restock this fixture: {{count}} units",
+    "restockHint": "Tip: Restock All in the Backroom tops up every shelf at once.",
+    "slot": "Slot {{n}}",
+    "empty": "Empty",
+    "soldOut": "Sold out!",
+    "qty": "{{qty}}/{{capacity}}",
+    "slotAria": "Slot {{n}}: {{content}}",
+    "actions": {
+      "fill": "Fill",
+      "swap": "Swap",
+      "price": "Price",
+      "clear": "Clear",
+      "pick": "Pick a card",
+      "stock": "Stock it"
+    },
+    "pickProduct": "Put on this slot:",
+    "noProducts": "Nothing in the closet fits here. Order more in the Crate app.",
+    "inBack": "{{count}} in back",
+    "slotOnly": "Only this slot",
+    "everywhere": "Every {{name}} in the shop",
+    "search": "Search your singles",
+    "noSingles": "No singles to show.",
+    "caseLocked": "The display case opens at Lv {{level}}. Keep selling!",
+    "decor": "Just for looks. Customers like a cozy shop!",
+    "register": {
+      "queue_one": "{{count}} customer in line",
+      "queue_other": "{{count}} customers in line",
+      "none": "Nobody in line right now.",
+      "hint": "Ring up the customer at the counter to take their money.",
+      "ringUp": "Ring up",
+      "closed": "The shop is closed. Flip the sign to open!"
+    },
+    "shopPrice": "(shop price {{price}})"
+  }
+}
