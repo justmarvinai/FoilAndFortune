@@ -1,0 +1,1798 @@
+/*
+ * The pack-opening stage (docs/05 §5.7, docs/04 §9). Our own effects: a vignette stage with a
+ * spotlight, the tearable wrapper, rarity edge glows, beams, bursts and stamps. Only transforms
+ * and opacity animate; per-frame values arrive as CSS variables written from refs.
+ *
+ * --card-w: the spotlight card's width. Everything else scales from it.
+ */
+
+.ffo-stage {
+  --chrome: 196px;
+  --card-w: clamp(150px, min(23vw, calc((100dvh - var(--chrome)) * 0.714)), 320px);
+  --stack-w: calc(var(--card-w) * 0.62);
+  --pile-w: calc(var(--card-w) * 0.5);
+  --pack-h: clamp(210px, calc(100dvh - var(--chrome) - 40px), 470px);
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  background: var(--color-night);
+  color: var(--color-paper);
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-height: 520px) {
+  .ffo-stage {
+    --chrome: 170px;
+  }
+}
+
+/* ---------- Backdrop: vignette, spotlight, floor pool ----------
+ * Static gradients only (no blur filters, no blend modes): it never repaints while cards move.
+ */
+
+.ffo-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Its own layer, rasterized once: nothing above it ever re-paints these gradients. */
+  will-change: transform;
+  background:
+    radial-gradient(ellipse 46% 52% at 50% 46%, rgb(89 100 214 / 0.32), transparent 72%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, transparent 45%, rgb(3 4 18 / 0.85) 100%);
+}
+
+/* The spotlight: a soft cone of light from above. */
+.ffo-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 30% 95% at 50% -6%,
+    rgb(255 246 229 / 0.2),
+    rgb(255 246 229 / 0.07) 55%,
+    transparent 78%
+  );
+}
+
+.ffo-backdrop::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: min(80vw, 900px);
+  height: 22%;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 246 229 / 0.14), transparent);
+}
+
+.ffo-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+}
+
+/* Slow-mo beat: the room holds its breath (an overlay fade, not a filter). */
+.ffo-dimmer {
+  position: absolute;
+  inset: 0;
+  background: rgb(3 4 18 / 0.62);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.ffo-stage[data-dim="true"] .ffo-dimmer {
+  opacity: 1;
+}
+
+.ffo-camera {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ffo-fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ffo-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 45%, var(--color-paper), rgb(255 246 229 / 0.85) 60%);
+}
+
+/* ---------- Chrome ---------- */
+
+.ffo-top,
+.ffo-bottom {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+}
+
+.ffo-top {
+  justify-content: space-between;
+}
+
+.ffo-bottom {
+  justify-content: space-between;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+@media (max-height: 520px) {
+  .ffo-top,
+  .ffo-bottom {
+    padding: 6px 12px;
+  }
+}
+
+.ffo-title {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.ffo-title__set {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.1vw, 24px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-sun);
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.5);
+}
+
+.ffo-title__kind {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0.8;
+}
+
+.ffo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  padding: 0 14px;
+  background: rgb(255 246 229 / 0.1);
+  color: var(--color-paper);
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 rgb(0 0 0 / 0.55);
+  transition:
+    transform 0.08s,
+    background-color 0.15s,
+    box-shadow 0.08s;
+}
+
+.ffo-chip:hover {
+  background: rgb(255 246 229 / 0.18);
+}
+
+.ffo-chip:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.ffo-chip:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.ffo-chip--sun {
+  background: var(--color-sun);
+  color: var(--color-ink);
+}
+
+.ffo-chip--sun:hover {
+  background: var(--color-sun);
+  filter: brightness(1.06);
+}
+
+.ffo-chip--icon {
+  width: 42px;
+  padding: 0;
+  justify-content: center;
+}
+
+.ffo-chip svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.ffo-toggle[aria-pressed="true"] {
+  background: var(--color-teal);
+  color: var(--color-paper);
+}
+
+@media (max-height: 520px), (max-width: 760px) {
+  .ffo-chip {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .ffo-chip--icon {
+    width: 34px;
+    padding: 0;
+  }
+  .ffo-toggle__label {
+    display: none;
+  }
+}
+
+.ffo-value {
+  contain: layout paint;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.ffo-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.ffo-value__amount {
+  display: inline-block;
+  transform-origin: 0 60%;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-sun);
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.5);
+}
+
+.ffo-bottom__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ffo-pips {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ffo-pips i {
+  width: 9px;
+  height: 18px;
+  border: 2px solid var(--color-ink);
+  border-radius: 3px;
+  background: rgb(255 246 229 / 0.15);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.ffo-pips i[data-on="true"] {
+  background: var(--color-paper);
+  box-shadow: 0 0 6px rgb(255 246 229 / 0.6);
+}
+
+.ffo-pips i[data-on="true"][data-hint="true"] {
+  background: var(--rc);
+  box-shadow: 0 0 8px var(--rc);
+}
+
+.ffo-pips__count {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+/* ---------- Table ---------- */
+
+.ffo-main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+}
+
+.ffo-view {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.ffo-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  z-index: 4;
+  translate: -50% 0;
+  max-width: calc(100vw - 32px);
+  border-radius: 999px;
+  padding: 6px 16px;
+  background: rgb(18 22 52 / 0.75);
+  font-weight: 800;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  animation: ffo-hint-in 0.4s ease-out both;
+}
+
+@media (max-height: 520px) {
+  .ffo-hint {
+    bottom: 2px;
+    padding: 3px 12px;
+    font-size: 13px;
+  }
+}
+
+@keyframes ffo-hint-in {
+  from {
+    opacity: 0;
+    translate: -50% 8px;
+  }
+}
+
+/* ---------- The sealed wrapper and the tear ---------- */
+
+.ffo-pack {
+  --tear: 0;
+  position: relative;
+  height: var(--pack-h);
+  aspect-ratio: 100 / 160;
+  animation: ffo-pack-in 0.55s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes ffo-pack-in {
+  from {
+    transform: translateX(40vw) rotate(14deg);
+    opacity: 0;
+  }
+}
+
+/* Floor shadow (a gradient, not a filter): shrinks as the product floats up. */
+.ffo-pack::after,
+.ffo-sealed::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -10%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.6), transparent);
+  animation: ffo-float-shadow 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ffo-pack[data-state]::after {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@keyframes ffo-float-shadow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+}
+
+.ffo-pack__float {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  animation: ffo-float 3.6s ease-in-out infinite;
+}
+
+@keyframes ffo-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.4deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1.4deg);
+  }
+}
+
+.ffo-pack__aura {
+  position: absolute;
+  inset: -16%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgb(183 139 255 / 0.34),
+    rgb(183 139 255 / 0.12) 60%,
+    transparent
+  );
+  animation: ffo-aura 2.8s ease-in-out infinite alternate;
+}
+
+/* A god pack glows gold before it's even torn, with slowly turning rays (docs/04 §9). */
+.ffo-pack[data-god="true"] .ffo-pack__aura {
+  inset: -32%;
+  background: radial-gradient(
+    closest-side,
+    rgb(255 201 60 / 0.8),
+    rgb(255 201 60 / 0.3) 55%,
+    transparent
+  );
+  animation-duration: 1.2s;
+}
+
+.ffo-pack[data-god="true"] .ffo-pack__aura::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgb(255 201 60 / 0.4) 0deg 6deg, transparent 6deg 22deg);
+  mask: radial-gradient(closest-side, black 25%, transparent);
+  animation: ffo-spin 16s linear infinite;
+}
+
+@keyframes ffo-aura {
+  from {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.ffo-pack__hit {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+}
+
+.ffo-pack__hit:active {
+  cursor: grabbing;
+}
+
+.ffo-pack__hit:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 10px;
+  border-radius: 12px;
+}
+
+/* The tear zone reaches past the wrapper so a drag can start beside the crimp. */
+.ffo-pack__hit::before {
+  content: "";
+  position: absolute;
+  left: -24%;
+  right: -24%;
+  top: -10%;
+  height: 34%;
+}
+
+.ffo-pack__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ffo-pack__layer > span {
+  width: 100%;
+}
+
+.ffo-pack__top {
+  transform-origin: var(--tear-hinge, 100%) 100%;
+  transform: translateY(calc(var(--tear) * -7px))
+    rotate(calc(var(--tear) * var(--tear-dir, 1) * -7deg));
+}
+
+/* Foil sheen: a bright band sweeping across the wrapper (transform only). */
+.ffo-pack__sheen {
+  position: absolute;
+  inset: 3% 4%;
+  overflow: hidden;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.ffo-pack__sheen::before {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(
+    110deg,
+    transparent 40%,
+    rgb(255 255 255 / 0.34) 47%,
+    rgb(255 139 209 / 0.16) 50%,
+    rgb(127 246 255 / 0.18) 53%,
+    transparent 60%
+  );
+  animation: ffo-sheen 3.4s ease-in-out infinite;
+}
+
+@keyframes ffo-sheen {
+  0% {
+    transform: translateX(-55%);
+  }
+  60%,
+  100% {
+    transform: translateX(55%);
+  }
+}
+
+/* The rip: light leaking out of the tear as it spreads. */
+.ffo-pack__rip {
+  position: absolute;
+  left: 2%;
+  right: 2%;
+  top: calc(var(--tear-y) * 100% - 2px);
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-paper), var(--color-sun), var(--color-paper));
+  box-shadow:
+    0 0 10px 3px rgb(255 240 200 / 0.9),
+    0 0 28px 10px rgb(255 201 60 / 0.45);
+  transform: scaleX(var(--tear));
+  transform-origin: var(--tear-from, 0%) 50%;
+  opacity: min(1, calc(var(--tear) * 6));
+  pointer-events: none;
+}
+
+.ffo-pack__guide {
+  position: absolute;
+  left: -9%;
+  right: -9%;
+  top: calc(var(--tear-y) * 100% - 1px);
+  height: 0;
+  border-top: 3px dashed rgb(255 246 229 / 0.9);
+  opacity: calc(1 - var(--tear) * 3);
+  pointer-events: none;
+  container-type: inline-size;
+}
+
+/* The guide dot slides along the tear line (transform only). */
+.ffo-pack__guide::after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  border: 3px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-sun);
+  box-shadow: 0 0 14px 4px rgb(255 201 60 / 0.8);
+  animation: ffo-guide-dot 1.6s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+}
+
+@keyframes ffo-guide-dot {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100cqw - 15px));
+    opacity: 0;
+  }
+}
+
+.ffo-pack[data-state] .ffo-pack__float {
+  animation-play-state: paused;
+}
+
+/* ---------- Sealed outer products (blister, deck box, booster box) ---------- */
+
+.ffo-sealed {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  animation: ffo-pack-in 0.55s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.ffo-sealed:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 12px;
+  border-radius: 16px;
+}
+
+.ffo-sealed__art {
+  will-change: transform;
+  animation: ffo-float 3.6s ease-in-out infinite;
+}
+
+/* ---------- Cards on the table ---------- */
+
+.ffo-table {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--card-w) minmax(0, 1fr);
+  align-items: center;
+  width: min(100%, 1200px);
+  height: 100%;
+  column-gap: clamp(16px, 4vw, 64px);
+  padding: 0 16px;
+}
+
+.ffo-pile,
+.ffo-stack {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ffo-pile {
+  justify-content: flex-end;
+}
+
+.ffo-stack {
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.ffo-pile__fan {
+  position: relative;
+  width: var(--pile-w);
+  aspect-ratio: 5 / 7;
+}
+
+.ffo-pile__card {
+  position: absolute;
+  inset: 0;
+  transform: translateX(calc(var(--k) * -16%)) rotate(calc(var(--k) * -4deg + 2deg));
+  transform-origin: 50% 90%;
+}
+
+.ffo-pile__card .gk-card {
+  animation: none;
+}
+
+.ffo-stack__deck {
+  position: relative;
+  width: var(--stack-w);
+  aspect-ratio: 5 / 7;
+  animation: ffo-rise 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+}
+
+@keyframes ffo-rise {
+  from {
+    transform: translateY(45%) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.ffo-back {
+  --w: var(--stack-w);
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--w) * 0.046);
+  transform: translate(calc(var(--k) * 3px), calc(var(--k) * -3px));
+}
+
+.ffo-back[data-glow="true"] {
+  box-shadow:
+    0 0 0 calc(var(--w) * 0.014) var(--rc),
+    0 0 calc(var(--w) * 0.1) calc(var(--w) * 0.025) var(--rc);
+}
+
+/* The pulse: a wider halo whose opacity breathes (composited, no filters). */
+.ffo-back[data-glow="true"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 calc(var(--w) * 0.34) calc(var(--w) * 0.08) var(--rc);
+  animation: ffo-pulse 1.1s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes ffo-pulse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Bigger hits add a foil rim: a static ring whose opacity flickers. */
+.ffo-back[data-glow="true"][data-rim="true"]::after,
+.ffo-spot[data-rim="true"]:not([data-landed="true"]) .ffo-face--back::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--w) * -0.02);
+  border-radius: calc(var(--w) * 0.06);
+  padding: calc(var(--w) * 0.018);
+  background: conic-gradient(var(--rc), var(--color-paper), var(--rc), var(--color-sun), var(--rc));
+  mask:
+    linear-gradient(black 0 0) content-box,
+    linear-gradient(black 0 0);
+  mask-composite: exclude;
+  animation: ffo-pulse 0.6s ease-in-out infinite alternate;
+}
+
+.ffo-back[data-glow="true"][data-rim="true"][data-tier="mythic"]::after,
+.ffo-spot[data-rim="true"][data-tier="mythic"]:not([data-landed="true"]) .ffo-face--back::after {
+  background: conic-gradient(
+    var(--color-rarity-mythic),
+    var(--color-sun),
+    var(--color-sky),
+    var(--color-grape),
+    var(--color-rarity-illustration),
+    var(--color-rarity-mythic)
+  );
+  animation-duration: 0.4s;
+}
+
+/* ---------- The spotlight card ---------- */
+
+.ffo-center {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.ffo-spot {
+  --w: var(--card-w);
+  position: relative;
+  width: var(--card-w);
+  aspect-ratio: 5 / 7;
+  perspective: 1100px;
+  isolation: isolate;
+}
+
+.ffo-spot__card {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ffo-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.ffo-face--back {
+  transform: rotateY(180deg);
+  border-radius: calc(var(--w) * 0.046);
+}
+
+.ffo-spot[data-glow="true"]:not([data-landed="true"]) .ffo-face--back {
+  box-shadow:
+    0 0 0 calc(var(--w) * 0.014) var(--rc),
+    0 0 calc(var(--w) * 0.12) calc(var(--w) * 0.03) var(--rc);
+}
+
+.ffo-spot__fx {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ffo-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--w) * 2);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--rc) 55%, transparent),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.ffo-spot[data-landed="true"]:not([data-tier="none"]) .ffo-halo {
+  opacity: 0.85;
+}
+
+.ffo-beams {
+  position: absolute;
+  will-change: transform;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.ffo-beams i {
+  position: absolute;
+  left: calc(var(--w) * -0.22);
+  bottom: 0;
+  width: calc(var(--w) * 0.44);
+  height: calc(var(--w) * 2.3);
+  transform-origin: 50% 100%;
+  transform: rotate(calc(var(--i) * 360deg / var(--n)));
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--rc) 85%, white),
+    color-mix(in srgb, var(--rc) 35%, transparent) 30%,
+    transparent 65%
+  );
+  clip-path: polygon(46% 100%, 54% 100%, 100% 0, 0 0);
+  opacity: 0.42;
+}
+
+.ffo-spot[data-landed="true"] .ffo-beams {
+  animation:
+    ffo-fade-in 0.45s ease-out forwards,
+    ffo-spin 16s linear infinite;
+}
+
+@keyframes ffo-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes ffo-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.ffo-burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--w) * 2.8);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(255 255 255 / 0.95) 0 7%,
+    color-mix(in srgb, var(--rc) 85%, transparent) 20%,
+    transparent 62%
+  );
+  opacity: 0;
+  scale: 0.2;
+}
+
+.ffo-spot[data-tier="glint"] .ffo-burst {
+  width: calc(var(--w) * 1.6);
+}
+
+.ffo-spot[data-landed="true"]:not([data-tier="none"]) .ffo-burst {
+  animation: ffo-burst 0.85s cubic-bezier(0.15, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes ffo-burst {
+  0% {
+    opacity: 1;
+    scale: 0.25;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.35;
+  }
+}
+
+/* Landing extras: NEW!, price tag, rarity ribbon. */
+.ffo-spot__new {
+  position: absolute;
+  left: -7%;
+  top: -3%;
+  z-index: 2;
+  opacity: 0;
+}
+
+.ffo-spot[data-landed="true"] .ffo-spot__new {
+  animation: ffo-pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) 0.15s both;
+}
+
+@keyframes ffo-pop {
+  from {
+    opacity: 0;
+    scale: 2.2;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.ffo-tag {
+  position: absolute;
+  right: -16%;
+  top: 14%;
+  z-index: 2;
+  min-width: 64px;
+  border: 3px solid var(--color-ink);
+  border-radius: 6px 14px 14px 6px;
+  padding: 2px 10px 2px 18px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: clamp(20px, calc(var(--w) * 0.11), 30px);
+  line-height: 1.1;
+  box-shadow: 0 3px 0 var(--color-ink);
+  transform-origin: 0 50%;
+  opacity: 0;
+}
+
+.ffo-tag::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  translate: 0 -50%;
+  border: 2px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-night);
+}
+
+.ffo-spot[data-landed="true"] .ffo-tag {
+  animation: ffo-tag 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 0.1s both;
+}
+
+@keyframes ffo-tag {
+  0% {
+    opacity: 0;
+    rotate: -50deg;
+    translate: -30% 0;
+  }
+  60% {
+    opacity: 1;
+    rotate: 10deg;
+  }
+  100% {
+    opacity: 1;
+    rotate: 4deg;
+    translate: 0 0;
+  }
+}
+
+.ffo-ribbon {
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 16px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  translate: -50% 0;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  padding: 3px 14px 3px 10px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(13px, calc(var(--w) * 0.06), 18px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 var(--color-ink);
+  opacity: 0;
+}
+
+.ffo-spot[data-hit="true"] .ffo-ribbon {
+  background: var(--rc);
+  box-shadow:
+    0 3px 0 var(--color-ink),
+    0 0 18px color-mix(in srgb, var(--rc) 70%, transparent);
+}
+
+.ffo-spot[data-landed="true"] .ffo-ribbon {
+  animation: ffo-ribbon 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes ffo-ribbon {
+  from {
+    opacity: 0;
+    scale: 0.4 1;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.ffo-misprint {
+  position: absolute;
+  right: -6%;
+  bottom: 18%;
+  z-index: 2;
+  rotate: 8deg;
+}
+
+/* ---------- Batch note (Skip commons) ---------- */
+
+.ffo-batch-note {
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  translate: -50% 0;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  padding: 4px 14px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  white-space: nowrap;
+  box-shadow: 0 3px 0 var(--color-ink);
+  animation: ffo-batch 1.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes ffo-batch {
+  0% {
+    opacity: 0;
+    translate: -50% 12px;
+  }
+  15%,
+  70% {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  100% {
+    opacity: 0;
+    translate: -50% -10px;
+  }
+}
+
+/* ---------- Deck list ---------- */
+
+.ffo-deck {
+  --mini-w: clamp(54px, calc(var(--card-w) * 0.34), 104px);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 10px 22px;
+  width: min(100%, 1180px);
+  max-height: 100%;
+  position: relative;
+  overflow: auto;
+  padding: 8px 16px 40px;
+}
+
+.ffo-deck::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 70% at 50% 50%,
+    rgb(8 10 30 / 0.78),
+    rgb(8 10 30 / 0.55) 60%,
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.ffo-view[data-pending="true"] .ffo-deck::after {
+  opacity: 1;
+}
+
+.ffo-deck__section h3 {
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-sun);
+}
+
+.ffo-deck__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ffo-deck__group {
+  position: relative;
+  width: var(--mini-w);
+  animation: ffo-deal 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) var(--d, 0ms) both;
+}
+
+.ffo-deck__group > .gk-card {
+  animation: none;
+}
+
+@keyframes ffo-deal {
+  from {
+    opacity: 0;
+    transform: translate(var(--fx, 0px), 40vh) rotate(-24deg) scale(0.6);
+  }
+}
+
+.ffo-count {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  z-index: 1;
+  border: 2px solid var(--color-ink);
+  border-radius: 999px;
+  padding: 0 7px;
+  background: var(--color-sun);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  box-shadow: 0 2px 0 var(--color-ink);
+}
+
+.ffo-finale {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.ffo-finale > * {
+  pointer-events: auto;
+}
+
+/* ---------- Box choice ---------- */
+
+.ffo-choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 5vw, 72px);
+  padding: 0 16px;
+}
+
+.ffo-choice__options {
+  display: grid;
+  gap: 16px;
+}
+
+.ffo-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 4px 14px;
+  width: min(340px, 42vw);
+  border: 3px solid var(--color-ink);
+  border-radius: 18px;
+  padding: 14px 18px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  text-align: left;
+  box-shadow: 0 6px 0 var(--color-ink);
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+
+.ffo-option:hover {
+  transform: translateY(-2px) rotate(-0.6deg);
+}
+
+.ffo-option:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 var(--color-ink);
+}
+
+.ffo-option--quick {
+  background: var(--color-sun);
+}
+
+.ffo-option__icon {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 3px solid var(--color-ink);
+  border-radius: 12px;
+  background: var(--color-night);
+  color: var(--color-sun);
+}
+
+.ffo-option__title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.ffo-option__hint {
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+@media (max-height: 520px) {
+  .ffo-option {
+    padding: 8px 14px;
+  }
+  .ffo-option__title {
+    font-size: 19px;
+  }
+  .ffo-option__icon {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ---------- Quick Rip reel ---------- */
+
+.ffo-reel {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  width: 100%;
+  height: 100%;
+}
+
+.ffo-reel__stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  align-items: center;
+  min-height: 0;
+}
+
+.ffo-reel__pack {
+  position: relative;
+  will-change: transform;
+  height: min(calc(var(--pack-h) * 0.62), 100%);
+  aspect-ratio: 100 / 160;
+}
+
+.ffo-reel__meter {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: min(340px, 60vw);
+  padding-bottom: 4px;
+}
+
+.ffo-reel__counter {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+}
+
+.ffo-reel__bar {
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  border: 3px solid var(--color-ink);
+  border-radius: 999px;
+  background: rgb(255 246 229 / 0.15);
+}
+
+.ffo-reel__bar > div {
+  width: 0;
+  height: 100%;
+  background: var(--color-sun);
+}
+
+.ffo-reel__hit {
+  --card-w: clamp(120px, calc((100dvh - var(--chrome) - 120px) * 0.714), 280px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  translate: -50% -50%;
+}
+
+.ffo-rail {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  min-height: calc(var(--card-w) * 0.36 * 1.4 + 8px);
+  padding: 4px 16px 6px;
+  overflow-x: auto;
+}
+
+.ffo-rail__card {
+  position: relative;
+  width: calc(var(--card-w) * 0.36);
+  flex: none;
+}
+
+.ffo-rail__card > .gk-card {
+  animation: none;
+}
+
+/* ---------- Summary ---------- */
+
+.ffo-summary {
+  display: grid;
+  grid-template-columns: minmax(250px, 330px) minmax(0, 1fr);
+  gap: clamp(14px, 3vw, 36px);
+  width: min(100%, 1240px);
+  height: 100%;
+  padding: 4px 18px 14px;
+  place-items: stretch;
+}
+
+@media (max-height: 520px) {
+  .ffo-summary {
+    grid-template-columns: minmax(220px, 34%) minmax(0, 1fr);
+    padding: 0 12px 8px;
+  }
+}
+
+.ffo-slip {
+  position: relative;
+  align-self: start;
+  max-height: 100%;
+  overflow: auto;
+  border: 3px solid var(--color-ink);
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+  padding: 16px 18px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgb(30 35 64 / 0.06) 27px 28px),
+    var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+  animation: ffo-slip-in 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+  rotate: -1deg;
+}
+
+@keyframes ffo-slip-in {
+  from {
+    opacity: 0;
+    translate: 0 40px;
+    rotate: -6deg;
+  }
+}
+
+@media (max-height: 520px) {
+  .ffo-slip {
+    padding: 10px 12px;
+  }
+}
+
+.ffo-slip h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.ffo-slip__meta {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.ffo-slip__lines {
+  display: grid;
+  gap: 2px;
+  margin: 10px 0 6px;
+  font-weight: 800;
+}
+
+.ffo-slip__line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ffo-slip__line::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  border-bottom: 2px dotted rgb(30 35 64 / 0.35);
+}
+
+.ffo-slip__line > :last-child {
+  order: 2;
+  font-variant-numeric: tabular-nums;
+}
+
+.ffo-slip__line--total {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.ffo-up {
+  color: var(--color-teal);
+}
+
+.ffo-down {
+  color: var(--color-coral);
+}
+
+.ffo-stamp {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  border: 4px solid currentColor;
+  border-radius: 10px;
+  padding: 2px 10px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 2px currentColor;
+  rotate: -12deg;
+  animation: ffo-stamp 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) 0.35s both;
+}
+
+.ffo-stamp[data-verdict="jackpot"] {
+  color: var(--color-grape);
+}
+
+.ffo-stamp[data-verdict="profit"] {
+  color: var(--color-teal);
+}
+
+.ffo-stamp[data-verdict="even"] {
+  color: var(--color-sky);
+}
+
+.ffo-stamp[data-verdict="ouch"] {
+  color: var(--color-coral);
+}
+
+@keyframes ffo-stamp {
+  from {
+    opacity: 0;
+    scale: 2.6;
+    rotate: -24deg;
+  }
+}
+
+.ffo-slip__hits {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.ffo-slip__hits li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.ffo-slip__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ffo-pulls {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 8px;
+}
+
+.ffo-pulls__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ffo-pulls__head h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.ffo-grid {
+  --cell: clamp(78px, calc(var(--card-w) * 0.44), 138px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--cell), 1fr));
+  gap: 18px 14px;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 12px 24px 6px;
+  align-content: start;
+}
+
+.ffo-cell {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  text-align: center;
+  cursor: zoom-in;
+  animation: ffo-cell-in 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) var(--d, 0ms) both;
+  transition: transform 0.12s;
+}
+
+.ffo-cell:hover {
+  transform: translateY(-4px) rotate(-1deg);
+}
+
+.ffo-cell:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
+.ffo-cell > .gk-card,
+.ffo-cell .gk-card {
+  animation: none;
+}
+
+.ffo-cell[data-hit="true"]::before {
+  content: "";
+  position: absolute;
+  inset: -6px -6px 22px;
+  border-radius: 12px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--rc) 60%, transparent),
+    transparent
+  );
+  z-index: -1;
+}
+
+@keyframes ffo-cell-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.85);
+  }
+}
+
+.ffo-cell__new {
+  position: absolute;
+  left: -6px;
+  top: -8px;
+  z-index: 1;
+}
+
+.ffo-cell__value {
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.ffo-best {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: 3px dashed rgb(255 201 60 / 0.6);
+  border-radius: 16px;
+  padding: 10px 14px;
+}
+
+.ffo-best__card {
+  width: calc(var(--card-w) * 0.5);
+  flex: none;
+}
+
+/* ---------- Crown stamp (Mythic, God Pack) ---------- */
+
+.ffo-crown {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.ffo-crown__stamp {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 6px solid var(--color-sun);
+  border-radius: 18px;
+  padding: 6px 26px;
+  background: rgb(18 22 52 / 0.7);
+  color: var(--color-sun);
+  font-family: var(--font-display);
+  font-size: clamp(34px, 7vw, 84px);
+  letter-spacing: 0.08em;
+  text-shadow: 0 4px 0 rgb(0 0 0 / 0.5);
+  box-shadow:
+    0 0 0 4px var(--color-ink),
+    0 0 60px rgb(255 201 60 / 0.6);
+  rotate: -8deg;
+  animation: ffo-crown 2.4s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes ffo-crown {
+  0% {
+    opacity: 0;
+    scale: 3;
+  }
+  14% {
+    opacity: 1;
+    scale: 1;
+  }
+  82% {
+    opacity: 1;
+    scale: 1.04;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.1;
+  }
+}
+
+/* ---------- Dialogs: leave confirm, card inspect ---------- */
+
+.ffo-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(8 10 30 / 0.72);
+  animation: ffo-overlay-in 0.2s ease-out both;
+}
+
+@keyframes ffo-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.ffo-dialog {
+  width: min(420px, 100%);
+  border: 3px solid var(--color-ink);
+  border-radius: var(--radius-panel);
+  padding: 20px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 8px 0 var(--color-ink);
+  animation: ffo-pop 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.ffo-zoom {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 4vw, 48px);
+}
+
+.ffo-zoom__card {
+  width: clamp(170px, calc((100dvh - 80px) * 0.714), 400px);
+  animation: ffo-pop 0.35s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.ffo-zoom__info {
+  display: grid;
+  gap: 8px;
+  max-width: 280px;
+}
+
+.ffo-zoom__name {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1;
+}
+
+/* ---------- Extras ---------- */
+
+.ffo-cell__card {
+  position: relative;
+  display: block;
+}
+
+.ffo-pile__card {
+  transition: transform 0.35s ease;
+}
+
+.ffo-finale__card .ffo-back {
+  --w: var(--card-w);
+}
+
+/* Each wrapper is its own layer, rasterized once: pops and swaps only touch the compositor. */
+.ffo-reel__variant {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.ffo-reel__pack[data-variant="0"] [data-v="0"],
+.ffo-reel__pack[data-variant="1"] [data-v="1"],
+.ffo-reel__pack[data-variant="2"] [data-v="2"],
+.ffo-reel__pack[data-variant="3"] [data-v="3"] {
+  opacity: 1;
+}
+
+.ffo-best {
+  color: inherit;
+  text-align: left;
+  background: radial-gradient(
+    ellipse at 20% 50%,
+    color-mix(in srgb, var(--rc) 30%, transparent),
+    transparent 70%
+  );
+  cursor: zoom-in;
+}
+
+.ffo-best__text {
+  display: grid;
+  gap: 4px;
+}
+
+.ffo-best__rarity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.ffo-zoom__value {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--color-sun);
+}
+
+.ffo-zoom__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+}
+
+/* ---------- Reduced motion: same information, no movement (docs/05 §10) ----------
+ * Every animation and transition jumps to its end state: entrances land, loops (float, sheen,
+ * rims, beams, idle foil) freeze, bursts end invisible. Shake, flash and particles are off in JS.
+ */
+
+/* biome-ignore-start lint/complexity/noImportantStyles: reduced motion must beat every animation rule above */
+.ffo-stage[data-reduced="true"] *,
+.ffo-stage[data-reduced="true"] *::before,
+.ffo-stage[data-reduced="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0ms !important;
+  transition-duration: 0.01ms !important;
+}
+/* biome-ignore-end lint/complexity/noImportantStyles: reduced motion must beat every animation rule above */

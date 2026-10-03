@@ -1,1 +1,133 @@
-{}
+{
+  "close": "Close",
+  "skipToHits": "Skip to hits",
+  "skipToEnd": "Skip to the end",
+  "valueSoFar": "Value so far",
+  "cardsLeft_one": "{{count}} card left",
+  "cardsLeft_other": "{{count}} cards left",
+  "leftCount_one": "{{count}} left",
+  "leftCount_other": "{{count}} left",
+  "packOf": "Pack {{n}} of {{total}}",
+  "promoTitle": "Promo card",
+  "new": "NEW!",
+  "copies": "×{{count}}",
+  "batch_one": "+{{count}} common · {{value}}",
+  "batch_other": "+{{count}} commons & uncommons · {{value}}",
+  "announce": "{{name}}, {{rarity}}, worth {{value}}",
+  "announceNew": "New for your collection! {{name}}, {{rarity}}, worth {{value}}",
+  "tearAria": "Tear open the pack",
+  "peelAria": "Peel open the blister",
+  "dealAria": "Open the deck box",
+  "toggles": {
+    "autoReveal": "Auto-reveal commons",
+    "skipCommons": "Skip commons"
+  },
+  "hint": {
+    "tear": "Drag across the top to rip it open, or just tap",
+    "godPack": "It's… glowing gold?! Rip it open!",
+    "peel": "Tap to peel open the blister",
+    "deal": "Tap to open the deck",
+    "reveal": "Tap or swipe to reveal",
+    "featured": "Something's glowing… tap to flip!",
+    "auto": "Auto-revealing commons…",
+    "nextPack": "Tap for the next pack",
+    "summary": "Tap to see your pulls",
+    "deckHolo": "Your guaranteed holo awaits. Tap to flip!"
+  },
+  "misprint": {
+    "miscut": "Misprint: miscut",
+    "inkError": "Misprint: ink error",
+    "missingFoil": "Misprint: missing foil",
+    "crimped": "Misprint: crimped",
+    "wrongBack": "Misprint: wrong back!"
+  },
+  "stamp": {
+    "mythic": "MYTHIC!",
+    "godPack": "GOD PACK!"
+  },
+  "box": {
+    "inside_one": "{{count}} booster pack inside",
+    "inside_other": "{{count}} booster packs inside",
+    "oneByOne": "Rip one by one",
+    "oneByOneHint": "Savor every single pack",
+    "quickRip": "Quick Rip",
+    "quickRipHint_one": "The whole pack in a flash",
+    "quickRipHint_other": "All {{count}} packs in about 10 seconds",
+    "ripRest": "Quick Rip the rest"
+  },
+  "reel": {
+    "pack": "Pack {{n}} / {{total}}",
+    "hits": "Highlights",
+    "skip": "Skip"
+  },
+  "deck": {
+    "creature": "Creatures · {{count}}",
+    "tactic": "Tactics · {{count}}",
+    "essence": "Essences · {{count}}"
+  },
+  "verdict": {
+    "jackpot": "Jackpot!",
+    "profit": "Profit!",
+    "even": "Break even",
+    "ouch": "Ouch"
+  },
+  "summary": {
+    "tally": "Tally slip",
+    "pulls": "Your pulls",
+    "tapToInspect": "Tap a card to inspect it",
+    "cards_one": "{{count}} card",
+    "cards_other": "{{count}} cards",
+    "newCount_one": "{{count}} new",
+    "newCount_other": "{{count}} new",
+    "marketValue": "Market value",
+    "cost": "You paid",
+    "net": "Net",
+    "hitCounts": "Hits by rarity",
+    "noHits": "No hits this time. The next one's got your name on it!",
+    "bestPull": "Best pull",
+    "addToBinder_one": "Add {{count}} hit to binder",
+    "addToBinder_other": "Add {{count}} hits to binder",
+    "added_zero": "Binder's up to date",
+    "added_one": "{{count}} card in your binder!",
+    "added_other": "{{count}} cards in your binder!",
+    "binderDone": "Binder's up to date",
+    "openAnother_one": "Open another ({{count}} left)",
+    "openAnother_other": "Open another ({{count}} left)",
+    "done": "Done",
+    "cellAria_one": "{{name}}, {{rarity}}, {{value}}",
+    "cellAria_other": "{{name}}, {{rarity}}, {{value}}, {{count}} copies"
+  },
+  "zoom": {
+    "value": "Market value",
+    "copies_one": "{{count}} copy pulled",
+    "copies_other": "{{count}} copies pulled",
+    "back": "Back"
+  },
+  "confirm": {
+    "title": "Leave the table?",
+    "body_one": "{{count}} hit is still face-down. It's already in your backroom; you'd only miss the show.",
+    "body_other": "{{count}} hits are still face-down. They're already in your backroom; you'd only miss the show.",
+    "stay": "Keep ripping",
+    "leave": "Leave"
+  },
+  "kind": {
+    "booster": "Booster Pack",
+    "blister": "3-Pack Blister",
+    "bundle": "Booster Bundle",
+    "box": "Booster Box",
+    "eliteBox": "Elite Box",
+    "collection": "Collection Box",
+    "tin": "Tin",
+    "starterDeck": "Starter Deck",
+    "prereleaseKit": "Prerelease Kit",
+    "posterCollection": "Poster Collection",
+    "promoKit": "Promo Kit",
+    "mysteryBox": "Mystery Box",
+    "accessory": "Accessory",
+    "mangaVolume": "Manga",
+    "mangaDeluxe": "Deluxe Manga",
+    "mangaBoxSet": "Manga Box Set",
+    "importBooster": "Import Booster",
+    "importBox": "Import Box"
+  }
+}

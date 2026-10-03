@@ -20,6 +20,7 @@ export const routes: readonly RouteDef[] = [
   { path: '/debug/engine', component: lazy(() => import('@/debug/EngineSandboxPage')) },
   { path: '/debug/sheets', component: lazy(() => import('@/debug/SheetsPlayground')) },
   { path: '/debug/audio', component: lazy(() => import('@/debug/AudioLabPage')) },
+  { path: '/debug/opening', component: lazy(() => import('@/debug/OpeningPlayground')) },
 ];
 
 export function matchRoute(pathname: string): RouteDef {

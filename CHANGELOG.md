@@ -20,6 +20,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   - **Day Summary receipt**: prints line by line with rolling numbers; served and lost customers, revenue, cost of goods, opened stock, rent, profit, reputation change, XP, best pull, and a "Tomorrow" teaser with arriving orders. Next Day starts the dawn.
   - **Level-up celebration** with confetti and unlock cards; a Settings board (audio volumes, quality, motion, text size, pause on interaction).
   - Keyboard: Space pause, 1/2/3 speed, I/P/O/C sheets, Esc back (or Settings as the pause menu). Autosaves at New Game and every dawn.
+- **Pack-opening stage** (`src/game/opening`, preview at `/debug/opening`):
+  - A spotlit stage where you tear the pack across its crimp; the tear follows your finger and sheds foil shards.
+  - Tap or swipe to reveal each card. The rare slot glows in its rarity color before it flips, and hits get bursts, beams, shake and an ascending stinger; Illustration Rares and up flip in slow motion, and a Mythic gets star rain and a crown stamp.
+  - Every card shows a NEW! badge and a price tag, with a running "value so far".
+  - Blisters reveal their promo first, starter decks cascade their list with the guaranteed holo last, and booster boxes offer **Rip one by one** or a ~10-second **Quick Rip** highlights reel.
+  - The summary tallies market value against cost with a verdict stamp, groups the pulls, and offers Add hits to binder and Open another.
+  - Skip-to-hits, auto-reveal and skip-commons controls, plus a full reduced-motion variant.
 - **Audio v1** (`src/audio`, lab at `/debug/audio`), all synthesized, with zero audio files:
   - A procedural lo-fi music director with five contexts (title, day, evening, night, pack opening), seeded 8-bar phrases with extended-chord keys, swing drums, bass and melody, plus tape warmth, crossfades and ducking under big reveals.
   - 54 sound effects (ZzFX patches plus our own synthesis), including a crinkly pack tear, a door bell, the register, coins and an ascending family of rarity stingers.
