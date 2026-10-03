@@ -55,7 +55,9 @@ export interface QualityPreset {
 export const qualityPresets: Record<QualityLevel, QualityPreset> = {
   low: {
     dpr: [1, 1],
-    antialias: true,
+    // No MSAA on the lightest tier: it costs the most on weak GPUs and software WebGL (~3× slower
+    // than Medium's SMAA there), and at DPR 1 the browser's upscale already softens edges.
+    antialias: false,
     shadows: false,
     shadowMapSize: 512,
     shadowRadius: 1,

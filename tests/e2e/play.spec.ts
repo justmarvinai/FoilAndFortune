@@ -7,6 +7,9 @@ import { expect, test } from './fixtures';
  * shop after a reload. `?quality=low` keeps software WebGL light once the real diorama lands.
  */
 test.describe('play screen', () => {
+  // Long flows over the live 3D shop, which is slow on software WebGL (CI has no GPU).
+  test.describe.configure({ timeout: 180_000 });
+
   test('new game, open the shop, sheets and Esc, then continue after a reload', async ({
     page,
     errors,
@@ -37,7 +40,8 @@ test.describe('play screen', () => {
     // The door sign opens the shop and the clock starts running.
     await sign.click();
     await expect(page.getByRole('button', { name: 'Close the shop early' })).toBeVisible();
-    await expect(clock).toHaveText(/^09:(0[1-9]|[1-5]\d)$/, { timeout: 15_000 });
+    // The first frames of the 3D shop are slow on software WebGL (CI has no GPU).
+    await expect(clock).toHaveText(/^09:(0[1-9]|[1-5]\d)$/, { timeout: 45_000 });
 
     // Shortcuts toggle sheets; Esc closes the top layer, then opens Settings (the pause menu).
     await page.keyboard.press('i');

@@ -18,7 +18,9 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   // Locally, one browser at a time: software WebGL (SwiftShader) on a few shared cores can
   // starve the machine. CI runners get Playwright's default parallelism.
-  workers: process.env.CI ? undefined : 1,
+  // Serial everywhere: the 3D routes run on software WebGL (no GPU on CI runners either), and two at
+  // once starve each other.
+  workers: 1,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:4173',

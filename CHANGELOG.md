@@ -56,6 +56,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 - The owner chose **Clay Critters for all card art** (ADR-006). `/debug/art` is now a Clay card gallery.
+- The Low quality tier no longer uses MSAA (the costliest feature on weak GPUs and software WebGL), and E2E tests run serially.
 - `/` is now the title screen and the debug hub moved to `/debug`. A `?quality=` override is remembered for the browser session, and the 3D shop stops rendering under the Day Summary and the pack stage.
 - **Balance:** sales XP is 1.0 per revenue dollar (was 0.5), and the early pacing targets follow the simulator: a level-up on days 1, 2, 4 and 7 (docs/02 §9).
 - Failed commands are atomic: no partial state change and no events.
